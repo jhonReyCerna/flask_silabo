@@ -133,7 +133,6 @@ def guardar_unidades():
                 'numero': i,
                 'nombre': request.form.get(f'nombre_unidad_{i}'),
                 'sesiones': sesiones_unidad,
-                'duracion': int(request.form.get(f'duracion_unidad_{i}', 0)),
                 'logro': request.form.get(f'logro_unidad_{i}'),
                 'contenidos': request.form.get(f'contenidos_unidad_{i}'),
                 'actividades': request.form.get(f'actividades_unidad_{i}')

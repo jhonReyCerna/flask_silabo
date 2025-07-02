@@ -96,12 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="form-row">
-                    <label for="duracion_unidad_${numero}">Duración (semanas):</label>
-                    <input type="number" id="duracion_unidad_${numero}" name="duracion_unidad_${numero}" 
-                           min="1" max="8" value="${sesionesUnidad}" required>
-                </div>
-                
-                <div class="form-row">
                     <label for="logro_unidad_${numero}">Logro de Unidad:</label>
                     <textarea id="logro_unidad_${numero}" name="logro_unidad_${numero}" 
                               rows="3" placeholder="Describe el logro principal de esta unidad..."
@@ -176,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (card) {
                 card.querySelector(`#nombre_unidad_${numero}`).value = unidad.nombre || '';
                 card.querySelector(`#sesiones_unidad_${numero}`).value = unidad.sesiones || '';
-                card.querySelector(`#duracion_unidad_${numero}`).value = unidad.duracion || '';
                 card.querySelector(`#logro_unidad_${numero}`).value = unidad.logro || '';
                 card.querySelector(`#contenidos_unidad_${numero}`).value = unidad.contenidos || '';
                 card.querySelector(`#actividades_unidad_${numero}`).value = unidad.actividades || '';
