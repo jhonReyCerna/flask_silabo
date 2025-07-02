@@ -55,6 +55,32 @@ document.addEventListener('DOMContentLoaded', function() {
             background-color: #007bff;
             color: white;
         }
+        .dia-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .dia-checkbox:hover {
+            background-color: #f8f9fa;
+        }
+        .dia-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        .dia-checkbox input[type="checkbox"]:checked + span {
+            font-weight: bold;
+            color: #007bff;
+        }
+        #horario-personalizado {
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
     `;
     document.head.appendChild(style);
 });

@@ -41,6 +41,18 @@ def general():
 def guardar_general():
     """Guarda los datos del formulario general"""
     try:
+        # Manejar días personalizados si se seleccionó horario personalizado
+        horario = request.form.get('horario_entry')
+        if horario == 'Horario: Personalizado':
+            dias_personalizados = request.form.getlist('dias_personalizados')
+            if len(dias_personalizados) >= 2 and len(dias_personalizados) <= 4:
+                horario = f"Horario: {' - '.join(dias_personalizados)}"
+            else:
+                return jsonify({
+                    'success': False, 
+                    'message': 'Debe seleccionar entre 2 y 4 días para el horario personalizado'
+                }), 400
+        
         # Obtener datos del formulario
         datos_formulario = {
             'codigo': request.form.get('codigo_entry'),
@@ -59,7 +71,7 @@ def guardar_general():
             'codigo_programa': request.form.get('codigo_programa_entry'),
             'caracter': request.form.get('caracter_entry'),
             'proposito': request.form.get('proposito_entry'),
-            'horario': request.form.get('horario_entry'),
+            'horario': horario,
             'modalidad': request.form.get('modalidad_entry'),
             'fecha_guardado': datetime.now().isoformat()
         }

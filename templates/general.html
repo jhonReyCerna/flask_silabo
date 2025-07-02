@@ -92,6 +92,43 @@
         <option value="Horario: Personalizado" {% if datos.horario == 'Horario: Personalizado' %}selected{% endif %}>Horario: Personalizado</option>
       </select>
     </div>
+    
+    <div class="form-row" id="horario-personalizado" style="display: none;">
+      <label>Seleccionar Días (mínimo 2, máximo 4):</label>
+      <div class="dias-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Domingo" id="dia-domingo">
+          <span>Domingo</span>
+        </label>
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Lunes" id="dia-lunes">
+          <span>Lunes</span>
+        </label>
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Martes" id="dia-martes">
+          <span>Martes</span>
+        </label>
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Miércoles" id="dia-miercoles">
+          <span>Miércoles</span>
+        </label>
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Jueves" id="dia-jueves">
+          <span>Jueves</span>
+        </label>
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Viernes" id="dia-viernes">
+          <span>Viernes</span>
+        </label>
+        <label class="dia-checkbox">
+          <input type="checkbox" name="dias_personalizados" value="Sábado" id="dia-sabado">
+          <span>Sábado</span>
+        </label>
+      </div>
+      <div id="mensaje-dias" style="margin-top: 10px; color: #666; font-size: 12px;">
+        Selecciona entre 2 y 4 días
+      </div>
+    </div>
     <div class="form-row">
       <label for="modalidad_entry">Modalidad:</label>
       <select id="modalidad_entry" name="modalidad_entry" required>
