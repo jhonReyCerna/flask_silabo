@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Panel de Control del Sílabo{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css') }}" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<header>📋 Panel de Control del Sílabo</header>
+
+<div class="container">
+  <nav class="sidebar" id="sidebar">
+    <button class="toggle-btn" id="toggleBtn">≡</button>
+    <div class="nav-header" id="navHeader">Navegación</div>
+    <ul>
+      <li><a href="{{ url_for('general') }}"><button><span class="icon">📝</span><span class="text">General</span></button></a></li>
+      <li><a href="{{ url_for('unidades') }}"><button><span class="icon">📚</span><span class="text">Unidades</span></button></a></li>
+      <li><a href="{{ url_for('competencias') }}"><button><span class="icon">🎯</span><span class="text">Competencias</span></button></a></li>
+      <li><a href="{{ url_for('productos') }}"><button><span class="icon">📦</span><span class="text">Productos</span></button></a></li>
+      <li><a href="{{ url_for('sesiones') }}"><button><span class="icon">📅</span><span class="text">Sesiones</span></button></a></li>
+      <li><a href="{{ url_for('cronograma') }}"><button><span class="icon">⏰</span><span class="text">Cronograma</span></button></a></li>
+      <li><a href="{{ url_for('referencias') }}"><button><span class="icon">🔗</span><span class="text">Referencias</span></button></a></li>
+      <li><a href="{{ url_for('finalizar') }}"><button><span class="icon">✅</span><span class="text">Finalizar</span></button></a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <div class="top-buttons" id="topButtons">
+      <a href="{{ url_for('general') }}"><button class="{% if request.endpoint == 'general' %}selected{% endif %}"><span class="icon">📝</span>General</button></a>
+      <a href="{{ url_for('unidades') }}"><button class="{% if request.endpoint == 'unidades' %}selected{% endif %}"><span class="icon">📚</span>Unidades</button></a>
+      <a href="{{ url_for('competencias') }}"><button class="{% if request.endpoint == 'competencias' %}selected{% endif %}"><span class="icon">🎯</span>Competencias</button></a>
+      <a href="{{ url_for('productos') }}"><button class="{% if request.endpoint == 'productos' %}selected{% endif %}"><span class="icon">📦</span>Productos</button></a>
+      <a href="{{ url_for('sesiones') }}"><button class="{% if request.endpoint == 'sesiones' %}selected{% endif %}"><span class="icon">📅</span>Sesiones</button></a>
+      <a href="{{ url_for('cronograma') }}"><button class="{% if request.endpoint == 'cronograma' %}selected{% endif %}"><span class="icon">⏰</span>Cronograma</button></a>
+      <a href="{{ url_for('referencias') }}"><button class="{% if request.endpoint == 'referencias' %}selected{% endif %}"><span class="icon">🔗</span>Referencias</button></a>
+      <a href="{{ url_for('finalizar') }}"><button class="{% if request.endpoint == 'finalizar' %}selected{% endif %}"><span class="icon">✅</span>Finalizar</button></a>
+    </div>
+    <section>
+      <h2 id="titulo-principal">{% block titulo %}Contenido Principal{% endblock %}</h2>
+      <div id="contenido-principal">
+        {% block contenido %}
+        <p>Aquí se mostrarán los formularios o contenido asociado a la sección seleccionada.</p>
+        {% endblock %}
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>© 2025 Universidad UNAC - Sistema de Sílabo</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

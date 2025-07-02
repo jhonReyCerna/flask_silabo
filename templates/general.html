@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Formulario General - Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+{% endblock %}
+
+{% block titulo %}📝 Información General{% endblock %}
+
+{% block contenido %}
+<form id="form-general" action="{{ url_for('guardar_general') }}" method="POST">
+  <div class="form-grid">
+    <div class="form-row">
+      <label for="codigo_entry">Código:</label>
+      <input type="text" id="codigo_entry" name="codigo_entry" value="{{ datos.codigo or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="version_entry">Versión:</label>
+      <input type="number" id="version_entry" name="version_entry" min="0" max="99" value="{{ datos.version or '00' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="fecha_entry">Fecha:</label>
+      <input type="date" id="fecha_entry" name="fecha_entry" value="{{ datos.fecha or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="rama_entry">Maestría:</label>
+      <input type="text" id="rama_entry" name="rama_entry" value="{{ datos.maestria or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="asignatura_entry">Asignatura:</label>
+      <input type="text" id="asignatura_entry" name="asignatura_entry" value="{{ datos.asignatura or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="semestre_combobox">Semestre 2025 -</label>
+      <select id="semestre_combobox" name="semestre_combobox" required>
+        <option value="A" {% if datos.semestre == 'A' %}selected{% endif %}>A</option>
+        <option value="B" {% if datos.semestre == 'B' %}selected{% endif %}>B</option>
+        <option value="C" {% if datos.semestre == 'C' %}selected{% endif %}>C</option>
+        <option value="D" {% if datos.semestre == 'D' %}selected{% endif %}>D</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="docente_entry">Docente:</label>
+      <input type="text" id="docente_entry" name="docente_entry" value="{{ datos.docente or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="horas_teoria_entry">Horas Teoría:</label>
+      <input type="number" id="horas_teoria_entry" name="horas_teoria_entry" min="0" max="99" value="{{ datos.horas_teoria or '0' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="horas_practica_entry">Horas Práctica:</label>
+      <input type="number" id="horas_practica_entry" name="horas_practica_entry" min="0" max="99" value="{{ datos.horas_practica or '0' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="creditos_entry">Créditos:</label>
+      <input type="number" id="creditos_entry" name="creditos_entry" value="{{ datos.creditos or '0' }}" readonly />
+    </div>
+    <div class="form-row">
+      <label for="sesiones_entry">Sesiones:</label>
+      <input type="number" id="sesiones_entry" name="sesiones_entry" min="0" max="99" value="{{ datos.sesiones or '00' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="semanas_entry">Semanas:</label>
+      <input type="number" id="semanas_entry" name="semanas_entry" min="0" max="99" value="{{ datos.semanas or '00' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="correo_entry">Correo:</label>
+      <input type="email" id="correo_entry" name="correo_entry" value="{{ datos.correo or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="codigo_programa_entry">Código del Posgrado:</label>
+      <input type="text" id="codigo_programa_entry" name="codigo_programa_entry" value="{{ datos.codigo_programa or '' }}" required />
+    </div>
+    <div class="form-row">
+      <label for="caracter_entry">Carácter:</label>
+      <select id="caracter_entry" name="caracter_entry" required>
+        <option value="">Seleccionar</option>
+        <option value="Obligatorio" {% if datos.caracter == 'Obligatorio' %}selected{% endif %}>Obligatorio</option>
+        <option value="Electivo" {% if datos.caracter == 'Electivo' %}selected{% endif %}>Electivo</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="proposito_entry">Propósito del Curso:</label>
+      <textarea id="proposito_entry" name="proposito_entry" rows="4" placeholder="tiene por propósito" style="color:gray;">{{ datos.proposito or '' }}</textarea>
+    </div>
+    <div class="form-row">
+      <label for="horario_entry">Seleccionar Horario:</label>
+      <select id="horario_entry" name="horario_entry" required>
+        <option value="Horario: Lunes - Miércoles - Viernes" {% if datos.horario == 'Horario: Lunes - Miércoles - Viernes' %}selected{% endif %}>Horario: Lunes - Miércoles - Viernes</option>
+        <option value="Horario: Sábado - Domingo" {% if datos.horario == 'Horario: Sábado - Domingo' %}selected{% endif %}>Horario: Sábado - Domingo</option>
+        <option value="Horario: Personalizado" {% if datos.horario == 'Horario: Personalizado' %}selected{% endif %}>Horario: Personalizado</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="modalidad_entry">Modalidad:</label>
+      <select id="modalidad_entry" name="modalidad_entry" required>
+        <option value="">Seleccionar</option>
+        <option value="Presencial" {% if datos.modalidad == 'Presencial' %}selected{% endif %}>Presencial</option>
+        <option value="Virtual" {% if datos.modalidad == 'Virtual' %}selected{% endif %}>Virtual</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <button type="submit">💾 Guardar</button>
+    </div>
+  </div>
+</form>
+
+<div id="mensaje" style="margin-top: 20px; padding: 10px; display: none;"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/general.js') }}"></script>
+{% endblock %}

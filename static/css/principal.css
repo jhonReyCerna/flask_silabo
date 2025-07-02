@@ -1,0 +1,189 @@
+/* Reset básico */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: 'Segoe UI Emoji', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #F4F8FB;
+  color: #263238;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background-color: #1976D2;
+  color: white;
+  padding: 20px 40px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Contenedor principal */
+.container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 80px - 40px); /* header + footer height */
+}
+
+/* Sidebar */
+nav.sidebar {
+  background-color: white;
+  width: 280px;
+  border-right: 1px solid #E3E7EB;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  transition: width 0.3s ease;
+}
+nav.sidebar.collapsed {
+  width: 70px;
+}
+
+nav.sidebar .nav-header {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #191919;
+  padding: 0 20px 10px;
+  border-bottom: 1px solid #E3E7EB;
+  user-select: none;
+}
+
+nav.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+nav.sidebar ul li {
+  padding: 0 20px;
+}
+
+nav.sidebar ul li button {
+  width: 100%;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #68737d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+  user-select: none;
+}
+nav.sidebar ul li button:hover {
+  background-color: #1565C0;
+  color: white;
+}
+nav.sidebar ul li button.active {
+  background-color: #1976D2;
+  color: white;
+}
+
+/* Solo mostrar icono cuando sidebar colapsado */
+nav.sidebar.collapsed ul li button span.text {
+  display: none;
+}
+
+/* Icono hamburguesa para toggle */
+nav.sidebar .toggle-btn {
+  border: none;
+  background: none;
+  font-size: 1.8rem;
+  color: #191919;
+  cursor: pointer;
+  padding: 12px 20px;
+  align-self: flex-end;
+  user-select: none;
+}
+nav.sidebar .toggle-btn:hover {
+  background-color: #E3E7EB;
+  border-radius: 8px;
+}
+
+/* Panel principal */
+main.content {
+  flex: 1;
+  background-color: white;
+  padding: 30px 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Barra superior de botones en el main */
+.top-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.top-buttons button {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #68737d;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s, color 0.3s;
+  user-select: none;
+  flex: 1 1 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.top-buttons button:hover {
+  background-color: #3874fe;
+  color: white;
+}
+.top-buttons button.selected {
+  background-color: #1976D2;
+  color: white;
+}
+
+/* Footer */
+footer {
+  background-color: #E3E7EB;
+  color: #1976D2;
+  font-style: italic;
+  font-size: 1rem;
+  padding: 10px 40px;
+  text-align: center;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Iconos estilo */
+.icon {
+  font-size: 1.3rem;
+  user-select: none;
+}
+
+/* Scrollbar personalizado para el main content */
+main.content::-webkit-scrollbar {
+  width: 10px;
+}
+main.content::-webkit-scrollbar-track {
+  background: #f4f8fb;
+}
+main.content::-webkit-scrollbar-thumb {
+  background-color: #1976D2;
+  border-radius: 10px;
+  border: 2px solid #f4f8fb;
+}
