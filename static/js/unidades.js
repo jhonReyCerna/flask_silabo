@@ -7,10 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const unidadesContainer = document.getElementById('unidades-container');
     const mensaje = document.getElementById('mensaje');
 
-    // Cargar datos guardados al cargar la página
     cargarDatosGuardados();
 
-    // Event listeners
     generarBtn.addEventListener('click', generarFormulariosUnidades);
     form.addEventListener('submit', guardarUnidades);
     sesionesInput.addEventListener('input', actualizarSesiones);
@@ -60,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
         guardarBtn.style.display = 'block';
         mostrarMensaje('Formularios de unidades generados correctamente', 'exito');
         
-        // Scroll suave hacia los formularios
         unidadesContainer.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'start' 
@@ -72,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         unidadDiv.className = 'unidad-card';
         unidadDiv.dataset.unidad = numero;
 
-        // Calcular sesiones sugeridas por unidad
         const sesionesBase = Math.floor(totalSesiones / totalUnidades);
         const sesionesExtra = totalSesiones % totalUnidades;
         const sesionesUnidad = sesionesBase + (numero <= sesionesExtra ? 1 : 0);
