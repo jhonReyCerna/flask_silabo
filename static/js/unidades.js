@@ -96,24 +96,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="form-row">
-                    <label for="logro_unidad_${numero}">Logro de Unidad:</label>
+                    <label for="logro_unidad_${numero}">Indicador(es) de logro:</label>
                     <textarea id="logro_unidad_${numero}" name="logro_unidad_${numero}" 
-                              rows="3" placeholder="Describe el logro principal de esta unidad..."
+                              rows="3" placeholder="Describe los indicadores de logro de esta unidad..."
                               required></textarea>
                 </div>
                 
                 <div class="form-row">
-                    <label for="contenidos_unidad_${numero}">Contenidos Temáticos:</label>
-                    <textarea id="contenidos_unidad_${numero}" name="contenidos_unidad_${numero}" 
-                              rows="4" placeholder="Lista los temas principales de esta unidad..."
-                              required></textarea>
-                </div>
-                
-                <div class="form-row">
-                    <label for="actividades_unidad_${numero}">Actividades de Aprendizaje:</label>
-                    <textarea id="actividades_unidad_${numero}" name="actividades_unidad_${numero}" 
-                              rows="3" placeholder="Describe las actividades principales..."
-                              required></textarea>
+                    <label for="instrumentos_unidad_${numero}">Instrumentos de Evaluación:</label>
+                    <div id="instrumentos_container_${numero}" class="instrumentos-container">
+                        <div class="instrumento-item">
+                            <input type="text" name="instrumento_unidad_${numero}[]" 
+                                   placeholder="Ej: Examen parcial, Proyecto grupal, etc..." required>
+                            <button type="button" class="btn-eliminar-instrumento" onclick="eliminarInstrumento(this)">❌</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-agregar-instrumento" onclick="agregarInstrumento(${numero})">➕ Agregar Instrumento</button>
                 </div>
             </div>
         `;
@@ -171,8 +169,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.querySelector(`#nombre_unidad_${numero}`).value = unidad.nombre || '';
                 card.querySelector(`#sesiones_unidad_${numero}`).value = unidad.sesiones || '';
                 card.querySelector(`#logro_unidad_${numero}`).value = unidad.logro || '';
-                card.querySelector(`#contenidos_unidad_${numero}`).value = unidad.contenidos || '';
-                card.querySelector(`#actividades_unidad_${numero}`).value = unidad.actividades || '';
+                
+                // Cargar instrumentos de evaluación
+                if (unidad.instrumentos && Array.isArray(unidad.instrumentos)) {
+                    const container = card.querySelector(`#instrumentos_container_${numero}`);
+                    container.innerHTML = ''; // Limpiar contenido existente
+                    
+                    unidad.instrumentos.forEach((instrumento, idx) => {
+                        const instrumentoDiv = document.createElement('div');
+                        instrumentoDiv.className = 'instrumento-item';
+                        instrumentoDiv.innerHTML = `
+                            <input type="text" name="instrumento_unidad_${numero}[]" 
+                                   value="${instrumento}" placeholder="Ej: Examen parcial, Proyecto grupal, etc..." required>
+                            <button type="button" class="btn-eliminar-instrumento" onclick="eliminarInstrumento(this)">❌</button>
+                        `;
+                        container.appendChild(instrumentoDiv);
+                    });
+                }
             }
         });
     }
@@ -229,4 +242,29 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 5000);
         }
     }
+
+    // Funciones para manejar instrumentos de evaluación dinámicos
+    window.agregarInstrumento = function(numeroUnidad) {
+        const container = document.getElementById(`instrumentos_container_${numeroUnidad}`);
+        const nuevoInstrumento = document.createElement('div');
+        nuevoInstrumento.className = 'instrumento-item';
+        nuevoInstrumento.innerHTML = `
+            <input type="text" name="instrumento_unidad_${numeroUnidad}[]" 
+                   placeholder="Ej: Examen parcial, Proyecto grupal, etc..." required>
+            <button type="button" class="btn-eliminar-instrumento" onclick="eliminarInstrumento(this)">❌</button>
+        `;
+        container.appendChild(nuevoInstrumento);
+    };
+
+    window.eliminarInstrumento = function(boton) {
+        const instrumentoItem = boton.parentNode;
+        const container = instrumentoItem.parentNode;
+        
+        // No permitir eliminar si solo hay un instrumento
+        if (container.children.length > 1) {
+            instrumentoItem.remove();
+        } else {
+            mostrarMensaje('Debe haber al menos un instrumento de evaluación por unidad', 'error');
+        }
+    };
 });

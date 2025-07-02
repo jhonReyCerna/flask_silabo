@@ -129,13 +129,15 @@ def guardar_unidades():
             sesiones_unidad = int(request.form.get(f'sesiones_unidad_{i}', 0))
             suma_sesiones += sesiones_unidad
             
+            # Obtener instrumentos de evaluación (pueden ser múltiples)
+            instrumentos = request.form.getlist(f'instrumento_unidad_{i}[]')
+            
             unidad_data = {
                 'numero': i,
                 'nombre': request.form.get(f'nombre_unidad_{i}'),
                 'sesiones': sesiones_unidad,
                 'logro': request.form.get(f'logro_unidad_{i}'),
-                'contenidos': request.form.get(f'contenidos_unidad_{i}'),
-                'actividades': request.form.get(f'actividades_unidad_{i}')
+                'instrumentos': instrumentos
             }
             unidades_detalle.append(unidad_data)
         
