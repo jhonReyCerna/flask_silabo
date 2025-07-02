@@ -326,10 +326,130 @@ def api_cargar_unidades_para_competencias():
 
 @app.route('/productos')
 def productos():
-    """Página de productos (por implementar)"""
-    return render_template('base.html', 
-                         titulo='📦 Productos',
-                         contenido='<p>Módulo de productos en desarrollo...</p>')
+    """Página del formulario de productos"""
+    datos = cargar_datos()
+    datos_productos = datos.get('productos', {})
+    return render_template('productos.html', datos=datos_productos)
+
+@app.route('/guardar_productos', methods=['POST'])
+def guardar_productos():
+    """Guarda los datos del formulario de productos"""
+    try:
+        datos = cargar_datos()
+        unidades_data = datos.get('unidades', {})
+        
+        if not unidades_data or not unidades_data.get('unidades_detalle'):
+            return jsonify({
+                'success': False,
+                'error': 'No se encontraron unidades. Debes crear las unidades primero.'
+            }), 400
+        
+        # Obtener datos JSON del frontend
+        productos_data = request.form.get('productos_data')
+        if not productos_data:
+            return jsonify({
+                'success': False,
+                'error': 'No se recibieron datos de productos.'
+            }), 400
+        
+        try:
+            unidades_productos = json.loads(productos_data)
+        except json.JSONDecodeError:
+            return jsonify({
+                'success': False,
+                'error': 'Datos de productos inválidos.'
+            }), 400
+        
+        # Validar estructura de datos
+        for unidad_prod in unidades_productos:
+            numero_unidad = unidad_prod.get('numero_unidad')
+            productos = unidad_prod.get('productos', [])
+            
+            if not isinstance(productos, list) or len(productos) < 1:
+                return jsonify({
+                    'success': False,
+                    'error': f'La unidad {numero_unidad} debe tener al menos 1 producto.'
+                }), 400
+            
+            if len(productos) > 4:
+                return jsonify({
+                    'success': False,
+                    'error': f'La unidad {numero_unidad} no puede tener más de 4 productos.'
+                }), 400
+            
+            # Validar que cada producto tenga la estructura correcta
+            for i, producto in enumerate(productos):
+                if not isinstance(producto, dict):
+                    return jsonify({
+                        'success': False,
+                        'error': f'Estructura de producto inválida en unidad {numero_unidad}.'
+                    }), 400
+                
+                codigo = producto.get('codigo', '').strip()
+                titulo = producto.get('titulo', '').strip()
+                descripcion = producto.get('descripcion', '').strip()
+                
+                if not codigo or not titulo or not descripcion:
+                    return jsonify({
+                        'success': False,
+                        'error': f'Todos los campos son obligatorios para el producto {i+1} de la unidad {numero_unidad}.'
+                    }), 400
+        
+        # Guardar productos
+        datos['productos'] = {
+            'unidades_productos': unidades_productos
+        }
+        
+        guardar_datos(datos)
+        print(f"DEBUG: Productos guardados exitosamente")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Productos guardados exitosamente'
+        })
+        
+    except Exception as e:
+        print(f"DEBUG: Error al guardar productos: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error interno del servidor: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_productos')
+def api_cargar_productos():
+    """API para cargar productos guardados"""
+    try:
+        datos = cargar_datos()
+        productos_data = datos.get('productos', {})
+        
+        return jsonify({
+            'success': True,
+            'productos': productos_data.get('unidades_productos', [])
+        })
+    except Exception as e:
+        print(f"DEBUG: Error al cargar productos: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error al cargar productos: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_unidades_para_productos')
+def api_cargar_unidades_para_productos():
+    """API para cargar las unidades disponibles para productos"""
+    datos = cargar_datos()
+    unidades_data = datos.get('unidades', {})
+    
+    if not unidades_data or not unidades_data.get('unidades_detalle'):
+        return jsonify({
+            'success': False,
+            'message': 'No se encontraron unidades. Debes crear las unidades primero.',
+            'unidades': []
+        })
+    
+    return jsonify({
+        'success': True,
+        'unidades': unidades_data['unidades_detalle']
+    })
 
 @app.route('/sesiones')
 def sesiones():
