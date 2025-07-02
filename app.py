@@ -1,16 +1,16 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file
 import json
 import os
 from datetime import datetime
+import tempfile
+from generar_word import generar_documento_word, generar_nombre_archivo
 
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta_para_silabo'
 
-# Configuración de carpetas
 app.template_folder = 'templates'
 app.static_folder = 'static'
 
-# Archivo para almacenar datos (simula una base de datos)
 DATA_FILE = 'historial.json'
 
 def cargar_datos():
@@ -41,7 +41,6 @@ def general():
 def guardar_general():
     """Guarda los datos del formulario general"""
     try:
-        # Validar correo con dominios específicos
         correo = request.form.get('correo_entry')
         dominios_permitidos = ['@gmail.com', '@unacvirtual.edu.pe']
         
@@ -51,7 +50,6 @@ def guardar_general():
                 'message': 'El correo debe ser @gmail.com o @unacvirtual.edu.pe'
             }), 400
         
-        # Manejar días personalizados si se seleccionó horario personalizado
         horario = request.form.get('horario_entry')
         if horario == 'Horario: Personalizado':
             dias_personalizados = request.form.getlist('dias_personalizados')
@@ -63,7 +61,6 @@ def guardar_general():
                     'message': 'Debe seleccionar entre 2 y 4 días para el horario personalizado'
                 }), 400
         
-        # Obtener datos del formulario
         datos_formulario = {
             'fecha_guardado': datetime.now().isoformat(),
             'codigo': request.form.get('codigo_entry'),
@@ -157,6 +154,40 @@ def finalizar():
     """Página de finalización del sílabo"""
     datos = cargar_datos()
     return render_template('finalizar.html', datos=datos)
+
+@app.route('/generar_word')
+def generar_word():
+    """Genera y descarga un documento Word del sílabo"""
+    try:
+        datos = cargar_datos()
+        datos_general = datos.get('general', {})
+        
+        if not datos_general:
+            return jsonify({
+                'success': False,
+                'message': 'No hay datos para generar el documento. Complete el formulario general primero.'
+            }), 400
+        
+        doc = generar_documento_word(datos_general)
+        
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
+            doc.save(tmp_file.name)
+            tmp_file_path = tmp_file.name
+        
+        nombre_archivo = generar_nombre_archivo(datos_general)
+        
+        return send_file(
+            tmp_file_path,
+            as_attachment=True,
+            download_name=nombre_archivo,
+            mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al generar el documento: {str(e)}'
+        }), 500
 
 if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)

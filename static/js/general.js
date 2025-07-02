@@ -22,18 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
         creditos.value = totalCreditos;
     }
 
-    // Función para manejar la visibilidad del horario personalizado
     function manejarHorarioPersonalizado() {
         if (horarioSelect.value === 'Horario: Personalizado') {
             horarioPersonalizado.style.display = 'block';
         } else {
             horarioPersonalizado.style.display = 'none';
-            // Limpiar selecciones de días cuando no es personalizado
             diasCheckboxes.forEach(checkbox => checkbox.checked = false);
         }
     }
 
-    // Función para manejar la visibilidad del link virtual
     function manejarModalidadVirtual() {
         if (modalidadSelect.value === 'Virtual') {
             linkVirtual.style.display = 'block';
@@ -41,11 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             linkVirtual.style.display = 'none';
             linkVirtualInput.required = false;
-            linkVirtualInput.value = ''; // Limpiar el campo cuando no es virtual
+            linkVirtualInput.value = ''; 
         }
     }
 
-    // Función para validar correo con dominios específicos
     function validarCorreo(email) {
         if (!email) return false;
         
@@ -55,15 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return dominiosPermitidos.some(dominio => emailLowerCase.endsWith(dominio));
     }
 
-    // Función para mostrar mensaje de validación de correo
     function mostrarValidacionCorreo(esValido) {
-        // Remover mensaje anterior si existe
         const mensajeAnterior = document.getElementById('mensaje-correo');
         if (mensajeAnterior) {
             mensajeAnterior.remove();
         }
         
-        // Crear nuevo mensaje
         const mensaje = document.createElement('small');
         mensaje.id = 'mensaje-correo';
         mensaje.style.display = 'block';
@@ -78,11 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
             mensaje.style.color = '#dc3545';
         }
         
-        // Insertar después del input de correo
         correoInput.parentNode.appendChild(mensaje);
     }
 
-    // Función para validar selección de días
     function validarSeleccionDias() {
         const diasSeleccionados = Array.from(diasCheckboxes).filter(cb => cb.checked);
         const cantidad = diasSeleccionados.length;
@@ -95,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (cantidad > 4) {
                 mensajeDias.textContent = `Máximo 4 días permitidos (tienes ${cantidad})`;
                 mensajeDias.style.color = '#dc3545';
-                // Desmarcar el último checkbox seleccionado
                 event.target.checked = false;
                 return false;
             } else {
@@ -108,18 +98,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Event listeners
     horarioSelect.addEventListener('change', manejarHorarioPersonalizado);
     modalidadSelect.addEventListener('change', manejarModalidadVirtual);
     
-    // Validación de correo en tiempo real
     correoInput.addEventListener('input', function() {
         const email = this.value.trim();
         if (email) {
             const esValido = validarCorreo(email);
             mostrarValidacionCorreo(esValido);
         } else {
-            // Remover mensaje si el campo está vacío
             const mensajeAnterior = document.getElementById('mensaje-correo');
             if (mensajeAnterior) {
                 mensajeAnterior.remove();
@@ -131,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.addEventListener('change', function(event) {
             const diasSeleccionados = Array.from(diasCheckboxes).filter(cb => cb.checked);
             
-            // Si se intenta seleccionar más de 4, no permitir
             if (diasSeleccionados.length > 4) {
                 event.target.checked = false;
                 validarSeleccionDias();
@@ -145,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
     horasTeoria.addEventListener('input', calcularCreditos);
     horasPractica.addEventListener('input', calcularCreditos);
 
-    // Inicializar
     calcularCreditos();
     manejarHorarioPersonalizado();
     manejarModalidadVirtual();
@@ -163,14 +148,12 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Validar correo antes de enviar
         const email = correoInput.value.trim();
         if (!validarCorreo(email)) {
             mostrarMensaje('❌ El correo debe ser @gmail.com o @unacvirtual.edu.pe', 'error');
             return;
         }
         
-        // Validar horario personalizado antes de enviar
         if (horarioSelect.value === 'Horario: Personalizado') {
             const diasSeleccionados = Array.from(diasCheckboxes).filter(cb => cb.checked);
             if (diasSeleccionados.length < 2 || diasSeleccionados.length > 4) {
@@ -179,14 +162,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Validar link virtual si se seleccionó modalidad virtual
         if (modalidadSelect.value === 'Virtual') {
             const linkVirtual = linkVirtualInput.value.trim();
             if (!linkVirtual) {
                 mostrarMensaje('❌ Debe ingresar el link de la clase virtual', 'error');
                 return;
             }
-            // Validar que sea una URL válida
             try {
                 new URL(linkVirtual);
             } catch {

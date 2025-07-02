@@ -3,24 +3,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const vistaPreviaBtn = document.getElementById('vistaPreviaBtn');
     const generarDocumentoBtn = document.getElementById('generarDocumentoBtn');
 
-    // Función para mostrar mensajes
     function mostrarMensaje(texto, tipo = 'info') {
-        // Remover mensaje anterior si existe
         const mensajeAnterior = document.querySelector('.mensaje-estado');
         if (mensajeAnterior) {
             mensajeAnterior.remove();
         }
 
-        // Crear nuevo mensaje
         const mensaje = document.createElement('div');
         mensaje.className = `mensaje-estado ${tipo}`;
         mensaje.innerHTML = `<p>${texto}</p>`;
 
-        // Insertar después del título
         const titulo = document.querySelector('.finalizar-titulo');
         titulo.parentNode.insertBefore(mensaje, titulo.nextSibling);
 
-        // Auto-ocultar después de 5 segundos
         setTimeout(() => {
             if (mensaje.parentNode) {
                 mensaje.remove();
@@ -28,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Función para cargar datos del historial
     async function cargarDatos() {
         try {
             const response = await fetch('/api/cargar_general');
@@ -40,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Botón Modificar - Regresar a General
     modificarBtn.addEventListener('click', function() {
         mostrarMensaje('🔄 Redirigiendo al formulario general...', 'info');
         setTimeout(() => {
@@ -48,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     });
 
-    // Botón Vista Previa
     vistaPreviaBtn.addEventListener('click', async function() {
         mostrarMensaje('👁️ Cargando vista previa...', 'info');
         
@@ -60,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Botón Generar Documento
     generarDocumentoBtn.addEventListener('click', async function() {
         mostrarMensaje('📄 Generando documento...', 'info');
         
@@ -72,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Función para mostrar vista previa
     function mostrarVistaPrevia(datos) {
         const ventanaPrevia = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
         
@@ -157,25 +147,45 @@ document.addEventListener('DOMContentLoaded', function() {
         mostrarMensaje('✅ Vista previa generada correctamente', 'success');
     }
 
-    // Función para generar documento (simulación)
-    function generarDocumento(datos) {
-        // Simular generación de documento
-        setTimeout(() => {
-            const contenido = JSON.stringify(datos, null, 2);
-            const blob = new Blob([contenido], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+    async function generarDocumento(datos) {
+        try {
+            mostrarMensaje('📄 Generando documento Word...', 'info');
             
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `silabo_${datos.asignatura || 'documento'}_${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
+            const response = await fetch('/generar_word');
             
-            URL.revokeObjectURL(url);
-            mostrarMensaje('✅ Documento descargado correctamente', 'success');
-        }, 2000);
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'Silabo.docx';
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                    if (filenameMatch && filenameMatch[1]) {
+                        filename = filenameMatch[1].replace(/['"]/g, '');
+                    }
+                }
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                
+                mostrarMensaje('✅ Documento Word descargado correctamente', 'success');
+            } else {
+                const errorData = await response.json();
+                mostrarMensaje(`❌ ${errorData.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error al generar documento:', error);
+            mostrarMensaje('❌ Error al generar el documento Word', 'error');
+        }
     }
 
-    // Cargar datos al inicio para mostrar información
     cargarDatos().then(datos => {
         if (datos && Object.keys(datos).length > 0) {
             mostrarMensaje(`📋 Datos cargados: ${datos.asignatura || 'Curso sin nombre'}`, 'success');
