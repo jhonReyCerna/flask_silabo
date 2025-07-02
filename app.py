@@ -186,10 +186,143 @@ def api_cargar_unidades():
 
 @app.route('/competencias')
 def competencias():
-    """Página de competencias (por implementar)"""
-    return render_template('base.html', 
-                         titulo='🎯 Competencias',
-                         contenido='<p>Módulo de competencias en desarrollo...</p>')
+    """Página del formulario de competencias"""
+    datos = cargar_datos()
+    datos_competencias = datos.get('competencias', {})
+    return render_template('competencias.html', datos=datos_competencias)
+
+@app.route('/guardar_competencias', methods=['POST'])
+def guardar_competencias():
+    """Guarda los datos del formulario de competencias con nueva estructura"""
+    try:
+        # Cargar datos existentes para obtener las unidades
+        datos = cargar_datos()
+        unidades_data = datos.get('unidades', {})
+        
+        if not unidades_data or not unidades_data.get('unidades_detalle'):
+            return jsonify({
+                'success': False,
+                'error': 'No se encontraron unidades. Debes crear las unidades primero.'
+            }), 400
+        
+        # Obtener datos JSON del frontend
+        competencias_data = request.form.get('competencias_data')
+        if not competencias_data:
+            return jsonify({
+                'success': False,
+                'error': 'No se recibieron datos de competencias.'
+            }), 400
+        
+        try:
+            unidades_competencias = json.loads(competencias_data)
+        except json.JSONDecodeError:
+            return jsonify({
+                'success': False,
+                'error': 'Datos de competencias inválidos.'
+            }), 400
+        
+        # Validar estructura de datos
+        for unidad_comp in unidades_competencias:
+            numero_unidad = unidad_comp.get('numero_unidad')
+            competencias = unidad_comp.get('competencias', [])
+            
+            if not isinstance(competencias, list) or len(competencias) < 1:
+                return jsonify({
+                    'success': False,
+                    'error': f'La unidad {numero_unidad} debe tener al menos 1 competencia.'
+                }), 400
+            
+            if len(competencias) > 4:
+                return jsonify({
+                    'success': False,
+                    'error': f'La unidad {numero_unidad} no puede tener más de 4 competencias.'
+                }), 400
+            
+            # Validar que cada competencia tenga la estructura correcta
+            for i, competencia in enumerate(competencias):
+                if not isinstance(competencia, dict):
+                    return jsonify({
+                        'success': False,
+                        'error': f'Estructura de competencia inválida en unidad {numero_unidad}.'
+                    }), 400
+                
+                codigo = competencia.get('codigo', '').strip()
+                titulo = competencia.get('titulo', '').strip()
+                descripcion = competencia.get('descripcion', '').strip()
+                
+                if not codigo or not titulo or not descripcion:
+                    return jsonify({
+                        'success': False,
+                        'error': f'Todas las competencias deben tener código, título y descripción.'
+                    }), 400
+        
+        # Estructurar datos para guardar
+        datos_formulario = {
+            'unidades_competencias': unidades_competencias
+        }
+        
+        # Cargar datos existentes y agregar competencias
+        datos['competencias'] = datos_formulario
+        
+        # Guardar datos actualizados
+        guardar_datos(datos)
+        
+        print(f"DEBUG: Competencias guardadas exitosamente para {len(unidades_competencias)} unidades")
+        
+        return jsonify({
+            'success': True,
+            'message': f'Competencias guardadas correctamente para {len(unidades_competencias)} unidades',
+            'datos': datos_formulario
+        })
+        
+    except Exception as e:
+        print(f"DEBUG: Error al guardar competencias: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error al guardar competencias: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_competencias')
+def api_cargar_competencias():
+    """API para cargar datos del formulario de competencias"""
+    try:
+        datos = cargar_datos()
+        competencias_data = datos.get('competencias', {})
+        
+        if competencias_data and 'unidades_competencias' in competencias_data:
+            return jsonify({
+                'success': True,
+                'competencias': competencias_data['unidades_competencias']
+            })
+        else:
+            return jsonify({
+                'success': True,
+                'competencias': []
+            })
+    except Exception as e:
+        print(f"DEBUG: Error al cargar competencias: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error al cargar competencias: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_unidades_para_competencias')
+def api_cargar_unidades_para_competencias():
+    """API para cargar las unidades disponibles para competencias"""
+    datos = cargar_datos()
+    unidades_data = datos.get('unidades', {})
+    
+    if not unidades_data or not unidades_data.get('unidades_detalle'):
+        return jsonify({
+            'success': False,
+            'message': 'No se encontraron unidades. Debes crear las unidades primero.',
+            'unidades': []
+        })
+    
+    return jsonify({
+        'success': True,
+        'unidades': unidades_data['unidades_detalle']
+    })
 
 @app.route('/productos')
 def productos():

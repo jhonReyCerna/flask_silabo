@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Competencias - Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/competencias.css') }}">
+{% endblock %}
+
+{% block titulo %}🎯 Competencias{% endblock %}
+
+{% block contenido %}
+<div id="mensaje-sin-unidades" class="mensaje-info" style="display: none;">
+  <h3>⚠️ No hay unidades disponibles</h3>
+  <p>Para poder gestionar competencias, primero debes crear las unidades en la página de <strong>Unidades de Aprendizaje</strong>.</p>
+  <a href="{{ url_for('unidades') }}" class="btn btn-primary">Ir a Unidades</a>
+</div>
+
+<form id="form-competencias" action="{{ url_for('guardar_competencias') }}" method="POST" style="display: none;">
+  <div class="info-section">
+    <h3>📋 Información</h3>
+    <p>Asigna <strong>de 1 a 4 competencias</strong> por cada unidad de aprendizaje que has creado.</p>
+    <p><strong>Cada competencia incluye:</strong> Código (RAE/CE secuencial), Título y Descripción detallada.</p>
+  </div>
+  
+  <div id="competencias-container">
+  </div>
+  
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">Guardar Competencias</button>
+  </div>
+  
+  <div id="mensaje" class="mensaje"></div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/competencias.js') }}"></script>
+{% endblock %}
