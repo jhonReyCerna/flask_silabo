@@ -81,6 +81,24 @@ document.addEventListener('DOMContentLoaded', function() {
             border-radius: 5px;
             background-color: #f8f9fa;
         }
+        #link-virtual {
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+        }
+        #link-virtual input[type="url"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        #link-virtual input[type="url"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
     `;
     document.head.appendChild(style);
 });

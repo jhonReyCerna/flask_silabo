@@ -41,6 +41,16 @@ def general():
 def guardar_general():
     """Guarda los datos del formulario general"""
     try:
+        # Validar correo con dominios específicos
+        correo = request.form.get('correo_entry')
+        dominios_permitidos = ['@gmail.com', '@unacvirtual.edu.pe']
+        
+        if not any(correo.lower().endswith(dominio) for dominio in dominios_permitidos):
+            return jsonify({
+                'success': False, 
+                'message': 'El correo debe ser @gmail.com o @unacvirtual.edu.pe'
+            }), 400
+        
         # Manejar días personalizados si se seleccionó horario personalizado
         horario = request.form.get('horario_entry')
         if horario == 'Horario: Personalizado':
@@ -73,6 +83,7 @@ def guardar_general():
             'proposito': request.form.get('proposito_entry'),
             'horario': horario,
             'modalidad': request.form.get('modalidad_entry'),
+            'link_virtual': request.form.get('link_virtual_entry') if request.form.get('modalidad_entry') == 'Virtual' else None,
             'fecha_guardado': datetime.now().isoformat()
         }
         
