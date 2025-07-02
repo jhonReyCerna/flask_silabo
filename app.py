@@ -109,10 +109,78 @@ def api_cargar_general():
 
 @app.route('/unidades')
 def unidades():
-    """Página de unidades (por implementar)"""
-    return render_template('base.html', 
-                         titulo='📚 Unidades de Aprendizaje',
-                         contenido='<p>Módulo de unidades en desarrollo...</p>')
+    """Página del formulario de unidades"""
+    datos = cargar_datos()
+    datos_unidades = datos.get('unidades', {})
+    return render_template('unidades.html', datos=datos_unidades)
+
+@app.route('/guardar_unidades', methods=['POST'])
+def guardar_unidades():
+    """Guarda los datos del formulario de unidades"""
+    try:
+        sesiones_total = int(request.form.get('sesiones'))
+        num_unidades = int(request.form.get('unidades'))
+        
+        # Recopilar datos de cada unidad
+        unidades_detalle = []
+        suma_sesiones = 0
+        
+        for i in range(1, num_unidades + 1):
+            sesiones_unidad = int(request.form.get(f'sesiones_unidad_{i}', 0))
+            suma_sesiones += sesiones_unidad
+            
+            unidad_data = {
+                'numero': i,
+                'nombre': request.form.get(f'nombre_unidad_{i}'),
+                'sesiones': sesiones_unidad,
+                'duracion': int(request.form.get(f'duracion_unidad_{i}', 0)),
+                'logro': request.form.get(f'logro_unidad_{i}'),
+                'contenidos': request.form.get(f'contenidos_unidad_{i}'),
+                'actividades': request.form.get(f'actividades_unidad_{i}')
+            }
+            unidades_detalle.append(unidad_data)
+        
+        # Validar que la suma de sesiones coincida
+        if suma_sesiones != sesiones_total:
+            return jsonify({
+                'success': False,
+                'message': f'Error: La suma de sesiones ({suma_sesiones}) no coincide con el total ({sesiones_total})'
+            }), 400
+        
+        datos_formulario = {
+            'fecha_guardado': datetime.now().isoformat(),
+            'sesiones': sesiones_total,
+            'unidades': num_unidades,
+            'unidades_detalle': unidades_detalle
+        }
+        
+        datos = cargar_datos()
+        datos['unidades'] = datos_formulario
+        
+        guardar_datos(datos)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Datos de {num_unidades} unidades guardados correctamente',
+            'datos': datos_formulario
+        })
+        
+    except ValueError as e:
+        return jsonify({
+            'success': False,
+            'message': 'Error en los datos numéricos proporcionados'
+        }), 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al guardar datos: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_unidades')
+def api_cargar_unidades():
+    """API para cargar datos del formulario de unidades"""
+    datos = cargar_datos()
+    return jsonify(datos.get('unidades', {}))
 
 @app.route('/competencias')
 def competencias():

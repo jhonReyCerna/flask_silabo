@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Unidades de Aprendizaje - Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/unidades.css') }}">
+{% endblock %}
+
+{% block titulo %}📚 Unidades de Aprendizaje{% endblock %}
+
+{% block contenido %}
+<form id="form-unidades" action="{{ url_for('guardar_unidades') }}" method="POST">
+  <div class="form-grid">
+    <div class="form-row">
+      <label for="sesiones">¿Cuántas sesiones son?</label>
+      <input type="number" id="sesiones" name="sesiones" min="1" max="16" value="{{ datos.sesiones or '12' }}" step="1" required />
+    </div>
+    <div class="form-row">
+      <label for="unidades">¿Cuántas unidades son?</label>
+      <input type="number" id="unidades" name="unidades" min="2" max="4" value="{{ datos.unidades or '3' }}" step="1" required />
+    </div>
+  </div>
+  
+  <div id="unidades-container">
+    <!-- Las unidades se generarán dinámicamente aquí -->
+  </div>
+  
+  <div class="form-buttons">
+    <button type="button" id="generar-unidades" class="btn btn-secondary">Generar Formularios de Unidades</button>
+    <button type="submit" class="btn btn-primary" style="display: none;">Guardar Unidades</button>
+  </div>
+  
+  <div id="mensaje" class="mensaje"></div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/unidades.js') }}"></script>
+{% endblock %}
