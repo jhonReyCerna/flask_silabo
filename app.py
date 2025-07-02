@@ -121,7 +121,8 @@ def guardar_unidades():
         sesiones_total = int(request.form.get('sesiones'))
         num_unidades = int(request.form.get('unidades'))
         
-        # Recopilar datos de cada unidad
+        print(f"DEBUG: Guardando unidades - Total sesiones: {sesiones_total}, Num unidades: {num_unidades}")
+        
         unidades_detalle = []
         suma_sesiones = 0
         
@@ -129,7 +130,6 @@ def guardar_unidades():
             sesiones_unidad = int(request.form.get(f'sesiones_unidad_{i}', 0))
             suma_sesiones += sesiones_unidad
             
-            # Obtener instrumentos de evaluación (pueden ser múltiples)
             instrumentos = request.form.getlist(f'instrumento_unidad_{i}[]')
             
             unidad_data = {
@@ -140,8 +140,8 @@ def guardar_unidades():
                 'instrumentos': instrumentos
             }
             unidades_detalle.append(unidad_data)
+            print(f"DEBUG: Unidad {i} - {unidad_data}")
         
-        # Validar que la suma de sesiones coincida
         if suma_sesiones != sesiones_total:
             return jsonify({
                 'success': False,
@@ -149,7 +149,6 @@ def guardar_unidades():
             }), 400
         
         datos_formulario = {
-            'fecha_guardado': datetime.now().isoformat(),
             'sesiones': sesiones_total,
             'unidades': num_unidades,
             'unidades_detalle': unidades_detalle
@@ -159,6 +158,8 @@ def guardar_unidades():
         datos['unidades'] = datos_formulario
         
         guardar_datos(datos)
+        
+        print(f"DEBUG: Datos guardados exitosamente en historial.json")
         
         return jsonify({
             'success': True,
