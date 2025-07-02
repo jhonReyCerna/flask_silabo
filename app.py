@@ -11,7 +11,7 @@ app.template_folder = 'templates'
 app.static_folder = 'static'
 
 # Archivo para almacenar datos (simula una base de datos)
-DATA_FILE = 'silabo_data.json'
+DATA_FILE = 'historial.json'
 
 def cargar_datos():
     """Carga los datos del archivo JSON"""
@@ -65,6 +65,7 @@ def guardar_general():
         
         # Obtener datos del formulario
         datos_formulario = {
+            'fecha_guardado': datetime.now().isoformat(),
             'codigo': request.form.get('codigo_entry'),
             'version': request.form.get('version_entry'),
             'fecha': request.form.get('fecha_entry'),
@@ -83,15 +84,12 @@ def guardar_general():
             'proposito': request.form.get('proposito_entry'),
             'horario': horario,
             'modalidad': request.form.get('modalidad_entry'),
-            'link_virtual': request.form.get('link_virtual_entry') if request.form.get('modalidad_entry') == 'Virtual' else None,
-            'fecha_guardado': datetime.now().isoformat()
+            'link_virtual': request.form.get('link_virtual_entry') if request.form.get('modalidad_entry') == 'Virtual' else None
         }
         
-        # Cargar datos existentes
         datos = cargar_datos()
         datos['general'] = datos_formulario
         
-        # Guardar datos
         guardar_datos(datos)
         
         return jsonify({
@@ -162,7 +160,6 @@ def finalizar():
                          contenido='<p>Módulo de finalización en desarrollo...</p>')
 
 if __name__ == '__main__':
-    # Crear carpetas necesarias si no existen
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static/css', exist_ok=True)
     os.makedirs('static/js', exist_ok=True)
