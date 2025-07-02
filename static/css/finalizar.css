@@ -1,0 +1,149 @@
+.finalizar-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.finalizar-titulo {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: fadeInDown 1s ease-out;
+}
+
+.finalizar-mensaje {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.finalizar-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.finalizar-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.finalizar-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.finalizar-btn:active {
+    transform: translateY(-1px);
+}
+
+/* Botones específicos con colores */
+#modificarBtn:hover {
+    background: rgba(52, 152, 219, 0.8);
+}
+
+#vistaPreviaBtn:hover {
+    background: rgba(155, 89, 182, 0.8);
+}
+
+#generarDocumentoBtn:hover {
+    background: rgba(46, 204, 113, 0.8);
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivo */
+@media (min-width: 768px) {
+    .finalizar-botones {
+        flex-direction: row;
+        justify-content: center;
+        max-width: 100%;
+    }
+    
+    .finalizar-btn {
+        flex: 1;
+        max-width: 200px;
+    }
+}
+
+/* Efectos adicionales */
+.finalizar-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    border-radius: 15px;
+    z-index: -1;
+    animation: gradientShift 3s ease infinite;
+    opacity: 0.7;
+}
+
+@keyframes gradientShift {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+}
+
+/* Mensaje de estado */
+.mensaje-estado {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    backdrop-filter: blur(5px);
+}
+
+.mensaje-estado.success {
+    border-left: 4px solid #2ecc71;
+}
+
+.mensaje-estado.error {
+    border-left: 4px solid #e74c3c;
+}
+
+.mensaje-estado.info {
+    border-left: 4px solid #3498db;
+}

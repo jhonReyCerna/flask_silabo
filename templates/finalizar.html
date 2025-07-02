@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Finalizar Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/finalizar.css') }}">
+{% endblock %}
+
+{% block titulo %}✅ Finalizar Sílabo{% endblock %}
+
+{% block contenido %}
+<div class="finalizar-container">
+  <h1 class="finalizar-titulo">¡Ya casi terminas!</h1>
+  <p class="finalizar-mensaje">
+    Estás en la última etapa. Revisa tu información, haz los cambios necesarios o genera tu documento final.
+  </p>
+  
+  <div class="finalizar-botones">
+    <button class="finalizar-btn" id="modificarBtn">📝 Modificar</button>
+    <button class="finalizar-btn" id="vistaPreviaBtn">👁️ Vista Previa</button>
+    <button class="finalizar-btn" id="generarDocumentoBtn">📄 Generar Documento</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/finalizar.js') }}"></script>
+{% endblock %}

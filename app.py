@@ -154,10 +154,9 @@ def referencias():
 
 @app.route('/finalizar')
 def finalizar():
-    """Página de finalización (por implementar)"""
-    return render_template('base.html', 
-                         titulo='✅ Finalizar',
-                         contenido='<p>Módulo de finalización en desarrollo...</p>')
+    """Página de finalización del sílabo"""
+    datos = cargar_datos()
+    return render_template('finalizar.html', datos=datos)
 
 if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)
