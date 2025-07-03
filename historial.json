@@ -164,5 +164,85 @@
         ]
       }
     ]
+  },
+  "sesiones": {
+    "unidades_sesiones": [
+      {
+        "unidad_numero": 1,
+        "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+        "total_sesiones": 4,
+        "sesiones": [
+          {
+            "numero_sesion": 1,
+            "temario": "Sociabilización del silabo\nFilosofía de Calidad Total.\nFilosofía Kaizen.\nTérminos y definiciones del TPM.\nMetodología del TPM\nMétodos, Técnicas y Herramientas asociados al TPM\nEvolución del TPM.\nAplicabilidad del TPM en las organizaciones"
+          },
+          {
+            "numero_sesion": 2,
+            "temario": "Mejora continua, gestión basada en procesos y ciclo PHVA en industria de procesos y\nmanufactura.\nConvergencia con ISO 9001:2015 y TPM.\nConvergencia con ISO 55000:2024 y TPM.\nConvergencia con ISO 55001:2024 y TPM.\nFramework GFMAM y TPM."
+          },
+          {
+            "numero_sesion": 3,
+            "temario": "Estructura del framework JIMP (4 fases, 12 pasos, 8 pilares).\nLas 16 pérdidas del TPM.\nLas 6 mayores pérdidas.\nBeneficios en P (Productividad), Q (Calidad), C (Costos), D (Entrega), S (Seguridad), M (Moral).\nCasos éxito de implementación del TPM"
+          },
+          {
+            "numero_sesion": 4,
+            "temario": "Las 4 fases del TPM.\nMetodología de los 12 pasos.\nLos 8 pilares del TPM."
+          }
+        ]
+      },
+      {
+        "unidad_numero": 2,
+        "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
+        "total_sesiones": 2,
+        "sesiones": [
+          {
+            "numero_sesion": 5,
+            "temario": "Contexto y partes interesadas de la organización\nProductos y servicios\nVolúmenes de producción\nProcesos de la organización\nAnálisis de la estrategia organizacional\nIdentificación de mudas\nPropuesta de valor del TPM\nDefinición del alcance del TPM\nEstablecimiento de objetivos y metas\nDefinición de estrategias e iniciativas"
+          },
+          {
+            "numero_sesion": 6,
+            "temario": "Creación del mapa estratégico\nAsignación de costos y responsables (matriz RACI)\nEstablecimiento de KPIs y uso del BSC"
+          }
+        ]
+      },
+      {
+        "unidad_numero": 3,
+        "unidad_nombre": "Diseño del Plan Maestro de TPM",
+        "total_sesiones": 4,
+        "sesiones": [
+          {
+            "numero_sesion": 7,
+            "temario": "Plan Maestro: visión general\nPilar  1: Mantenimiento Planificado\nPilar  2: Mantenimiento Autónomo"
+          },
+          {
+            "numero_sesion": 8,
+            "temario": "Pilar 3: Mantenimiento de Calidad\nPilar 4: Mejora Enfocada\nPilar 5: Educación y Entrenamiento"
+          },
+          {
+            "numero_sesion": 9,
+            "temario": "Pilar 6: Mantenimiento en la Etapa Inicial\nPilar 7: Seguridad, Salud y Medio Ambiente\nPilar 8: TPM en Áreas Administrativas"
+          },
+          {
+            "numero_sesion": 10,
+            "temario": "Estructura del Plan Maestro\nRevisión de los 12 pasos de JIM"
+          }
+        ]
+      },
+      {
+        "unidad_numero": 4,
+        "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
+        "total_sesiones": 2,
+        "sesiones": [
+          {
+            "numero_sesion": 11,
+            "temario": "Presentación del trabajo integrador\nVerificación por el docente\nRetroalimentación y discusión"
+          },
+          {
+            "numero_sesion": 12,
+            "temario": "Exposición del trabajo integrador\nValidación por el docente\nDiscusión y mejores prácticas"
+          }
+        ]
+      }
+    ]
   }
 }

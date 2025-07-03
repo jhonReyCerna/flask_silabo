@@ -453,10 +453,116 @@ def api_cargar_unidades_para_productos():
 
 @app.route('/sesiones')
 def sesiones():
-    """Página de sesiones (por implementar)"""
-    return render_template('base.html', 
-                         titulo='📅 Sesiones',
-                         contenido='<p>Módulo de sesiones en desarrollo...</p>')
+    """Página del formulario de sesiones"""
+    datos = cargar_datos()
+    datos_sesiones = datos.get('sesiones', {})
+    return render_template('sesiones.html', datos=datos_sesiones)
+
+@app.route('/guardar_sesiones', methods=['POST'])
+def guardar_sesiones():
+    """Guarda los datos del formulario de sesiones"""
+    try:
+        datos = cargar_datos()
+        unidades_data = datos.get('unidades', {})
+        
+        if not unidades_data or not unidades_data.get('unidades_detalle'):
+            return jsonify({
+                'success': False,
+                'error': 'No se encontraron unidades. Debes crear las unidades primero.'
+            }), 400
+        
+        # Obtener datos JSON del frontend
+        sesiones_data = request.form.get('sesiones_data')
+        if not sesiones_data:
+            return jsonify({
+                'success': False,
+                'error': 'No se recibieron datos de sesiones.'
+            }), 400
+        
+        try:
+            unidades_sesiones = json.loads(sesiones_data)
+        except json.JSONDecodeError:
+            return jsonify({
+                'success': False,
+                'error': 'Datos de sesiones inválidos.'
+            }), 400
+        
+        # Validar estructura de datos
+        for unidad_ses in unidades_sesiones:
+            sesiones = unidad_ses.get('sesiones', [])
+            if not isinstance(sesiones, list) or len(sesiones) < 1:
+                return jsonify({
+                    'success': False,
+                    'error': f'Cada unidad debe tener al menos 1 sesión.'
+                }), 400
+            
+            for sesion in sesiones:
+                if not all(key in sesion for key in ['numero_sesion', 'temario']):
+                    return jsonify({
+                        'success': False,
+                        'error': 'Cada sesión debe tener número y temario.'
+                    }), 400
+        
+        # Guardar en el archivo
+        datos['sesiones'] = {
+            'unidades_sesiones': unidades_sesiones
+        }
+        
+        guardar_datos(datos)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Sesiones guardadas correctamente. Total: {sum(len(u.get("sesiones", [])) for u in unidades_sesiones)} sesiones.'
+        })
+        
+    except Exception as e:
+        print(f"DEBUG: Error al guardar sesiones: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error interno del servidor: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_sesiones')
+def api_cargar_sesiones():
+    """API para cargar datos del formulario de sesiones"""
+    try:
+        datos = cargar_datos()
+        sesiones_data = datos.get('sesiones', {})
+        
+        if sesiones_data and 'unidades_sesiones' in sesiones_data:
+            return jsonify({
+                'success': True,
+                'sesiones': sesiones_data['unidades_sesiones']
+            })
+        else:
+            return jsonify({
+                'success': True,
+                'sesiones': []
+            })
+    except Exception as e:
+        print(f"DEBUG: Error al cargar sesiones: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error al cargar sesiones: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_unidades_para_sesiones')
+def api_cargar_unidades_para_sesiones():
+    """API para cargar las unidades disponibles para sesiones"""
+    datos = cargar_datos()
+    unidades_data = datos.get('unidades', {})
+    
+    if not unidades_data or not unidades_data.get('unidades_detalle'):
+        return jsonify({
+            'success': False,
+            'message': 'No se encontraron unidades. Debes crear las unidades primero.',
+            'unidades': []
+        })
+    
+    return jsonify({
+        'success': True,
+        'unidades': unidades_data['unidades_detalle']
+    })
 
 @app.route('/cronograma')
 def cronograma():

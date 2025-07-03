@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Sesiones - Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sesiones.css') }}">
+{% endblock %}
+
+{% block titulo %}📅 Sesiones{% endblock %}
+
+{% block contenido %}
+<div id="mensaje-sin-unidades" class="mensaje-info" style="display: none;">
+  <h3>⚠️ No hay unidades disponibles</h3>
+  <p>Para poder gestionar sesiones, primero debes crear las unidades en la página de <strong>Unidades de Aprendizaje</strong>.</p>
+  <a href="{{ url_for('unidades') }}" class="btn btn-primary">Ir a Unidades</a>
+</div>
+
+<form id="form-sesiones" action="{{ url_for('guardar_sesiones') }}" method="POST" style="display: none;">
+  <div class="info-section">
+    <h3>📋 Información</h3>
+    <p>Define el <strong>temario de cada sesión individual</strong> basándote en las unidades y distribución de sesiones que creaste.</p>
+    <p><strong>Cada sesión incluye:</strong> Solo el temario/contenido que se desarrollará.</p>
+  </div>
+  
+  <div id="sesiones-container">
+    <!-- Las sesiones se generarán dinámicamente aquí -->
+  </div>
+  
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">Guardar Sesiones</button>
+  </div>
+  
+  <div id="mensaje" class="mensaje"></div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/sesiones.js') }}"></script>
+{% endblock %}
