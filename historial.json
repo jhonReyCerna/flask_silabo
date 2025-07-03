@@ -76,7 +76,7 @@
         "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
         "competencias": [
           {
-            "codigo": "RAE1/CE1",
+            "codigo": "RAE1 (CE1)",
             "titulo": "Fundamentos del TPM según JIMP [Sesión 1, 2, 3 y 4]",
             "descripcion": "Comprende y aplica los conceptos fundamentales del TPM según la metodología JIMP, incluyendo las 4 fases, la metodología de 12 pasos y los 8 pilares, para identificar, describir y analizar los componentes esenciales de una organización (estructura organizativa, procesos y activos) en el contexto deun sistemade gestión de mantenimiento basado en TPM, alineado con normativas como ISO 9001:2015, ISO 55000:2024 e ISO 55001:2024"
           }
@@ -87,7 +87,7 @@
         "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
         "competencias": [
           {
-            "codigo": "RAE2/CE2",
+            "codigo": "RAE2 (CE2)",
             "titulo": "Propuesta de Valor del TPM a la Organización [Sesión  5 y 6] \"",
             "descripcion": "\"Desarrolla una propuesta de valor del TPM para una organización, alineada con los objetivos y estrategia de la organización; incluyendo la identificación de mudas, la definición del alcance del TPM, y utilizando herramientas de gestión como el mapa estratégico, la matriz RACI y el BSC.\""
           }
@@ -98,7 +98,7 @@
         "unidad_nombre": "Diseño del Plan Maestro de TPM",
         "competencias": [
           {
-            "codigo": "RAE3/CE3",
+            "codigo": "RAE3 (CE3)",
             "titulo": "Diseño del Plan Maestro de TPM [Sesión 7, 8, 9 y 10]",
             "descripcion": "Desarrolla un Plan Maestro de TPM que integre los 8 pilares, detallando procesos, actividades, responsables y documentación, y que esté alineado con la metodología de los 12 pasos de JIMP.\""
           }
@@ -109,7 +109,7 @@
         "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
         "competencias": [
           {
-            "codigo": "RAE4/CE4",
+            "codigo": "RAE4 (CE4)",
             "titulo": "Verificación y Validación del Plan Estratégico de TPM [Sesión 11 y 12]",
             "descripcion": "Evalúa y valida el plan estratégico de TPM utilizando matrices de verificación y validación, asegurando alineación con objetivos organizacionales, cumplimiento de normativas (ISO 55001:2024) y coherencia de los 8 pilares con evidencias documentadas."
           }

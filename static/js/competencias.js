@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         competenciaDiv.dataset.unidad = numeroUnidad;
         competenciaDiv.dataset.competencia = numeroCompetencia;
 
-        const codigo = `RAE${contadorGlobalCompetencias}/CE${contadorGlobalCompetencias}`;
+        const codigo = `RAE${contadorGlobalCompetencias} (CE${contadorGlobalCompetencias})`;
         contadorGlobalCompetencias++;
 
         competenciaDiv.innerHTML = `
