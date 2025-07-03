@@ -7,20 +7,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let unidadesDisponibles = [];
     let sesionesGuardadas = [];
 
-    // Cargar datos al inicializar
     cargarUnidadesYSesiones();
 
-    // Event listener para el formulario
     form.addEventListener('submit', guardarSesiones);
 
     function cargarUnidadesYSesiones() {
-        // Primero cargar las unidades disponibles
         fetch('/api/cargar_unidades_para_sesiones')
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.unidades && data.unidades.length > 0) {
                     unidadesDisponibles = data.unidades;
-                    // Luego cargar sesiones guardadas si existen
                     cargarSesionesGuardadas();
                 } else {
                     mostrarMensajeSinUnidades();
@@ -74,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
             contadorSesionGlobal += sesionesUnidad;
         });
 
-        // Cargar datos guardados si existen
         if (sesionesGuardadas.length > 0) {
             cargarDatosGuardados();
         }
@@ -102,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Generar formularios para cada sesión
         const sesionesContainer = unidadDiv.querySelector(`#sesiones_unidad_${numeroUnidad}`);
         for (let i = 0; i < totalSesiones; i++) {
             const numeroSesionGlobal = inicioSesion + i;
