@@ -99,7 +99,7 @@
         "competencias": [
           {
             "codigo": "RAE3/CE3",
-            "titulo": "RAE3 (CE3) Diseño del Plan Maestro de TPM [Sesión 7, 8, 9 y 10]",
+            "titulo": "Diseño del Plan Maestro de TPM [Sesión 7, 8, 9 y 10]",
             "descripcion": "Desarrolla un Plan Maestro de TPM que integre los 8 pilares, detallando procesos, actividades, responsables y documentación, y que esté alineado con la metodología de los 12 pasos de JIMP.\""
           }
         ]
@@ -124,7 +124,7 @@
         "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
         "productos": [
           {
-            "codigo": "PA1/C1",
+            "codigo": "PA1 (C1)",
             "titulo": "Análisis Organizacional para TPM según JIMP",
             "descripcion": "Analiza un caso práctico de una organización industrial para identificar, describir y evaluar sus componentes esenciales (estructura organizativa, procesos clave y portafolio de activos críticos) en relación con la metodología JIMP (4 fases, 12 pasos y 8 pilares) y las normativas ISO 55000:2024 e ISO 55001:2024, con el fin de diseñar un plan preliminar para la implementación de un sistema"
           }
@@ -135,7 +135,7 @@
         "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
         "productos": [
           {
-            "codigo": "PA2/C2",
+            "codigo": "PA2 (C2)",
             "titulo": "Informe Estratégico de Alineación del TPM",
             "descripcion": "\"Elabora un plan maestro detallado que incluya los 8 pilares del TPM, especificando para cada pilar los procesos, actividades, responsables y documentación requerida, siguiendo la metodología de los 12 pasos de JIMP.\""
           }
@@ -146,7 +146,7 @@
         "unidad_nombre": "Diseño del Plan Maestro de TPM",
         "productos": [
           {
-            "codigo": "PA3/C3",
+            "codigo": "PA3 (C3)",
             "titulo": "Desarrollo del Plan Maestro de TPM",
             "descripcion": "Evalúa críticamente un plan estratégico de TPM utilizando matrices de verificación y validación, aplicando criterios como alineación con objetivos organizacionales, cumplimiento normativo (ISO 55001:2024), coherencia interna y viabilidad técnica, para asegurar su efectividad y completitud."
           }
@@ -157,7 +157,7 @@
         "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
         "productos": [
           {
-            "codigo": "PA4/C4",
+            "codigo": "PA4 (C4)",
             "titulo": "Presentación Final del Plan de TPM",
             "descripcion": "Presentar y defender un plan estratégico de TPM revisado, que incorpore mejoras basadas en la retroalimentación del docente y las mejores prácticas discutidas, demostrando cómo cumple con los criterios de verificación y validación y se alinea con los objetivos organizacionales."
           }

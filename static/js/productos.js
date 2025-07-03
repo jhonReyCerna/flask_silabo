@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         productoDiv.dataset.unidad = numeroUnidad;
         productoDiv.dataset.producto = numeroProducto;
 
-        const codigo = `PA${contadorGlobalProductos}/C${contadorGlobalProductos}`;
+        const codigo = `PA${contadorGlobalProductos} (C${contadorGlobalProductos})`;
         contadorGlobalProductos++;
 
         productoDiv.innerHTML = `
