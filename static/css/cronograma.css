@@ -1,0 +1,228 @@
+/* Estilos específicos para el cronograma */
+
+.info-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #007bff;
+}
+
+.info-section h3 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.info-resumen {
+  background-color: white;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  margin-top: 15px;
+}
+
+.info-resumen h4 {
+  color: #495057;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.info-resumen ul {
+  margin: 5px 0;
+  padding-left: 20px;
+}
+
+.info-resumen li {
+  margin: 3px 0;
+}
+
+.fecha-inicio-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 20px;
+}
+
+.fecha-inicio-section .form-row {
+  margin-bottom: 15px;
+}
+
+.fecha-inicio-section label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.fecha-inicio-section input[type="date"] {
+  width: 200px;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.fecha-inicio-section input[type="date"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.cronograma-table-container {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.cronograma-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.cronograma-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid #0056b3;
+}
+
+.cronograma-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: top;
+}
+
+.cronograma-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.cronograma-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cronograma-table .sesion-numero {
+  font-weight: bold;
+  color: #007bff;
+  text-align: center;
+  width: 80px;
+}
+
+.cronograma-table .unidad-info {
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.cronograma-table .dia-nombre {
+  font-weight: bold;
+  color: #495057;
+}
+
+.cronograma-table .fecha-valor {
+  color: #6c757d;
+  font-size: 13px;
+}
+
+.cronograma-table .horas-valor {
+  text-align: center;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.mensaje-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #bee5eb;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mensaje-info h3 {
+  color: #0c5460;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.mensaje-info ul {
+  text-align: left;
+  max-width: 400px;
+  margin: 15px auto;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.form-buttons {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.mensaje {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.mensaje.exito {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.mensaje.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .cronograma-table-container {
+    overflow-x: auto;
+  }
+  
+  .cronograma-table {
+    min-width: 600px;
+  }
+  
+  .fecha-inicio-section input[type="date"] {
+    width: 100%;
+  }
+}

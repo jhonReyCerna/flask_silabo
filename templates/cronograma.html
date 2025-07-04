@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Cronograma - Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cronograma.css') }}">
+{% endblock %}
+
+{% block titulo %}⏰ Cronograma{% endblock %}
+
+{% block contenido %}
+<div id="mensaje-sin-datos" class="mensaje-info" style="display: none;">
+  <h3>⚠️ Datos insuficientes para generar cronograma</h3>
+  <p>Para poder generar el cronograma, necesitas tener completado:</p>
+  <ul>
+    <li><strong>Información General:</strong> Horario/días de clase</li>
+    <li><strong>Unidades de Aprendizaje:</strong> Distribución de sesiones</li>
+  </ul>
+  <a href="{{ url_for('general') }}" class="btn btn-primary">Ir a General</a>
+</div>
+
+<form id="form-cronograma" action="{{ url_for('guardar_cronograma') }}" method="POST" style="display: none;">
+  <div class="info-section">
+    <h3>📋 Información del Cronograma</h3>
+    <p>Selecciona la <strong>fecha de inicio</strong> y el sistema calculará automáticamente las fechas de cada sesión basándose en el horario definido.</p>
+    <div id="info-resumen" class="info-resumen">
+      <!-- Se cargará dinámicamente -->
+    </div>
+  </div>
+  
+  <div class="fecha-inicio-section">
+    <div class="form-row">
+      <label for="fecha-inicio">📅 Fecha de Inicio de Clases:</label>
+      <input type="date" id="fecha-inicio" name="fecha_inicio" required>
+    </div>
+    <button type="button" id="generar-cronograma" class="btn btn-secondary">Generar Cronograma</button>
+  </div>
+  
+  <div id="cronograma-container" style="display: none;">
+    <h3>📊 Cronograma de Sesiones</h3>
+    <div class="cronograma-table-container">
+      <table id="cronograma-table" class="cronograma-table">
+        <thead>
+          <tr>
+            <th>Sesión</th>
+            <th>Unidad</th>
+            <th>Día</th>
+            <th>Fecha</th>
+            <th>Horas</th>
+          </tr>
+        </thead>
+        <tbody id="cronograma-tbody">
+          <!-- Se generará dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="form-buttons" id="form-buttons" style="display: none;">
+    <button type="submit" class="btn btn-primary">Guardar Cronograma</button>
+  </div>
+  
+  <div id="mensaje" class="mensaje"></div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/cronograma.js') }}"></script>
+{% endblock %}

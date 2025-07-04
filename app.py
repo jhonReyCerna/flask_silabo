@@ -566,10 +566,78 @@ def api_cargar_unidades_para_sesiones():
 
 @app.route('/cronograma')
 def cronograma():
-    """Página de cronograma (por implementar)"""
-    return render_template('base.html', 
-                         titulo='⏰ Cronograma',
-                         contenido='<p>Módulo de cronograma en desarrollo...</p>')
+    """Página de cronograma"""
+    return render_template('cronograma.html')
+
+@app.route('/guardar_cronograma', methods=['POST'])
+def guardar_cronograma():
+    """Guarda los datos del cronograma"""
+    try:
+        fecha_inicio = request.form.get('fecha_inicio')
+        cronograma_data = request.form.get('cronograma')
+        
+        if not fecha_inicio:
+            return jsonify({
+                'success': False,
+                'message': 'Fecha de inicio es requerida'
+            }), 400
+        
+        cronograma_list = []
+        if cronograma_data:
+            import json
+            cronograma_list = json.loads(cronograma_data)
+        
+        datos_cronograma = {
+            'fecha_inicio': fecha_inicio,
+            'cronograma': cronograma_list
+        }
+        
+        datos = cargar_datos()
+        datos['cronograma'] = datos_cronograma
+        
+        guardar_datos(datos)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Cronograma guardado correctamente',
+            'datos': datos_cronograma
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al guardar cronograma: {str(e)}'
+        }), 500
+
+@app.route('/api/cargar_cronograma')
+def api_cargar_cronograma():
+    """API para cargar datos del cronograma"""
+    datos = cargar_datos()
+    return jsonify({
+        'success': True,
+        'data': datos.get('cronograma', {})
+    })
+
+@app.route('/api/cargar_unidades_para_cronograma')
+def api_cargar_unidades_para_cronograma():
+    """API para cargar datos de unidades para el cronograma"""
+    datos = cargar_datos()
+    unidades_data = datos.get('unidades', {})
+    
+    # Transformar los datos para el cronograma
+    unidades_list = []
+    if 'unidades_detalle' in unidades_data:
+        for i, unidad in enumerate(unidades_data['unidades_detalle']):
+            unidades_list.append({
+                'numero': i + 1,
+                'nombre': unidad.get('nombre', f'Unidad {i + 1}'),
+                'sesiones': unidad.get('sesiones', 0)
+            })
+    
+    return jsonify({
+        'success': True,
+        'data': unidades_list
+    })
 
 @app.route('/referencias')
 def referencias():
