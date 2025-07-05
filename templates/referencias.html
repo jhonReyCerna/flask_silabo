@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Referencias - Sílabo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/referencias.css') }}">
+{% endblock %}
+
+{% block titulo %}📚 Referencias{% endblock %}
+
+{% block contenido %}
+<form id="form-referencias" action="{{ url_for('guardar_referencias') }}" method="POST">
+  <div class="info-section">
+    <h3>📋 Información</h3>
+    <p>Agrega las <strong>referencias bibliográficas</strong> según el formato APA correspondiente a cada tipo.</p>
+    <p><strong>Puedes agregar múltiples referencias de cada tipo</strong> - todos los campos son de ingreso manual.</p>
+  </div>
+  
+  <div class="info-formatos">
+    <h4>📖 Formatos de Referencia:</h4>
+    <p><strong>Libro:</strong> Apellido, N. (Año). <em>Título del libro en cursiva</em>. Editorial.</p>
+    <p><strong>Artículo:</strong> Apellido, N., & Apellido, N. (Año). Título del artículo. <em>Nombre de la revista en cursiva</em>, volumen(número), páginas. https://doi.org/xxxxx</p>
+    <p><strong>Web:</strong> Autor. (Año, día mes). Título de la página. <em>Sitio web</em>. URL</p>
+  </div>
+  
+  <div id="referencias-container">
+    <div class="tipo-referencia" id="libros-section">
+      <div class="tipo-header">
+        <span>📖</span>
+        <span>Libros</span>
+      </div>
+      <div class="tipo-content">
+        <div id="libros-lista" class="referencias-lista">
+        </div>
+        <div class="agregar-referencia">
+          <button type="button" class="btn-agregar-referencia" onclick="agregarReferencia('libros')">
+            Agregar Libro
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tipo-referencia" id="articulos-section">
+      <div class="tipo-header">
+        <span>📄</span>
+        <span>Artículos de Revista</span>
+      </div>
+      <div class="tipo-content">
+        <div id="articulos-lista" class="referencias-lista">
+        </div>
+        <div class="agregar-referencia">
+          <button type="button" class="btn-agregar-referencia" onclick="agregarReferencia('articulos')">
+            Agregar Artículo
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tipo-referencia" id="web-section">
+      <div class="tipo-header">
+        <span>🌐</span>
+        <span>Páginas Web</span>
+      </div>
+      <div class="tipo-content">
+        <div id="web-lista" class="referencias-lista">
+        </div>
+        <div class="agregar-referencia">
+          <button type="button" class="btn-agregar-referencia" onclick="agregarReferencia('web')">
+            Agregar Página Web
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">Guardar Referencias</button>
+  </div>
+  
+  <div id="mensaje" class="mensaje"></div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/referencias.js') }}"></script>
+{% endblock %}

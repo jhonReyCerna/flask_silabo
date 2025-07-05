@@ -641,10 +641,63 @@ def api_cargar_unidades_para_cronograma():
 
 @app.route('/referencias')
 def referencias():
-    """Página de referencias (por implementar)"""
-    return render_template('base.html', 
-                         titulo='🔗 Referencias',
-                         contenido='<p>Módulo de referencias en desarrollo...</p>')
+    """Página de referencias bibliográficas"""
+    datos = cargar_datos()
+    referencias_data = datos.get('referencias', {})
+    return render_template('referencias.html', datos=referencias_data)
+
+@app.route('/guardar_referencias', methods=['POST'])
+def guardar_referencias():
+    """Guarda las referencias bibliográficas"""
+    try:
+        referencias_data = request.get_json()
+        
+        # Cargar datos existentes
+        datos = cargar_datos()
+        
+        # Actualizar referencias
+        datos['referencias'] = {
+            'fecha_guardado': datetime.now().isoformat(),
+            'libros': referencias_data.get('libros', []),
+            'articulos': referencias_data.get('articulos', []),
+            'web': referencias_data.get('web', [])
+        }
+        
+        # Guardar datos
+        guardar_datos(datos)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Referencias guardadas exitosamente'
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al guardar referencias: {str(e)}'
+        })
+
+@app.route('/api/cargar_referencias')
+def cargar_referencias():
+    """Carga las referencias guardadas"""
+    try:
+        datos = cargar_datos()
+        referencias = datos.get('referencias', {})
+        
+        return jsonify({
+            'success': True,
+            'referencias': {
+                'libros': referencias.get('libros', []),
+                'articulos': referencias.get('articulos', []),
+                'web': referencias.get('web', [])
+            }
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al cargar referencias: {str(e)}'
+        })
 
 @app.route('/finalizar')
 def finalizar():
