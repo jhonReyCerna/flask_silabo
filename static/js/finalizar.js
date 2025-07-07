@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const generarDocumentoBtn = document.getElementById('generarDocumentoBtn');
     const verHistorialBtn = document.getElementById('verHistorialBtn');
 
-    // Sistema de notificaciones mejorado
     function mostrarNotificacion(titulo, mensaje, tipo = 'info', duracion = 5000) {
         const iconos = {
             success: '✅',
@@ -47,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Agregar estilos de animación si no existen
         if (!document.getElementById('notificacionStyles')) {
             const style = document.createElement('style');
             style.id = 'notificacionStyles';
@@ -79,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(notificacion);
         
-        // Auto-remove después de la duración especificada
         setTimeout(() => {
             if (notificacion.parentElement) {
                 notificacion.style.animation = 'slideOutRight 0.3s ease-out';
@@ -92,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, duracion);
     }
     
-    // Mejorar la función mostrarMensaje existente
     function mostrarMensajeMejorado(texto, tipo = 'info') {
         const titulos = {
             success: 'Éxito',
@@ -103,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         mostrarNotificacion(titulos[tipo], texto, tipo);
         
-        // Mantener el comportamiento anterior para compatibilidad
         mostrarMensaje(texto, tipo);
     }
 
@@ -196,27 +191,27 @@ document.addEventListener('DOMContentLoaded', function() {
             <body>
                 <div class="header">
                     <h1>UNIVERSIDAD UNAC</h1>
-                    <h2>SÍLABO - ${datos.asignatura || 'Sin Asignatura'}</h2>
+                    <h2>SÍLABO - ${datos.general?.asignatura || 'Sin Asignatura'}</h2>
                     <p>Generado el: ${new Date().toLocaleDateString('es-ES')}</p>
                 </div>
                 
                 <div class="grid">
                     <div class="seccion">
                         <h3>📝 Información General</h3>
-                        <div class="campo"><span class="label">Código:</span> <span class="valor">${datos.codigo || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Versión:</span> <span class="valor">${datos.version || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Fecha:</span> <span class="valor">${datos.fecha || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Maestría:</span> <span class="valor">${datos.maestria || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Asignatura:</span> <span class="valor">${datos.asignatura || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Semestre:</span> <span class="valor">2025-${datos.semestre || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Código:</span> <span class="valor">${datos.general?.codigo || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Versión:</span> <span class="valor">${datos.general?.version || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Fecha:</span> <span class="valor">${datos.general?.fecha || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Maestría:</span> <span class="valor">${datos.general?.maestria || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Asignatura:</span> <span class="valor">${datos.general?.asignatura || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Semestre:</span> <span class="valor">2025-${datos.general?.semestre || 'N/A'}</span></div>
                     </div>
                     
                     <div class="seccion">
                         <h3>👨‍🏫 Información del Docente</h3>
-                        <div class="campo"><span class="label">Docente:</span> <span class="valor">${datos.docente || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Correo:</span> <span class="valor">${datos.correo || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Modalidad:</span> <span class="valor">${datos.modalidad || 'N/A'}</span></div>
-                        ${datos.link_virtual ? `<div class="campo"><span class="label">Link Virtual:</span> <span class="valor">${datos.link_virtual}</span></div>` : ''}
+                        <div class="campo"><span class="label">Docente:</span> <span class="valor">${datos.general?.docente || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Correo:</span> <span class="valor">${datos.general?.correo || 'N/A'}</span></div>
+                        <div class="campo"><span class="label">Modalidad:</span> <span class="valor">${datos.general?.modalidad || 'N/A'}</span></div>
+                        ${datos.general?.link_virtual ? `<div class="campo"><span class="label">Link Virtual:</span> <span class="valor">${datos.general.link_virtual}</span></div>` : ''}
                     </div>
                 </div>
                 
@@ -366,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (data.success) {
                 const registros = data.historial.registros_completados || [];
-                registrosDisponibles = registros; // Guardar para uso posterior
+                registrosDisponibles = registros; 
                 
                 let historialHtml = `
                     <div class="finalizar-container" style="max-width: 1400px;">
@@ -414,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (registros.length === 0) {
                     historialHtml += '<p style="color: #666; text-align: center; padding: 40px;">No hay registros completados anteriormente.</p>';
                 } else {
-                    // Obtener maestrías únicas para el filtro
                     const maestriasUnicas = [...new Set(registros.map(r => r.general?.maestria).filter(m => m))];
                     
                     historialHtml += `
@@ -432,7 +426,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             <tbody>
                     `;
                     
-                    // Almacenar maestrías únicas para el filtro
                     window.maestriasUnicas = maestriasUnicas;
                     
                     registros.forEach((registro, index) => {
@@ -486,7 +479,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 configurarEstadisticas();
                 configurarPaginacion();
                 
-                // Agregar sistema de ayuda después de que se cargue el DOM
                 setTimeout(() => {
                     agregarAyudaContextual();
                     cargarPreferenciasUsuario();
@@ -531,7 +523,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.add('seleccionada');
                 filaSeleccionada = parseInt(this.getAttribute('data-index'));
                 
-                // Habilitar botones
                 botonLlenar.style.opacity = '1';
                 botonLlenar.style.pointerEvents = 'auto';
                 botonPreview.style.opacity = '1';
@@ -596,7 +587,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const filtroMaestria = document.getElementById('filtroMaestria');
         const limpiarFiltros = document.getElementById('limpiarFiltros');
         
-        // Poblar el select de maestrías
         const maestriaSelect = document.getElementById('filtroMaestria');
         if (window.maestriasUnicas) {
             window.maestriasUnicas.forEach(maestria => {
@@ -607,7 +597,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Función para filtrar registros
         function filtrarRegistros() {
             const valorAsignatura = filtroAsignatura.value.toLowerCase();
             const valorDocente = filtroDocente.value.toLowerCase();
@@ -627,11 +616,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return coincideAsignatura && coincideDocente && coincideMaestria;
             });
             
-            // Resetear a la primera página y mostrar resultados filtrados
             paginaActual = 1;
             mostrarPagina(1);
             
-            // Limpiar selección
             filaSeleccionada = null;
             const botonLlenar = document.getElementById('llenarFormularioBtn');
             const botonPreview = document.getElementById('previewBtn');
@@ -645,7 +632,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Eventos de filtrado
         filtroAsignatura.addEventListener('input', () => {
             filtrarRegistros();
             guardarPreferenciasUsuario();
@@ -659,7 +645,6 @@ document.addEventListener('DOMContentLoaded', function() {
             guardarPreferenciasUsuario();
         });
         
-        // Limpiar filtros
         limpiarFiltros.addEventListener('click', () => {
             filtroAsignatura.value = '';
             filtroDocente.value = '';
@@ -681,7 +666,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function exportarHistorialCSV() {
         try {
-            // Usar registros filtrados en lugar de filas visibles
             const registrosAExportar = registrosFiltrados;
             
             if (registrosAExportar.length === 0) {
@@ -689,7 +673,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Crear el CSV
             const headers = ['Asignatura', 'Código', 'Docente', 'Maestría', 'Semestre', 'Fecha Finalización', 'Créditos', 'Modalidad'];
             let csvContent = headers.join(',') + '\n';
             
@@ -714,7 +697,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 csvContent += row.join(',') + '\n';
             });
             
-            // Crear y descargar el archivo
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -752,7 +734,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const referencias = registro.referencias || {};
         const metadatos = registro.metadatos || {};
         
-        // Crear modal de preview
         const modalHTML = `
             <div id="previewModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center;">
                 <div style="background: white; width: 90%; max-width: 800px; max-height: 80%; overflow-y: auto; border-radius: 12px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
@@ -791,7 +772,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
                                 <h3 style="margin: 0 0 10px 0; color: #856404;">📚 Secciones Completadas</h3>
                                 <p>✅ Competencias: ${(() => {
-                                    // Contar competencias totales en todas las unidades
+                                    
                                     let totalCompetencias = 0;
                                     if (competencias && typeof competencias === 'object') {
                                         Object.values(competencias).forEach(unidadComp => {
@@ -811,7 +792,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     return 'Sin datos';
                                 })()}</p>
                                 <p>✅ Productos: ${(() => {
-                                    // Contar productos totales en todas las unidades
+                                    
                                     let totalProductos = 0;
                                     if (productos && typeof productos === 'object') {
                                         Object.values(productos).forEach(unidadProd => {
@@ -833,7 +814,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p>✅ Referencias: ${(() => {
                                     let totalReferencias = 0;
                                     if (referencias && typeof referencias === 'object') {
-                                        // Contar libros, artículos y web
                                         if (Array.isArray(referencias.libros)) totalReferencias += referencias.libros.length;
                                         if (Array.isArray(referencias.articulos)) totalReferencias += referencias.articulos.length;
                                         if (Array.isArray(referencias.web)) totalReferencias += referencias.web.length;
@@ -844,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div style="background: #d1ecf1; padding: 15px; border-radius: 8px; border-left: 4px solid #17a2b8;">
                                 <h3 style="margin: 0 0 10px 0; color: #0c5460;">ℹ️ Metadatos</h3>
                                 <p><strong>Finalizado:</strong> ${metadatos.fecha_finalizacion ? new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES') : 'N/A'}</p>
-                                <p><strong>Versión:</strong> ${metadatos.version || 'N/A'}</p>
+                                <p><strong>Versión:</strong> ${general.version || 'N/A'}</p>
                                 <p><strong>Estado:</strong> ${metadatos.estado || 'N/A'}</p>
                             </div>
                         </div>
@@ -864,7 +844,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         
-        // Eventos del modal
         document.getElementById('closePreviewModal').addEventListener('click', cerrarPreviewModal);
         document.getElementById('cerrarPreview').addEventListener('click', cerrarPreviewModal);
         document.getElementById('cargarDesdePreview').addEventListener('click', () => {
@@ -872,7 +851,6 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmarCargarRegistro();
         });
         
-        // Cerrar al hacer clic fuera del modal
         document.getElementById('previewModal').addEventListener('click', (e) => {
             if (e.target.id === 'previewModal') {
                 cerrarPreviewModal();
@@ -896,7 +874,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const registro = registrosDisponibles[filaSeleccionada];
         const general = registro.general || {};
         
-        // Crear modal de confirmación
         const modalHTML = `
             <div id="confirmModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center;">
                 <div style="background: white; width: 90%; max-width: 500px; border-radius: 12px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
@@ -930,7 +907,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         
-        // Eventos del modal
         document.getElementById('confirmarCarga').addEventListener('click', () => {
             cerrarConfirmModal();
             llenarFormularioDesdeHistorial();
@@ -938,7 +914,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.getElementById('cancelarCarga').addEventListener('click', cerrarConfirmModal);
         
-        // Cerrar al hacer clic fuera del modal
         document.getElementById('confirmModal').addEventListener('click', (e) => {
             if (e.target.id === 'confirmModal') {
                 cerrarConfirmModal();
@@ -976,7 +951,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 const stats = data.estadisticas;
                 
-                // Crear modal de estadísticas
                 const modalHTML = `
                     <div id="estadisticasModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center;">
                         <div style="background: white; width: 95%; max-width: 1000px; max-height: 85%; overflow-y: auto; border-radius: 12px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
@@ -1064,12 +1038,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 document.body.insertAdjacentHTML('beforeend', modalHTML);
                 
-                // Eventos del modal
                 document.getElementById('closeStatsModal').addEventListener('click', cerrarEstadisticasModal);
                 document.getElementById('cerrarEstadisticas').addEventListener('click', cerrarEstadisticasModal);
                 document.getElementById('exportarEstadisticas').addEventListener('click', () => exportarEstadisticasCSV(stats));
                 
-                // Cerrar al hacer clic fuera del modal
                 document.getElementById('estadisticasModal').addEventListener('click', (e) => {
                     if (e.target.id === 'estadisticasModal') {
                         cerrarEstadisticasModal();
@@ -1098,27 +1070,22 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             let csvContent = 'Tipo,Categoria,Cantidad\n';
             
-            // Agregar maestrías
             Object.entries(stats.maestrias).forEach(([maestria, count]) => {
                 csvContent += `"Maestría","${maestria}","${count}"\n`;
             });
             
-            // Agregar docentes
             Object.entries(stats.docentes).forEach(([docente, count]) => {
                 csvContent += `"Docente","${docente}","${count}"\n`;
             });
             
-            // Agregar modalidades
             Object.entries(stats.modalidades).forEach(([modalidad, count]) => {
                 csvContent += `"Modalidad","${modalidad}","${count}"\n`;
             });
             
-            // Agregar actividad mensual
             Object.entries(stats.por_mes).forEach(([mes, count]) => {
                 csvContent += `"Mes","${mes}","${count}"\n`;
             });
             
-            // Crear y descargar el archivo
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -1141,7 +1108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Configuración de paginación
     function configurarPaginacion() {
         registrosFiltrados = [...registrosDisponibles];
         mostrarPagina(1);
@@ -1154,7 +1120,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const totalPaginas = Math.ceil(registrosFiltrados.length / registrosPorPagina);
         
-        // Actualizar tabla
         const tbody = document.querySelector('#historialTable tbody');
         if (tbody) {
             tbody.innerHTML = '';
@@ -1186,14 +1151,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 tbody.innerHTML += fila;
             });
             
-            // Reconfigurar eventos de selección
             configurarSeleccionFilas();
         }
         
-        // Actualizar controles de paginación
         actualizarControlesPaginacion(numeroPagina, totalPaginas);
         
-        // Actualizar contador
         const contadorElement = document.querySelector('.finalizar-container p strong');
         if (contadorElement) {
             const mostrandoDesde = inicio + 1;
@@ -1216,7 +1178,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div style="display: flex; gap: 5px;">
             `;
             
-            // Mostrar números de página
             for (let i = 1; i <= totalPaginas; i++) {
                 if (i === paginaActual) {
                     paginacionHTML += `
@@ -1246,7 +1207,6 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
         
-        // Agregar o actualizar controles de paginación
         let paginacionContainer = document.getElementById('paginacionContainer');
         if (!paginacionContainer) {
             paginacionContainer = document.createElement('div');
@@ -1256,7 +1216,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         paginacionContainer.innerHTML = paginacionHTML;
         
-        // Eventos de paginación
         if (totalPaginas > 1) {
             document.getElementById('paginaAnterior')?.addEventListener('click', () => {
                 if (paginaActual > 1) {
@@ -1279,15 +1238,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Configurar atajos de teclado
     document.addEventListener('keydown', function(e) {
-        // Ctrl+H para abrir historial
         if (e.ctrlKey && e.key === 'h') {
             e.preventDefault();
             verHistorialBtn.click();
         }
         
-        // Escape para cerrar modales
         if (e.key === 'Escape') {
             const modales = ['previewModal', 'confirmModal', 'estadisticasModal'];
             modales.forEach(modalId => {
@@ -1298,7 +1254,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Enter para confirmar acciones en modales
         if (e.key === 'Enter') {
             const confirmBtn = document.getElementById('confirmarCarga');
             const cargarBtn = document.getElementById('cargarDesdePreview');
@@ -1311,7 +1266,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Sistema de ayuda contextual
     function agregarAyudaContextual() {
         const ayudas = {
             'verHistorialBtn': {
@@ -1370,7 +1324,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(tooltip);
         
-        // Posicionar tooltip
         const rect = e.target.getBoundingClientRect();
         const tooltipRect = tooltip.getBoundingClientRect();
         
@@ -1384,7 +1337,6 @@ document.addEventListener('DOMContentLoaded', function() {
             left = rect.left + (rect.width - tooltipRect.width) / 2;
         }
         
-        // Ajustar si se sale de la pantalla
         if (left < 10) left = 10;
         if (left + tooltipRect.width > window.innerWidth - 10) {
             left = window.innerWidth - tooltipRect.width - 10;
@@ -1403,7 +1355,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     agregarAyudaContextual();
     
-    // Auto-guardar preferencias del usuario
     function guardarPreferenciasUsuario() {
         const preferencias = {
             filtroAsignatura: document.getElementById('filtroAsignatura')?.value || '',
@@ -1422,7 +1373,6 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const prefs = JSON.parse(preferencias);
                 
-                // Aplicar filtros guardados
                 setTimeout(() => {
                     const filtroAsignatura = document.getElementById('filtroAsignatura');
                     const filtroDocente = document.getElementById('filtroDocente');
@@ -1438,9 +1388,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         filtroMaestria.value = prefs.filtroMaestria;
                     }
                     
-                    // Aplicar filtros si hay valores
                     if (prefs.filtroAsignatura || prefs.filtroDocente || prefs.filtroMaestria) {
-                        // Trigger filter function
                         if (filtroAsignatura) {
                             filtroAsignatura.dispatchEvent(new Event('input'));
                         }
@@ -1453,11 +1401,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Función para limpiar preferencias
     function limpiarPreferenciasUsuario() {
         localStorage.removeItem('historialPreferencias');
     }
     
-    // Cargar preferencias al inicio
     cargarPreferenciasUsuario();
 });
