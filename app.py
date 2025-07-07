@@ -871,6 +871,131 @@ def cargar_registro_desde_historial():
             'message': f'Error al cargar registro: {str(e)}'
         })
 
+@app.route('/api/filtrar_historial', methods=['POST'])
+def api_filtrar_historial():
+    """API para filtrar y buscar en el historial"""
+    try:
+        data = request.json
+        asignatura_filtro = data.get('asignatura', '').lower()
+        docente_filtro = data.get('docente', '').lower() 
+        maestria_filtro = data.get('maestria', '').lower()
+        fecha_desde = data.get('fecha_desde')
+        fecha_hasta = data.get('fecha_hasta')
+        
+        historial = cargar_historial_completo()
+        registros = historial.get('registros_completados', [])
+        
+        registros_filtrados = []
+        
+        for registro in registros:
+            general = registro.get('general', {})
+            metadatos = registro.get('metadatos', {})
+            
+            # Filtros de texto
+            asignatura_coincide = not asignatura_filtro or asignatura_filtro in general.get('asignatura', '').lower()
+            docente_coincide = not docente_filtro or docente_filtro in general.get('docente', '').lower()
+            maestria_coincide = not maestria_filtro or maestria_filtro in general.get('maestria', '').lower()
+            
+            # Filtros de fecha
+            fecha_coincide = True
+            if fecha_desde or fecha_hasta:
+                fecha_finalizacion = metadatos.get('fecha_finalizacion')
+                if fecha_finalizacion:
+                    fecha_reg = datetime.fromisoformat(fecha_finalizacion).date()
+                    if fecha_desde:
+                        fecha_coincide = fecha_coincide and fecha_reg >= datetime.fromisoformat(fecha_desde).date()
+                    if fecha_hasta:
+                        fecha_coincide = fecha_coincide and fecha_reg <= datetime.fromisoformat(fecha_hasta).date()
+                else:
+                    fecha_coincide = False
+            
+            if asignatura_coincide and docente_coincide and maestria_coincide and fecha_coincide:
+                registros_filtrados.append(registro)
+        
+        # Estadísticas
+        maestrias_unicas = list(set(r.get('general', {}).get('maestria', '') for r in registros_filtrados if r.get('general', {}).get('maestria')))
+        docentes_unicos = list(set(r.get('general', {}).get('docente', '') for r in registros_filtrados if r.get('general', {}).get('docente')))
+        
+        return jsonify({
+            'success': True,
+            'registros_filtrados': registros_filtrados,
+            'total_filtrados': len(registros_filtrados),
+            'total_original': len(registros),
+            'estadisticas': {
+                'maestrias_unicas': maestrias_unicas,
+                'docentes_unicos': docentes_unicos
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al filtrar historial: {str(e)}'
+        })
+
+@app.route('/api/estadisticas_historial')
+def api_estadisticas_historial():
+    """API para obtener estadísticas del historial"""
+    try:
+        historial = cargar_historial_completo()
+        registros = historial.get('registros_completados', [])
+        
+        if not registros:
+            return jsonify({
+                'success': True,
+                'estadisticas': {
+                    'total_registros': 0,
+                    'maestrias': {},
+                    'docentes': {},
+                    'por_mes': {},
+                    'modalidades': {}
+                }
+            })
+        
+        # Análisis por maestría
+        maestrias = {}
+        for registro in registros:
+            maestria = registro.get('general', {}).get('maestria', 'Sin especificar')
+            maestrias[maestria] = maestrias.get(maestria, 0) + 1
+        
+        # Análisis por docente
+        docentes = {}
+        for registro in registros:
+            docente = registro.get('general', {}).get('docente', 'Sin especificar')
+            docentes[docente] = docentes.get(docente, 0) + 1
+        
+        # Análisis por mes
+        por_mes = {}
+        for registro in registros:
+            fecha_finalizacion = registro.get('metadatos', {}).get('fecha_finalizacion')
+            if fecha_finalizacion:
+                fecha = datetime.fromisoformat(fecha_finalizacion)
+                mes_año = fecha.strftime('%Y-%m')
+                por_mes[mes_año] = por_mes.get(mes_año, 0) + 1
+        
+        # Análisis por modalidad
+        modalidades = {}
+        for registro in registros:
+            modalidad = registro.get('general', {}).get('modalidad', 'Sin especificar')
+            modalidades[modalidad] = modalidades.get(modalidad, 0) + 1
+        
+        return jsonify({
+            'success': True,
+            'estadisticas': {
+                'total_registros': len(registros),
+                'maestrias': maestrias,
+                'docentes': docentes,
+                'por_mes': por_mes,
+                'modalidades': modalidades
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al obtener estadísticas: {str(e)}'
+        })
+
 if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static/css', exist_ok=True)
