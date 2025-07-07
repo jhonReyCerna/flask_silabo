@@ -141,13 +141,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     vistaPreviaBtn.addEventListener('click', async function() {
-        mostrarMensaje('👁️ Cargando vista previa...', 'info');
+        const boton = this;
+        const textoOriginal = boton.textContent;
         
-        const datos = await cargarDatos();
-        if (datos && Object.keys(datos).length > 0) {
-            mostrarVistaPrevia(datos);
-        } else {
-            mostrarMensaje('❌ No hay datos para mostrar. Complete el formulario general primero.', 'error');
+        try {
+            boton.textContent = 'Cargando...';
+            boton.disabled = true;
+            
+            mostrarMensaje('👁️ Cargando vista previa del documento Word...', 'info');
+            
+            // Abrir vista previa del documento Word
+            const ventanaPrevia = window.open('/vista_previa_word', '_blank', 'width=1000,height=700,scrollbars=yes,toolbar=yes,location=yes,status=yes,menubar=yes,resizable=yes');
+            
+            if (!ventanaPrevia) {
+                throw new Error('No se pudo abrir la ventana de vista previa. Por favor, habilite las ventanas emergentes para este sitio.');
+            }
+            
+            mostrarNotificacion('Vista Previa', 'Vista previa del documento Word abierta en una nueva ventana', 'success');
+            
+        } catch (error) {
+            console.error('Error al mostrar vista previa:', error);
+            mostrarMensaje('❌ Error al cargar la vista previa: ' + error.message, 'error');
+        } finally {
+            boton.textContent = textoOriginal;
+            boton.disabled = false;
         }
     });
 
@@ -166,90 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mostrarMensaje('📋 Cargando historial...', 'info');
         await mostrarHistorial();
     });
-
-    function mostrarVistaPrevia(datos) {
-        const ventanaPrevia = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-        
-        const htmlPrevia = `
-            <!DOCTYPE html>
-            <html lang="es">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Vista Previa - Sílabo</title>
-                <style>
-                    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-                    .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
-                    .seccion { margin-bottom: 20px; }
-                    .campo { margin-bottom: 10px; }
-                    .label { font-weight: bold; color: #333; }
-                    .valor { color: #666; }
-                    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-                    @media print { body { margin: 0; } }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <h1>UNIVERSIDAD UNAC</h1>
-                    <h2>SÍLABO - ${datos.general?.asignatura || 'Sin Asignatura'}</h2>
-                    <p>Generado el: ${new Date().toLocaleDateString('es-ES')}</p>
-                </div>
-                
-                <div class="grid">
-                    <div class="seccion">
-                        <h3>📝 Información General</h3>
-                        <div class="campo"><span class="label">Código:</span> <span class="valor">${datos.general?.codigo || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Versión:</span> <span class="valor">${datos.general?.version || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Fecha:</span> <span class="valor">${datos.general?.fecha || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Maestría:</span> <span class="valor">${datos.general?.maestria || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Asignatura:</span> <span class="valor">${datos.general?.asignatura || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Semestre:</span> <span class="valor">2025-${datos.general?.semestre || 'N/A'}</span></div>
-                    </div>
-                    
-                    <div class="seccion">
-                        <h3>👨‍🏫 Información del Docente</h3>
-                        <div class="campo"><span class="label">Docente:</span> <span class="valor">${datos.general?.docente || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Correo:</span> <span class="valor">${datos.general?.correo || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Modalidad:</span> <span class="valor">${datos.general?.modalidad || 'N/A'}</span></div>
-                        ${datos.general?.link_virtual ? `<div class="campo"><span class="label">Link Virtual:</span> <span class="valor">${datos.general.link_virtual}</span></div>` : ''}
-                    </div>
-                </div>
-                
-                <div class="grid">
-                    <div class="seccion">
-                        <h3>⏱️ Información Académica</h3>
-                        <div class="campo"><span class="label">Horas Teoría:</span> <span class="valor">${datos.horas_teoria || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Horas Práctica:</span> <span class="valor">${datos.horas_practica || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Créditos:</span> <span class="valor">${datos.creditos || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Sesiones:</span> <span class="valor">${datos.sesiones || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Semanas:</span> <span class="valor">${datos.semanas || 'N/A'}</span></div>
-                    </div>
-                    
-                    <div class="seccion">
-                        <h3>📚 Detalles del Curso</h3>
-                        <div class="campo"><span class="label">Código del Posgrado:</span> <span class="valor">${datos.codigo_programa || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Carácter:</span> <span class="valor">${datos.caracter || 'N/A'}</span></div>
-                        <div class="campo"><span class="label">Horario:</span> <span class="valor">${datos.horario || 'N/A'}</span></div>
-                    </div>
-                </div>
-                
-                <div class="seccion">
-                    <h3>🎯 Propósito del Curso</h3>
-                    <p>${datos.proposito || 'No especificado'}</p>
-                </div>
-                
-                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center; color: #666;">
-                    <small>Documento generado automáticamente por el Sistema de Sílabos UNAC</small>
-                </div>
-            </body>
-            </html>
-        `;
-        
-        ventanaPrevia.document.write(htmlPrevia);
-        ventanaPrevia.document.close();
-        
-        mostrarMensaje('✅ Vista previa generada correctamente', 'success');
-    }
 
     async function generarDocumento(datos) {
         try {

@@ -891,12 +891,10 @@ def api_filtrar_historial():
             general = registro.get('general', {})
             metadatos = registro.get('metadatos', {})
             
-            # Filtros de texto
             asignatura_coincide = not asignatura_filtro or asignatura_filtro in general.get('asignatura', '').lower()
             docente_coincide = not docente_filtro or docente_filtro in general.get('docente', '').lower()
             maestria_coincide = not maestria_filtro or maestria_filtro in general.get('maestria', '').lower()
             
-            # Filtros de fecha
             fecha_coincide = True
             if fecha_desde or fecha_hasta:
                 fecha_finalizacion = metadatos.get('fecha_finalizacion')
@@ -912,7 +910,7 @@ def api_filtrar_historial():
             if asignatura_coincide and docente_coincide and maestria_coincide and fecha_coincide:
                 registros_filtrados.append(registro)
         
-        # Estadísticas
+
         maestrias_unicas = list(set(r.get('general', {}).get('maestria', '') for r in registros_filtrados if r.get('general', {}).get('maestria')))
         docentes_unicos = list(set(r.get('general', {}).get('docente', '') for r in registros_filtrados if r.get('general', {}).get('docente')))
         
@@ -995,6 +993,724 @@ def api_estadisticas_historial():
             'success': False,
             'message': f'Error al obtener estadísticas: {str(e)}'
         })
+
+@app.route('/vista_previa_word')
+def vista_previa_word():
+    """Genera una vista previa HTML del documento Word que se va a generar"""
+    try:
+        datos = cargar_datos()
+        
+        datos_procesados = {
+            'general': datos.get('general', {}),
+            'unidades': datos.get('unidades', {}),
+            'competencias': datos.get('competencias', {}),
+            'productos': datos.get('productos', {}),
+            'sesiones': datos.get('sesiones', {}),
+            'cronograma': datos.get('cronograma', {}),
+            'referencias': datos.get('referencias', {})
+        }
+        
+        html_preview = generar_html_vista_previa(datos_procesados)
+        
+        return html_preview
+        
+    except Exception as e:
+        return f"""
+        <html>
+            <head>
+                <title>Error - Vista Previa</title>
+                <style>
+                    body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                    .error {{ color: red; background: #ffe6e6; padding: 20px; border-radius: 5px; }}
+                </style>
+            </head>
+            <body>
+                <div class="error">
+                    <h2>Error al generar vista previa</h2>
+                    <p>{str(e)}</p>
+                </div>
+            </body>
+        </html>
+        """
+
+def generar_html_vista_previa(datos):
+    """Genera el HTML de vista previa que simula exactamente el documento Word"""
+    general = datos.get('general', {})
+    unidades = datos.get('unidades', {})
+    competencias = datos.get('competencias', {})
+    productos = datos.get('productos', {})
+    sesiones = datos.get('sesiones', {})
+    cronograma = datos.get('cronograma', {})
+    referencias = datos.get('referencias', {})
+    
+    programa = general.get('maestria', '[PROGRAMA]')
+    asignatura = general.get('asignatura', '[ASIGNATURA]')
+    semestre = general.get('semestre', '[SEMESTRE]')
+    docente = general.get('docente', '[DOCENTE]')
+    codigo = general.get('codigo', '[CÓDIGO]')
+    version = general.get('version', '[VERSIÓN]')
+    fecha = general.get('fecha', '[FECHA]')
+    correo = general.get('correo', '[CORREO]')
+    modalidad = general.get('modalidad', '[MODALIDAD]')
+    proposito = general.get('proposito', '[PROPÓSITO DE LA ASIGNATURA]')
+    caracter = general.get('caracter', '[CARÁCTER]')
+    codigo_programa = general.get('codigo_programa', '[CÓDIGO PROGRAMA]')
+    
+    horas_teoria = general.get('horas_teoria', 0)
+    horas_practica = general.get('horas_practica', 0)
+    creditos = general.get('creditos', 0)
+    sesiones_total = general.get('sesiones', 0)
+    semanas = general.get('semanas', 0)
+    
+    horas_totales = int(horas_teoria) + int(horas_practica)
+    
+    encabezado_tabla = f"""
+    <div class="header-table">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <tr>
+                <td rowspan="4" style="width: 100px; border: 1px solid #000; text-align: center; vertical-align: middle; padding: 5px;">
+                    <div style="width: 75px; height: 60px; border: 1px solid #ccc; display: inline-block; text-align: center; line-height: 60px; color: #666; font-size: 10px;">LOGO UC</div>
+                </td>
+                <td colspan="5" style="border: 1px solid #000; background-color: #B7D6F0; text-align: center; padding: 5px; font-weight: bold; font-size: 11px;">
+                    FORMACIÓN ACADÉMICA Y PROFESIONAL
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: middle;">PROCESO NIVEL 0:</td>
+                <td colspan="3" style="border: 1px solid #000; padding: 5px; font-size: 8px; text-align: center; vertical-align: middle;">ENSEÑANZA – APRENDIZAJE</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: middle;">REGISTRO</td>
+                <td colspan="3" style="border: 1px solid #000; padding: 5px; font-size: 8px; text-align: center; vertical-align: middle;">FORMATO DE SÍLABO</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: top;">Código: {codigo}</td>
+                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Versión: {version}</td>
+                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Fecha: {fecha}</td>
+                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Página: 1 de 1</td>
+            </tr>
+        </table>
+    </div>
+    """
+    
+    if isinstance(unidades, dict):
+        unidades_detalle = unidades.get('unidades_detalle', [])
+    else:
+        unidades_detalle = []
+    
+    unidades_html = ""
+    for i, unidad in enumerate(unidades_detalle, 1):
+        if isinstance(unidad, dict):
+            nombre = unidad.get('nombre', f'Unidad {i}')
+            descripcion = unidad.get('descripcion', 'Sin descripción')
+            if ':' in descripcion:
+                partes = descripcion.split(':', 1)
+                descripcion = partes[0] + ': ' + partes[1].strip().capitalize()
+            unidades_html += f"""
+            <p style="margin: 6px 0;"><strong>Unidad {i}:</strong> {descripcion}</p>
+            """
+    
+    competencias_html = ""
+    if isinstance(competencias, dict) and competencias:
+        for unidad_num, comp_unidad in competencias.items():
+            if comp_unidad and isinstance(comp_unidad, list):
+                for comp in comp_unidad:
+                    if isinstance(comp, dict):
+                        codigo_comp = comp.get('codigo', '')
+                        titulo = comp.get('titulo', '')
+                        descripcion_comp = comp.get('descripcion', '')
+                        competencias_html += f"""
+                        <div style="margin: 6px 0; margin-left: 1.3cm;">
+                            <p style="margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;">
+                                {codigo_comp} {titulo}:
+                            </p>
+                            <p style="margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;">
+                                {descripcion_comp}
+                            </p>
+                        </div>
+                        """
+    
+    productos_html = ""
+    if isinstance(productos, dict) and productos:
+        for unidad_num, prod_unidad in productos.items():
+            if prod_unidad and isinstance(prod_unidad, list):
+                for prod in prod_unidad:
+                    if isinstance(prod, dict):
+                        codigo_prod = prod.get('codigo', '')
+                        titulo_prod = prod.get('titulo', '')
+                        descripcion_prod = prod.get('descripcion', '')
+                        productos_html += f"""
+                        <div style="margin: 6px 0; margin-left: 1.3cm;">
+                            <p style="margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;">
+                                {codigo_prod} {titulo_prod}:
+                            </p>
+                            <p style="margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;">
+                                {descripcion_prod}
+                            </p>
+                        </div>
+                        """
+    
+    sesiones_html = ""
+    if isinstance(sesiones, dict) and sesiones and unidades_detalle:
+        contador_sesion = 1
+        for i, unidad in enumerate(unidades_detalle, 1):
+            unidad_num = str(i)
+            if unidad_num in sesiones:
+                sesiones_unidad = sesiones[unidad_num]
+                if isinstance(unidad, dict):
+                    nombre_unidad = unidad.get('nombre', f'Unidad {i}')
+                else:
+                    nombre_unidad = f'Unidad {i}'
+                fecha_inicio = "01/03/2025"  
+                fecha_termino = "28/03/2025" 
+                
+
+                sesiones_html += f"""
+                <div style="page-break-inside: avoid; margin-bottom: 20px;">
+                    <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #000; background-color: #f0f0f0; padding: 8px; font-weight: bold; text-align: center; font-size: 12pt;">
+                                UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 11pt;">
+                                Fecha de inicio: {fecha_inicio} &nbsp;&nbsp;&nbsp; Fecha de término: {fecha_termino}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 11pt;">
+                                Resultado de aprendizaje específico {i}:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
+                                SEMANA/ SESIÓN
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
+                                FECHA
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 40%;">
+                                TEMARIO/ACTIVIDAD
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
+                                DURACIÓN
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
+                                MODALIDAD
+                            </td>
+                        </tr>
+                """
+                
+                for sesion in sesiones_unidad:
+                    if isinstance(sesion, dict):
+                        tema = sesion.get('tema', 'Sin tema definido')
+                    else:
+                        tema = 'Sin tema definido'
+                    sesiones_html += f"""
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                                {contador_sesion}
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                                01/03/2025
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; vertical-align: top; text-align: justify;">
+                                {tema}
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                                4 horas
+                            </td>
+                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                                {modalidad}
+                            </td>
+                        </tr>
+                    """
+                    contador_sesion += 1
+                
+                sesiones_html += """
+                    </table>
+                </div>
+                """
+    
+    referencias_html = ""
+    if isinstance(referencias, dict) and referencias:
+        if referencias.get('libros'):
+            referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Libros:</p>"
+            for i, libro in enumerate(referencias['libros'], 1):
+                if isinstance(libro, dict):
+                    autores = []
+                    for autor in libro.get('autores', []):
+                        if isinstance(autor, dict):
+                            nombre = autor.get('nombre', '')
+                            apellido = autor.get('apellido', '')
+                            if apellido and nombre:
+                                autores.append(f"{apellido}, {nombre[0]}.")
+                    
+                    autores_str = " & ".join(autores) if autores else "Autor desconocido"
+                    referencias_html += f"""
+                    <p style="margin: 3px 0 3px 0.5in; text-align: justify; font-size: 11pt;">
+                        {i}. {autores_str} ({libro.get('año', 'S.f.')}). <em>{libro.get('titulo', '')}</em>. {libro.get('editorial', '')}.
+                    </p>
+                    """
+        
+        if referencias.get('articulos'):
+            referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Artículos de revista:</p>"
+            for i, articulo in enumerate(referencias['articulos'], 1):
+                if isinstance(articulo, dict):
+                    autores = []
+                    for autor in articulo.get('autores', []):
+                        if isinstance(autor, dict):
+                            nombre = autor.get('nombre', '')
+                            apellido = autor.get('apellido', '')
+                            if apellido and nombre:
+                                autores.append(f"{apellido}, {nombre[0]}.")
+                    
+                    autores_str = " & ".join(autores) if autores else "Autor desconocido"
+                    referencias_html += f"""
+                    <p style="margin: 3px 0 3px 0.5in; text-align: justify; font-size: 11pt;">
+                        {i}. {autores_str} ({articulo.get('año', 'S.f.')}). {articulo.get('titulo', '')}. <em>{articulo.get('revista', '')}</em>, {articulo.get('volumen', '')}({articulo.get('numero', '')}), {articulo.get('paginas', '')}. {articulo.get('doi', '')}
+                    </p>
+                    """
+        
+        if referencias.get('web'):
+            referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Recursos web:</p>"
+            for i, web in enumerate(referencias['web'], 1):
+                if isinstance(web, dict):
+                    referencias_html += f"""
+                    <p style="margin: 3px 0 3px 0.5in; text-align: justify; font-size: 11pt;">
+                        {i}. {web.get('autor', 'Autor desconocido')} ({web.get('año', 'S.f.')}). {web.get('titulo', '')}. <em>{web.get('sitio', '')}</em>. {web.get('url', '')}
+                    </p>
+                    """
+    
+    cronograma_html = ""
+    if isinstance(cronograma, dict) and cronograma and cronograma.get('semanas'):
+        cronograma_html += """
+        <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+            <tr>
+                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
+                    SEMANA
+                </td>
+                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
+                    FECHA
+                </td>
+                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 50%;">
+                    ACTIVIDAD
+                </td>
+                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 20%;">
+                    OBSERVACIONES
+                </td>
+            </tr>
+        """
+        
+        semanas_cronograma = cronograma.get('semanas', [])
+        for i, semana in enumerate(semanas_cronograma, 1):
+            if isinstance(semana, dict):
+                fecha = semana.get('fecha', f'Semana {i}')
+                actividad = semana.get('actividad', 'Actividad de aprendizaje')
+                observaciones = semana.get('observaciones', '')
+            else:
+                fecha = f'Semana {i}'
+                actividad = 'Actividad de aprendizaje'
+                observaciones = ''
+            
+            cronograma_html += f"""
+            <tr>
+                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                    {i}
+                </td>
+                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                    {fecha}
+                </td>
+                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; vertical-align: top; text-align: justify;">
+                    {actividad}
+                </td>
+                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
+                    {observaciones}
+                </td>
+            </tr>
+            """
+        
+        cronograma_html += "</table>"
+    
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vista Previa - Sílabo {asignatura}</title>
+        <link rel="stylesheet" href="/static/css/vista_previa.css">
+        <style>
+            body {{
+                font-family: 'Times New Roman', serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }}
+            .document {{
+                max-width: 21cm;
+                margin: 0 auto;
+                background: white;
+                padding: 2.5cm;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                min-height: 29.7cm;
+            }}
+            .header {{
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #333;
+                padding-bottom: 20px;
+            }}
+            .header h1 {{
+                font-size: 22pt;
+                margin: 10px 0;
+                font-weight: bold;
+            }}
+            .header h2 {{
+                font-size: 18pt;
+                margin: 5px 0;
+                font-weight: bold;
+            }}
+            .header h3 {{
+                font-size: 14pt;
+                margin: 5px 0;
+                font-weight: bold;
+            }}
+            .header .programa {{
+                font-size: 14pt;
+                margin: 10px 0;
+                font-weight: bold;
+            }}
+            .header .info {{
+                font-size: 14pt;
+                margin: 5px 0;
+                text-align: left;
+                font-weight: bold;
+            }}
+            .header .ubicacion {{
+                font-size: 18pt;
+                margin: 15px 0;
+                font-weight: bold;
+            }}
+            .section {{
+                margin-bottom: 25px;
+            }}
+            .section h3 {{
+                font-size: 12pt;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #000;
+            }}
+            .section h4 {{
+                font-size: 11pt;
+                font-weight: bold;
+                margin-bottom: 8px;
+                color: #000;
+            }}
+            .data-table {{
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }}
+            .data-table td {{
+                border: 1px solid #000;
+                padding: 8px;
+                font-size: 11pt;
+                vertical-align: top;
+            }}
+            .data-table td:first-child {{
+                width: 50px;
+                text-align: left;
+                font-weight: bold;
+            }}
+            .data-table td:nth-child(2) {{
+                width: 200px;
+                font-weight: bold;
+            }}
+            .data-table td:nth-child(3) {{
+                width: auto;
+            }}
+            .content {{
+                font-size: 12pt;
+                text-align: justify;
+                margin-bottom: 15px;
+            }}
+            .content p {{
+                margin-bottom: 10px;
+            }}
+            .lista {{
+                margin-left: 20px;
+            }}
+            .lista li {{
+                margin-bottom: 5px;
+            }}
+            .page-break {{
+                page-break-before: always;
+            }}
+            .logo {{
+                width: 1.8in;
+                height: auto;
+                margin: 10px 0;
+            }}
+            .centrado {{
+                text-align: center;
+            }}
+            .titulo-silabo {{
+                font-size: 36pt;
+                font-weight: bold;
+                margin: 20px 0;
+                text-align: center;
+            }}
+            .preview-toolbar {{
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 1000;
+            }}
+            .preview-toolbar button {{
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                margin: 0 5px;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 12px;
+            }}
+            .preview-toolbar button:hover {{
+                background: #45a049;
+            }}
+            .no-data {{
+                color: #999;
+                font-style: italic;
+            }}
+            @media print {{
+                body {{ margin: 0; padding: 0; background: white; }}
+                .document {{ box-shadow: none; margin: 0; padding: 2.5cm; }}
+                .preview-toolbar {{ display: none; }}
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="preview-toolbar">
+            <button onclick="window.print()" title="Imprimir">🖨️ Imprimir</button>
+            <button onclick="window.close()" title="Cerrar">❌ Cerrar</button>
+        </div>
+        
+        <div class="document">
+            <!-- Portada -->
+            <div class="header">
+                <h1>UNIVERSIDAD NACIONAL DEL CALLAO</h1>
+                <h2>ESCUELA DE POSGRADO DE LA UNAC</h2>
+                <h3>UNIDAD DE POSGRADO DE LA FACULTAD DE INGENIERÍA MECÁNICA Y DE ENERGÍA</h3>
+                
+                <div class="centrado">
+                    <div style="margin: 20px 0;">
+                        <div style="width: 1.8in; height: 100px; border: 1px solid #ccc; display: inline-block; text-align: center; line-height: 100px; color: #666;">LOGO UNAC</div>
+                    </div>
+                </div>
+                
+                <div class="titulo-silabo">SÍLABO</div>
+                
+                <div class="programa">PROGRAMA DE POSGRADO:</div>
+                <div class="programa">MAESTRÍA EN {programa.upper()}</div>
+                <div class="info">ASIGNATURA: {asignatura.upper()}</div>
+                <div class="info">SEMESTRE ACADÉMICO: 2025 - {semestre.upper()}</div>
+                <div class="info">DOCENTE: {docente.upper()}</div>
+                
+                <div class="ubicacion">
+                    <br>
+                    CALLAO, PERÚ<br>
+                    2025
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+            
+            <!-- Contenido del Sílabo -->
+            <div class="centrado">
+                <h2 style="font-size: 16pt; margin-bottom: 20px;">SÍLABO</h2>
+            </div>
+            
+            <div class="section">
+                <h3>I. DATOS GENERALES</h3>
+                <table class="data-table">
+                    <tr>
+                        <td>1.1</td>
+                        <td>Asignatura</td>
+                        <td>{asignatura.title()}</td>
+                    </tr>
+                    <tr>
+                        <td>1.2</td>
+                        <td>Código</td>
+                        <td>{codigo.upper()}</td>
+                    </tr>
+                    <tr>
+                        <td>1.3</td>
+                        <td>Carácter</td>
+                        <td>{caracter}</td>
+                    </tr>
+                    <tr>
+                        <td>1.4</td>
+                        <td>Requisito (nombre y código)</td>
+                        <td>Ninguno</td>
+                    </tr>
+                    <tr>
+                        <td>1.5</td>
+                        <td>Ciclo</td>
+                        <td>I</td>
+                    </tr>
+                    <tr>
+                        <td>1.6</td>
+                        <td>Semestre académico</td>
+                        <td>{semestre}</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">1.7</td>
+                        <td>Número de horas de clase</td>
+                        <td>{horas_totales} horas semanales.</td>
+                    </tr>
+                    <tr>
+                        <td>Horas de teoría</td>
+                        <td>{horas_teoria} horas semanales.</td>
+                    </tr>
+                    <tr>
+                        <td>Horas de práctica</td>
+                        <td>{horas_practica} horas semanales.</td>
+                    </tr>
+                    <tr>
+                        <td>1.8</td>
+                        <td>Número de créditos</td>
+                        <td>{creditos}</td>
+                    </tr>
+                    <tr>
+                        <td>1.9</td>
+                        <td>Duración</td>
+                        <td>{sesiones_total} sesiones {semanas} semanas</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">1.10</td>
+                        <td>Docente(s)</td>
+                        <td>{docente.title()}</td>
+                    </tr>
+                    <tr>
+                        <td>Correo electrónico institucional</td>
+                        <td>{correo}</td>
+                    </tr>
+                    <tr>
+                        <td>1.11</td>
+                        <td>Modalidad</td>
+                        <td>{modalidad}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h3>II. SUMILLA</h3>
+                <div class="content">
+                    <p>La asignatura de {asignatura.title()} pertenece al módulo curricular de estudios de especialidad, es de naturaleza teórico-práctico y de carácter {caracter.lower()}, tiene por propósito {proposito}</p>
+                    <p>La asignatura se organiza en cuatro unidades de aprendizaje:</p>
+                    {unidades_html if unidades_html else '<p class="no-data">No se han definido unidades de aprendizaje.</p>'}
+                </div>
+            </div>
+            
+            {f'''
+            <div class="section">
+                <h3>III. COMPETENCIAS Y CAPACIDADES</h3>
+                <div class="content">
+                    {competencias_html}
+                </div>
+            </div>
+            ''' if competencias_html else '''
+            <div class="section">
+                <h3>III. COMPETENCIAS Y CAPACIDADES</h3>
+                <div class="content">
+                    <p class="no-data">No se han definido competencias.</p>
+                </div>
+            </div>
+            '''}
+            
+            {f'''
+            <div class="section">
+                <h3>IV. PRODUCTOS ACADÉMICOS</h3>
+                <div class="content">
+                    {productos_html}
+                </div>
+            </div>
+            ''' if productos_html else '''
+            <div class="section">
+                <h3>IV. PRODUCTOS ACADÉMICOS</h3>
+                <div class="content">
+                    <p class="no-data">No se han definido productos académicos.</p>
+                </div>
+            </div>
+            '''}
+            
+            {f'''
+            <div class="section">
+                <h3>V. PROGRAMACIÓN DE SESIONES</h3>
+                <div class="content">
+                    {sesiones_html}
+                </div>
+            </div>
+            ''' if sesiones_html else '''
+            <div class="section">
+                <h3>V. PROGRAMACIÓN DE SESIONES</h3>
+                <div class="content">
+                    <p class="no-data">No se han definido sesiones.</p>
+                </div>
+            </div>
+            '''}
+            
+            {f'''
+            <div class="section">
+                <h3>VI. CRONOGRAMA</h3>
+                <div class="content">
+                    {cronograma_html}
+                </div>
+            </div>
+            ''' if cronograma_html else '''
+            <div class="section">
+                <h3>VI. CRONOGRAMA</h3>
+                <div class="content">
+                    <p class="no-data">No se ha generado el cronograma.</p>
+                </div>
+            </div>
+            '''}
+            
+            {f'''
+            <div class="section">
+                <h3>VII. REFERENCIAS BIBLIOGRÁFICAS</h3>
+                <div class="content">
+                    {referencias_html}
+                </div>
+            </div>
+            ''' if referencias_html else '''
+            <div class="section">
+                <h3>VII. REFERENCIAS BIBLIOGRÁFICAS</h3>
+                <div class="content">
+                    <p class="no-data">No se han agregado referencias bibliográficas.</p>
+                </div>
+            </div>
+            '''}
+            
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 10pt;">
+                <p><strong>Documento generado automáticamente por el Sistema de Sílabos UNAC</strong></p>
+                <p>Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}</p>
+                <p><em>Esta es una vista previa del documento Word que se generará</em></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    return html_content
 
 if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)

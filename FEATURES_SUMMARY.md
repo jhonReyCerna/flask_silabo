@@ -28,6 +28,15 @@ Se ha implementado un sistema completo de historial de sílabos con característ
 - **Estado de Completitud**: Indica qué secciones están completas
 - **Cargar Directo**: Botón para cargar desde la vista previa
 
+### 👁️ **Vista Previa del Documento Word**
+- **Vista Previa Realista**: Muestra exactamente cómo se verá el documento Word final
+- **Formato Profesional**: Simula la estructura y formato del documento oficial
+- **Todas las Secciones**: Incluye portada, datos generales, sumilla, competencias, productos, sesiones, cronograma y referencias
+- **Encabezado Oficial**: Reproduce el encabezado con logo y datos de la universidad
+- **Toolbar Funcional**: Botones para imprimir y cerrar la vista previa
+- **Responsive**: Se adapta a diferentes tamaños de pantalla
+- **Preparado para Impresión**: Optimizado para imprimir directamente desde el navegador
+
 ### ⚠️ **Sistema de Confirmación**
 - **Confirmación Obligatoria**: Modal de confirmación antes de sobrescribir datos
 - **Información del Registro**: Muestra detalles del registro a cargar
