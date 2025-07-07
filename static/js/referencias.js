@@ -233,10 +233,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         container.appendChild(referenciaDiv);
 
-        if (datos && datos.autores && datos.autores.length > 0) {
-            datos.autores.forEach((autor, index) => {
-                agregarAutor(tipo, numero, autor);
-            });
+        if (datos && datos.autores) {
+            let autoresArray = [];
+            
+            if (typeof datos.autores === 'object' && !Array.isArray(datos.autores)) {
+                const claves = Object.keys(datos.autores).sort((a, b) => parseInt(a) - parseInt(b));
+                autoresArray = claves.map(clave => datos.autores[clave]);
+            } 
+            else if (Array.isArray(datos.autores)) {
+                autoresArray = datos.autores;
+            }
+            
+            if (autoresArray.length > 0) {
+                autoresArray.forEach((autor, index) => {
+                    agregarAutor(tipo, numero, autor);
+                });
+            } else {
+                agregarAutor(tipo, numero);
+            }
         } else {
             agregarAutor(tipo, numero);
         }
@@ -388,9 +402,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const referenciasFormateadas = {
-            libros: datos.libros ? Object.values(datos.libros) : [],
-            articulos: datos.articulos ? Object.values(datos.articulos) : [],
-            web: datos.web ? Object.values(datos.web) : []
+            libros: datos.libros ? Object.values(datos.libros).map(libro => {
+                if (libro.autores && typeof libro.autores === 'object' && !Array.isArray(libro.autores)) {
+                    libro.autores = Object.values(libro.autores);
+                }
+                return libro;
+            }) : [],
+            articulos: datos.articulos ? Object.values(datos.articulos).map(articulo => {
+                if (articulo.autores && typeof articulo.autores === 'object' && !Array.isArray(articulo.autores)) {
+                    articulo.autores = Object.values(articulo.autores);
+                }
+                return articulo;
+            }) : [],
+            web: datos.web ? Object.values(datos.web).map(web => {
+                if (web.autores && typeof web.autores === 'object' && !Array.isArray(web.autores)) {
+                    web.autores = Object.values(web.autores);
+                }
+                return web;
+            }) : []
         };
         
         fetch('/guardar_referencias', {
