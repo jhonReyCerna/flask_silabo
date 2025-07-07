@@ -261,28 +261,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 let historialHtml = `
                     <div class="finalizar-container">
                         <h1 class="finalizar-titulo">📋 Historial de Sílabos</h1>
-                        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white; color: black; margin: 20px 0;">
+                        <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; background: white; color: black; margin: 20px 0;">
                 `;
                 
                 if (registros.length === 0) {
-                    historialHtml += '<p style="color: #666; text-align: center; padding: 20px;">No hay registros completados anteriormente.</p>';
+                    historialHtml += '<p style="color: #666; text-align: center; padding: 40px;">No hay registros completados anteriormente.</p>';
                 } else {
+                    historialHtml += `
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <thead>
+                                <tr style="background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                    <th style="padding: 12px; text-align: left; border-right: 1px solid #dee2e6; color: #333; font-weight: bold;">📚 Asignatura</th>
+                                    <th style="padding: 12px; text-align: left; border-right: 1px solid #dee2e6; color: #333; font-weight: bold;">🔢 Código</th>
+                                    <th style="padding: 12px; text-align: left; border-right: 1px solid #dee2e6; color: #333; font-weight: bold;">👨‍🏫 Docente</th>
+                                    <th style="padding: 12px; text-align: left; border-right: 1px solid #dee2e6; color: #333; font-weight: bold;">🎓 Maestría</th>
+                                    <th style="padding: 12px; text-align: left; border-right: 1px solid #dee2e6; color: #333; font-weight: bold;">📅 Semestre</th>
+                                    <th style="padding: 12px; text-align: left; color: #333; font-weight: bold;">✅ Finalizado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
                     registros.forEach((registro, index) => {
                         const general = registro.general || {};
                         const metadatos = registro.metadatos || {};
+                        const fechaFinalizacion = metadatos.fecha_finalizacion ? 
+                            new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            }) : 'N/A';
+                        
+                        const backgroundColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
                         
                         historialHtml += `
-                            <div style="border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 10px;">
-                                <h4 style="color: #333; margin: 0 0 10px 0;">📚 ${general.asignatura || 'Sin nombre'}</h4>
-                                <p style="margin: 5px 0; color: #666;"><strong>Código:</strong> ${general.codigo || 'N/A'}</p>
-                                <p style="margin: 5px 0; color: #666;"><strong>Docente:</strong> ${general.docente || 'N/A'}</p>
-                                <p style="margin: 5px 0; color: #666;"><strong>Finalizado:</strong> ${metadatos.fecha_finalizacion ? new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES') : 'N/A'}</p>
-                            </div>
+                            <tr style="background-color: ${backgroundColor}; border-bottom: 1px solid #dee2e6;">
+                                <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #333; font-weight: 500;">${general.asignatura || 'Sin nombre'}</td>
+                                <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #666;">${general.codigo || 'N/A'}</td>
+                                <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #666;">${general.docente || 'N/A'}</td>
+                                <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #666;">${general.maestria || 'N/A'}</td>
+                                <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #666;">2025-${general.semestre || 'N/A'}</td>
+                                <td style="padding: 12px; color: #28a745; font-weight: 500;">${fechaFinalizacion}</td>
+                            </tr>
                         `;
                     });
+                    
+                    historialHtml += `
+                            </tbody>
+                        </table>
+                    `;
                 }
                 
                 historialHtml += `
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <p style="color: #333; font-size: 16px; margin-bottom: 20px; background-color: #e8f5e8; padding: 15px 25px; border-radius: 12px; display: inline-block; border: 2px solid #4caf50; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                📊 Total de registros: <strong style="background-color: #4caf50; color: white; padding: 8px 16px; border-radius: 20px; font-size: 18px; margin-left: 10px;">${registros.length}</strong>
+                            </p>
                         </div>
                         <div class="finalizar-botones">
                             <button class="finalizar-btn" onclick="location.reload()">🔙 Volver</button>
