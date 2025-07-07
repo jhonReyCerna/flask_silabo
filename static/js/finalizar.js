@@ -250,6 +250,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    let registrosDisponibles = [];
+    let filaSeleccionada = null;
+
     async function mostrarHistorial() {
         try {
             const response = await fetch('/api/historial');
@@ -257,10 +260,21 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (data.success) {
                 const registros = data.historial.registros_completados || [];
+                registrosDisponibles = registros; // Guardar para uso posterior
                 
                 let historialHtml = `
                     <div class="finalizar-container">
                         <h1 class="finalizar-titulo">📋 Historial de Sílabos</h1>
+                        <div style="margin-bottom: 20px;">
+                            <p style="color: #333; font-size: 16px; text-align: center; margin-bottom: 15px; background-color: #e3f2fd; padding: 12px; border-radius: 8px; border: 1px solid #bbdefb;">
+                                💡 <strong>Instrucciones:</strong> Haz clic en una fila para seleccionarla, luego presiona "Llenar Formulario" para cargar esos datos
+                            </p>
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <button id="llenarFormularioBtn" class="finalizar-btn" style="background-color: #4caf50; border-color: #4caf50; opacity: 0.6; pointer-events: none;">
+                                    📥 Llenar Formulario
+                                </button>
+                            </div>
+                        </div>
                         <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; background: white; color: black; margin: 20px 0;">
                 `;
                 
@@ -268,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     historialHtml += '<p style="color: #666; text-align: center; padding: 40px;">No hay registros completados anteriormente.</p>';
                 } else {
                     historialHtml += `
-                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <table id="historialTable" style="width: 100%; border-collapse: collapse; font-size: 14px;">
                             <thead>
                                 <tr style="background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">
                                     <th style="padding: 12px; text-align: left; border-right: 1px solid #dee2e6; color: #333; font-weight: bold;">📚 Asignatura</th>
@@ -295,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const backgroundColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
                         
                         historialHtml += `
-                            <tr style="background-color: ${backgroundColor}; border-bottom: 1px solid #dee2e6;">
+                            <tr class="historial-row" data-index="${index}" style="background-color: ${backgroundColor}; border-bottom: 1px solid #dee2e6; cursor: pointer; transition: background-color 0.2s ease;">
                                 <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #333; font-weight: 500;">${general.asignatura || 'Sin nombre'}</td>
                                 <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #666;">${general.codigo || 'N/A'}</td>
                                 <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #666;">${general.docente || 'N/A'}</td>
@@ -326,12 +340,95 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 
                 document.querySelector('.finalizar-container').outerHTML = historialHtml;
+                
+                configurarSeleccionFilas();
+                
             } else {
                 mostrarMensaje('❌ Error al cargar historial', 'error');
             }
         } catch (error) {
             console.error('Error al cargar historial:', error);
             mostrarMensaje('❌ Error al cargar historial', 'error');
+        }
+    }
+
+    function configurarSeleccionFilas() {
+        const filas = document.querySelectorAll('.historial-row');
+        const botonLlenar = document.getElementById('llenarFormularioBtn');
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            .historial-row:hover {
+                background-color: #e3f2fd !important;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .historial-row.seleccionada {
+                background-color: #4caf50 !important;
+                color: white !important;
+            }
+            .historial-row.seleccionada td {
+                color: white !important;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        filas.forEach(fila => {
+            fila.addEventListener('click', function() {
+                filas.forEach(f => f.classList.remove('seleccionada'));
+                
+                this.classList.add('seleccionada');
+                filaSeleccionada = parseInt(this.getAttribute('data-index'));
+                
+                botonLlenar.style.opacity = '1';
+                botonLlenar.style.pointerEvents = 'auto';
+                
+                const general = registrosDisponibles[filaSeleccionada]?.general || {};
+                mostrarMensaje(`✅ Seleccionado: ${general.asignatura || 'Registro'} - ${general.codigo || 'Sin código'}`, 'success');
+            });
+        });
+        
+        if (botonLlenar) {
+            botonLlenar.addEventListener('click', llenarFormularioDesdeHistorial);
+        }
+    }
+    
+    async function llenarFormularioDesdeHistorial() {
+        if (filaSeleccionada === null || !registrosDisponibles[filaSeleccionada]) {
+            mostrarMensaje('❌ Por favor selecciona una fila primero', 'error');
+            return;
+        }
+        
+        const registroSeleccionado = registrosDisponibles[filaSeleccionada];
+        
+        try {
+            mostrarMensaje('⏳ Cargando datos del registro seleccionado...', 'info');
+            
+            const response = await fetch('/api/cargar_registro_desde_historial', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    registro_index: filaSeleccionada
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                mostrarMensaje('✅ ¡Datos cargados exitosamente! Redirigiendo al formulario...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = '/general';
+                }, 2000);
+            } else {
+                mostrarMensaje(`❌ Error al cargar datos: ${result.message}`, 'error');
+            }
+            
+        } catch (error) {
+            console.error('Error al cargar registro:', error);
+            mostrarMensaje('❌ Error al cargar el registro', 'error');
         }
     }
 

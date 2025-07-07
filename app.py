@@ -749,7 +749,6 @@ def generar_word():
         
         nombre_archivo = generar_nombre_archivo(datos_general)
         
-        # Finalizar el registro después de generar el documento
         finalizar_registro()
         
         return send_file(
@@ -816,6 +815,60 @@ def obtener_historial():
         return jsonify({
             'success': False,
             'message': f'Error al obtener historial: {str(e)}'
+        })
+
+@app.route('/api/cargar_registro_desde_historial', methods=['POST'])
+def cargar_registro_desde_historial():
+    """Carga un registro específico del historial al registro actual"""
+    try:
+        data = request.get_json()
+        registro_index = data.get('registro_index')
+        
+        if registro_index is None:
+            return jsonify({
+                'success': False,
+                'message': 'Índice de registro no proporcionado'
+            })
+        
+        historial = cargar_historial_completo()
+        registros_completados = historial.get('registros_completados', [])
+        
+        if registro_index < 0 or registro_index >= len(registros_completados):
+            return jsonify({
+                'success': False,
+                'message': 'Índice de registro inválido'
+            })
+        
+        registro_seleccionado = registros_completados[registro_index]
+        
+        nuevo_registro_actual = {}
+        for seccion, datos in registro_seleccionado.items():
+            if seccion != 'metadatos':  
+                nuevo_registro_actual[seccion] = datos.copy() if isinstance(datos, dict) else datos
+        
+        if 'general' in nuevo_registro_actual:
+            if 'fecha_guardado' in nuevo_registro_actual['general']:
+                del nuevo_registro_actual['general']['fecha_guardado']
+        
+        historial['registro_actual'] = nuevo_registro_actual
+        
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(historial, f, ensure_ascii=False, indent=2)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Registro cargado exitosamente',
+            'datos_cargados': {
+                'asignatura': nuevo_registro_actual.get('general', {}).get('asignatura', 'Sin nombre'),
+                'codigo': nuevo_registro_actual.get('general', {}).get('codigo', 'Sin código'),
+                'secciones_cargadas': list(nuevo_registro_actual.keys())
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al cargar registro: {str(e)}'
         })
 
 if __name__ == '__main__':
