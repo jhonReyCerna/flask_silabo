@@ -32,6 +32,25 @@
   
   <div id="mensaje" class="mensaje"></div>
 </form>
+
+<!-- Modal de confirmación personalizado -->
+<div id="modal-restablecer" class="modal-overlay">
+  <div class="modal-content">
+    <span class="modal-icon">⚠️</span>
+    <h3 class="modal-title">¿Estás seguro?</h3>
+    <p class="modal-message">
+      Se perderán todos los formularios generados y los datos introducidos. Esta acción no se puede deshacer.
+    </p>
+    <div class="modal-buttons">
+      <button id="modal-confirm" class="modal-btn modal-btn-confirm">
+        🗑️ Sí, Restablecer
+      </button>
+      <button id="modal-cancel" class="modal-btn modal-btn-cancel">
+        ❌ Cancelar
+      </button>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

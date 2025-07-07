@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const guardarBtn = document.querySelector('button[type="submit"]');
     const unidadesContainer = document.getElementById('unidades-container');
     const mensaje = document.getElementById('mensaje');
+    
+    // Referencias al modal
+    const modalOverlay = document.getElementById('modal-restablecer');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
 
     // Variable para controlar el estado de bloqueo
     let camposBloqueados = false;
@@ -14,10 +19,24 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarDatosGuardados();
 
     generarBtn.addEventListener('click', generarFormulariosUnidades);
-    restablecerBtn.addEventListener('click', restablecerFormulario);
+    restablecerBtn.addEventListener('click', mostrarModalRestablecer);
+    modalConfirm.addEventListener('click', confirmarRestablecimiento);
+    modalCancel.addEventListener('click', cerrarModal);
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            cerrarModal();
+        }
+    });
     form.addEventListener('submit', guardarUnidades);
     sesionesInput.addEventListener('input', actualizarSesiones);
     unidadesInput.addEventListener('input', limpiarFormulariosExistentes);
+    
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            cerrarModal();
+        }
+    });
 
     function cargarDatosGuardados() {
         fetch('/api/cargar_unidades')
@@ -275,25 +294,40 @@ document.addEventListener('DOMContentLoaded', function() {
         camposBloqueados = false;
     }
 
-    // Función para restablecer el formulario
-    function restablecerFormulario() {
-        if (confirm('¿Estás seguro de que quieres restablecer? Se perderán todos los formularios generados.')) {
-            // Limpiar formularios
-            unidadesContainer.innerHTML = '';
-            
-            // Desbloquear campos
-            desbloquearCamposBasicos();
-            
-            // Ocultar botón guardar
-            guardarBtn.style.display = 'none';
-            
-            // Restablecer valores por defecto
-            sesionesInput.value = '12';
-            unidadesInput.value = '3';
-            
-            // Mostrar mensaje
-            mostrarMensaje('Formulario restablecido. Puedes modificar sesiones y unidades nuevamente.', 'exito');
-        }
+    // Funciones para el modal de confirmación
+    function mostrarModalRestablecer() {
+        modalOverlay.classList.add('active');
+        // Prevenir scroll del body
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function cerrarModal() {
+        modalOverlay.classList.remove('active');
+        // Restaurar scroll del body
+        document.body.style.overflow = 'auto';
+    }
+    
+    function confirmarRestablecimiento() {
+        // Limpiar formularios
+        unidadesContainer.innerHTML = '';
+        
+        // Desbloquear campos
+        desbloquearCamposBasicos();
+        
+        // Ocultar botón guardar
+        guardarBtn.style.display = 'none';
+        
+        // Restablecer valores por defecto
+        sesionesInput.value = '12';
+        unidadesInput.value = '3';
+        
+        // Cerrar modal
+        cerrarModal();
+        
+        // Mostrar mensaje con animación
+        setTimeout(() => {
+            mostrarMensaje('✅ Formulario restablecido. Puedes modificar sesiones y unidades nuevamente.', 'exito');
+        }, 300);
     }
 
     // Modificar las funciones actualizarSesiones y limpiarFormulariosExistentes
