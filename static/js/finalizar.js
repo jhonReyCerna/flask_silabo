@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             mostrarMensaje('👁️ Cargando vista previa del documento Word...', 'info');
             
-            // Abrir vista previa del documento Word
             const ventanaPrevia = window.open('/vista_previa_word', '_blank', 'width=1000,height=700,scrollbars=yes,toolbar=yes,location=yes,status=yes,menubar=yes,resizable=yes');
             
             if (!ventanaPrevia) {
@@ -531,9 +530,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function filtrarRegistros() {
-            const valorAsignatura = filtroAsignatura.value.toLowerCase();
-            const valorDocente = filtroDocente.value.toLowerCase();
-            const valorMaestria = filtroMaestria.value.toLowerCase();
+            const valorAsignatura = filtroAsignatura.value.toLowerCase().trim();
+            const valorDocente = filtroDocente.value.toLowerCase().trim();
+            const valorMaestria = filtroMaestria.value.toLowerCase().trim();
             
             registrosFiltrados = registrosDisponibles.filter(registro => {
                 const general = registro?.general || {};
@@ -563,19 +562,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 botonPreview.style.opacity = '0.6';
                 botonPreview.style.pointerEvents = 'none';
             }
+            
+            const totalFiltrados = registrosFiltrados.length;
+            const totalOriginales = registrosDisponibles.length;
+            
+            if (totalFiltrados === 0) {
+                mostrarMensaje('🔍 No se encontraron registros que coincidan con los filtros aplicados', 'warning');
+            } else if (totalFiltrados < totalOriginales) {
+                mostrarMensaje(`🔍 Filtros aplicados: ${totalFiltrados} de ${totalOriginales} registros`, 'info');
+            }
         }
         
         filtroAsignatura.addEventListener('input', () => {
             filtrarRegistros();
-            guardarPreferenciasUsuario();
+            setTimeout(() => guardarPreferenciasUsuario(), 300);
         });
         filtroDocente.addEventListener('input', () => {
             filtrarRegistros();
-            guardarPreferenciasUsuario();
+            setTimeout(() => guardarPreferenciasUsuario(), 300);
         });
         filtroMaestria.addEventListener('change', () => {
             filtrarRegistros();
-            guardarPreferenciasUsuario();
+            setTimeout(() => guardarPreferenciasUsuario(), 300);
         });
         
         limpiarFiltros.addEventListener('click', () => {
@@ -585,8 +593,21 @@ document.addEventListener('DOMContentLoaded', function() {
             registrosFiltrados = [...registrosDisponibles];
             paginaActual = 1;
             mostrarPagina(1);
+            
+            filaSeleccionada = null;
+            const botonLlenar = document.getElementById('llenarFormularioBtn');
+            const botonPreview = document.getElementById('previewBtn');
+            if (botonLlenar) {
+                botonLlenar.style.opacity = '0.6';
+                botonLlenar.style.pointerEvents = 'none';
+            }
+            if (botonPreview) {
+                botonPreview.style.opacity = '0.6';
+                botonPreview.style.pointerEvents = 'none';
+            }
+            
             limpiarPreferenciasUsuario();
-            mostrarMensaje('🔄 Filtros limpiados', 'info');
+            mostrarMensaje('🔄 Filtros limpiados - Mostrando todos los registros', 'info');
         });
     }
     
@@ -1043,10 +1064,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function configurarPaginacion() {
         registrosFiltrados = [...registrosDisponibles];
+        paginaActual = 1;
         mostrarPagina(1);
     }
     
     function mostrarPagina(numeroPagina) {
+        paginaActual = numeroPagina;
         const inicio = (numeroPagina - 1) * registrosPorPagina;
         const fin = inicio + registrosPorPagina;
         const registrosPagina = registrosFiltrados.slice(inicio, fin);
@@ -1088,12 +1111,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         actualizarControlesPaginacion(numeroPagina, totalPaginas);
+        actualizarContadorRegistros(inicio, fin);
         
+        setTimeout(() => guardarPreferenciasUsuario(), 100);
+    }
+    
+    function actualizarContadorRegistros(inicio, fin) {
         const contadorElement = document.querySelector('.finalizar-container p strong');
         if (contadorElement) {
-            const mostrandoDesde = inicio + 1;
+            const mostrandoDesde = registrosFiltrados.length > 0 ? inicio + 1 : 0;
             const mostrandoHasta = Math.min(fin, registrosFiltrados.length);
             contadorElement.textContent = `${mostrandoDesde}-${mostrandoHasta} de ${registrosFiltrados.length}`;
+            
+            const parrafoContador = contadorElement.parentElement;
+            if (parrafoContador) {
+                parrafoContador.innerHTML = `
+                    📊 Mostrando <strong>${mostrandoDesde}-${mostrandoHasta} de ${registrosFiltrados.length}</strong> registros
+                    ${registrosFiltrados.length !== registrosDisponibles.length ? 
+                        `(filtrado de ${registrosDisponibles.length} total)` : ''}
+                `;
+            }
         }
     }
     
@@ -1102,40 +1139,93 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (totalPaginas > 1) {
             paginacionHTML = `
-                <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; padding: 20px;">
-                    <button id="paginaAnterior" ${paginaActual === 1 ? 'disabled' : ''} 
-                            style="background: ${paginaActual === 1 ? '#6c757d' : '#007bff'}; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: ${paginaActual === 1 ? 'not-allowed' : 'pointer'};">
-                        ← Anterior
-                    </button>
+                <div id="paginacionControles" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-top: 2px solid #007bff;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button id="paginaPrimera" ${paginaActual === 1 ? 'disabled' : ''} 
+                                style="background: ${paginaActual === 1 ? '#6c757d' : '#007bff'}; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: ${paginaActual === 1 ? 'not-allowed' : 'pointer'}; font-size: 14px;"
+                                title="Primera página">
+                            ⏪ Primera
+                        </button>
+                        <button id="paginaAnterior" ${paginaActual === 1 ? 'disabled' : ''} 
+                                style="background: ${paginaActual === 1 ? '#6c757d' : '#007bff'}; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: ${paginaActual === 1 ? 'not-allowed' : 'pointer'}; font-size: 14px;"
+                                title="Página anterior">
+                            ← Anterior
+                        </button>
+                    </div>
                     
-                    <div style="display: flex; gap: 5px;">
+                    <div style="display: flex; gap: 5px; align-items: center;">
             `;
             
-            for (let i = 1; i <= totalPaginas; i++) {
-                if (i === paginaActual) {
+            let paginasAMostrar = [];
+            const maxBotones = 7;
+            
+            if (totalPaginas <= maxBotones) {
+                for (let i = 1; i <= totalPaginas; i++) {
+                    paginasAMostrar.push(i);
+                }
+            } else {
+                if (paginaActual <= 4) {
+                    paginasAMostrar = [1, 2, 3, 4, 5, '...', totalPaginas];
+                } else if (paginaActual >= totalPaginas - 3) {
+                    paginasAMostrar = [1, '...', totalPaginas - 4, totalPaginas - 3, totalPaginas - 2, totalPaginas - 1, totalPaginas];
+                } else {
+                    paginasAMostrar = [1, '...', paginaActual - 1, paginaActual, paginaActual + 1, '...', totalPaginas];
+                }
+            }
+            
+            paginasAMostrar.forEach((pagina) => {
+                if (pagina === '...') {
                     paginacionHTML += `
-                        <button class="pagina-numero" data-pagina="${i}" 
-                                style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                            ${i}
+                        <span style="padding: 8px 4px; color: #6c757d; font-weight: bold;">...</span>
+                    `;
+                } else if (pagina === paginaActual) {
+                    paginacionHTML += `
+                        <button class="pagina-numero pagina-activa" data-pagina="${pagina}" 
+                                style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; min-width: 40px; box-shadow: 0 2px 4px rgba(0,123,255,0.3);">
+                            ${pagina}
                         </button>
                     `;
                 } else {
                     paginacionHTML += `
-                        <button class="pagina-numero" data-pagina="${i}" 
-                                style="background: #f8f9fa; color: #333; border: 1px solid #dee2e6; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
-                            ${i}
+                        <button class="pagina-numero" data-pagina="${pagina}" 
+                                style="background: white; color: #007bff; border: 1px solid #007bff; padding: 8px 12px; border-radius: 6px; cursor: pointer; min-width: 40px; transition: all 0.2s ease;"
+                                onmouseover="this.style.background='#007bff'; this.style.color='white';"
+                                onmouseout="this.style.background='white'; this.style.color='#007bff';">
+                            ${pagina}
                         </button>
                     `;
                 }
-            }
+            });
             
             paginacionHTML += `
                     </div>
                     
-                    <button id="paginaSiguiente" ${paginaActual === totalPaginas ? 'disabled' : ''} 
-                            style="background: ${paginaActual === totalPaginas ? '#6c757d' : '#007bff'}; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: ${paginaActual === totalPaginas ? 'not-allowed' : 'pointer'};">
-                        Siguiente →
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button id="paginaSiguiente" ${paginaActual === totalPaginas ? 'disabled' : ''} 
+                                style="background: ${paginaActual === totalPaginas ? '#6c757d' : '#007bff'}; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: ${paginaActual === totalPaginas ? 'not-allowed' : 'pointer'}; font-size: 14px;"
+                                title="Página siguiente">
+                            Siguiente →
+                        </button>
+                        <button id="paginaUltima" ${paginaActual === totalPaginas ? 'disabled' : ''} 
+                                style="background: ${paginaActual === totalPaginas ? '#6c757d' : '#007bff'}; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: ${paginaActual === totalPaginas ? 'not-allowed' : 'pointer'}; font-size: 14px;"
+                                title="Última página">
+                            Última ⏩
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; margin-left: 20px; padding-left: 20px; border-left: 1px solid #dee2e6;">
+                        <span style="color: #6c757d; font-size: 14px;">Ir a:</span>
+                        <input type="number" id="irAPagina" min="1" max="${totalPaginas}" value="${paginaActual}" 
+                               style="width: 60px; padding: 6px 8px; border: 1px solid #dee2e6; border-radius: 4px; text-align: center; font-size: 14px;">
+                        <button id="botonIrAPagina" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 14px;"
+                                title="Ir a la página especificada">
+                            Ir
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 10px; color: #6c757d; font-size: 14px;">
+                    Página ${paginaActual} de ${totalPaginas} | ${registrosPorPagina} registros por página
                 </div>
             `;
         }
@@ -1144,12 +1234,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!paginacionContainer) {
             paginacionContainer = document.createElement('div');
             paginacionContainer.id = 'paginacionContainer';
-            document.querySelector('.finalizar-container').appendChild(paginacionContainer);
+            const botonesContainer = document.querySelector('.finalizar-botones');
+            if (botonesContainer) {
+                botonesContainer.parentNode.insertBefore(paginacionContainer, botonesContainer);
+            } else {
+                document.querySelector('.finalizar-container').appendChild(paginacionContainer);
+            }
         }
         
         paginacionContainer.innerHTML = paginacionHTML;
         
         if (totalPaginas > 1) {
+            document.getElementById('paginaPrimera')?.addEventListener('click', () => {
+                if (paginaActual > 1) {
+                    mostrarPagina(1);
+                }
+            });
+            
             document.getElementById('paginaAnterior')?.addEventListener('click', () => {
                 if (paginaActual > 1) {
                     mostrarPagina(paginaActual - 1);
@@ -1162,12 +1263,74 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
+            document.getElementById('paginaUltima')?.addEventListener('click', () => {
+                if (paginaActual < totalPaginas) {
+                    mostrarPagina(totalPaginas);
+                }
+            });
+            
             document.querySelectorAll('.pagina-numero').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const pagina = parseInt(e.target.getAttribute('data-pagina'));
-                    mostrarPagina(pagina);
+                    if (!isNaN(pagina)) {
+                        mostrarPagina(pagina);
+                    }
                 });
             });
+            
+            const inputIrAPagina = document.getElementById('irAPagina');
+            const botonIrAPagina = document.getElementById('botonIrAPagina');
+            
+            botonIrAPagina?.addEventListener('click', () => {
+                const paginaDestino = parseInt(inputIrAPagina.value);
+                if (paginaDestino >= 1 && paginaDestino <= totalPaginas) {
+                    mostrarPagina(paginaDestino);
+                } else {
+                    mostrarMensaje('❌ Número de página inválido', 'error');
+                    inputIrAPagina.value = paginaActual;
+                }
+            });
+            
+            inputIrAPagina?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    botonIrAPagina.click();
+                }
+            });
+            
+            const navegacionTecladoHandler = function(e) {
+               
+                if (document.querySelector('#historialTable') && !document.querySelector('#previewModal, #confirmModal, #estadisticasModal')) {
+                    
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                        return;
+                    }
+                    
+                    if (e.key === 'ArrowLeft' && paginaActual > 1) {
+                        e.preventDefault();
+                        mostrarPagina(paginaActual - 1);
+                    } else if (e.key === 'ArrowRight' && paginaActual < totalPaginas) {
+                        e.preventDefault();
+                        mostrarPagina(paginaActual + 1);
+                    } else if (e.key === 'Home') {
+                        e.preventDefault();
+                        mostrarPagina(1);
+                    } else if (e.key === 'End') {
+                        e.preventDefault();
+                        mostrarPagina(totalPaginas);
+                    } else if (e.key >= '1' && e.key <= '9') {
+                        const paginaDeseada = parseInt(e.key);
+                        if (paginaDeseada <= totalPaginas) {
+                            e.preventDefault();
+                            mostrarPagina(paginaDeseada);
+                        }
+                    }
+                }
+            };
+            
+            document.removeEventListener('keydown', window.navegacionTecladoHandler);
+            
+            document.addEventListener('keydown', navegacionTecladoHandler);
+            window.navegacionTecladoHandler = navegacionTecladoHandler;
         }
     }
     
@@ -1294,7 +1457,8 @@ document.addEventListener('DOMContentLoaded', function() {
             filtroDocente: document.getElementById('filtroDocente')?.value || '',
             filtroMaestria: document.getElementById('filtroMaestria')?.value || '',
             registrosPorPagina: registrosPorPagina,
-            paginaActual: paginaActual
+            paginaActual: paginaActual,
+            timestamp: Date.now()
         };
         
         localStorage.setItem('historialPreferencias', JSON.stringify(preferencias));
@@ -1305,6 +1469,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (preferencias) {
             try {
                 const prefs = JSON.parse(preferencias);
+             
+                const tiempoTranscurrido = Date.now() - (prefs.timestamp || 0);
+                const unaHora = 60 * 60 * 1000;
+                
+                if (tiempoTranscurrido > unaHora) {
+                    limpiarPreferenciasUsuario();
+                    return;
+                }
                 
                 setTimeout(() => {
                     const filtroAsignatura = document.getElementById('filtroAsignatura');
@@ -1325,11 +1497,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (filtroAsignatura) {
                             filtroAsignatura.dispatchEvent(new Event('input'));
                         }
+                        
+                    
+                        setTimeout(() => {
+                            if (prefs.paginaActual && prefs.paginaActual > 1) {
+                                const totalPaginas = Math.ceil(registrosFiltrados.length / registrosPorPagina);
+                                const paginaAIr = Math.min(prefs.paginaActual, totalPaginas);
+                                if (paginaAIr > 1 && paginaAIr <= totalPaginas) {
+                                    mostrarPagina(paginaAIr);
+                                }
+                            }
+                        }, 300);
+                    } else if (prefs.paginaActual && prefs.paginaActual > 1) {
+                        const totalPaginas = Math.ceil(registrosDisponibles.length / registrosPorPagina);
+                        const paginaAIr = Math.min(prefs.paginaActual, totalPaginas);
+                        if (paginaAIr > 1 && paginaAIr <= totalPaginas) {
+                            mostrarPagina(paginaAIr);
+                        }
                     }
                 }, 200);
                 
             } catch (error) {
                 console.error('Error al cargar preferencias:', error);
+                limpiarPreferenciasUsuario();
             }
         }
     }
