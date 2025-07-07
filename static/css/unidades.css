@@ -41,7 +41,6 @@
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
 }
 
-/* Estados para campos bloqueados */
 .form-row input:disabled,
 .form-row select:disabled,
 .form-row textarea:disabled {
@@ -300,7 +299,6 @@
   display: none;
 }
 
-/* Modal de confirmación personalizado */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -441,7 +439,6 @@
   box-shadow: 0 12px 25px rgba(255, 255, 255, 0.2);
 }
 
-/* Animaciones */
 @keyframes bounceIn {
   0% {
     opacity: 0;
@@ -471,7 +468,6 @@
   }
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -526,7 +522,6 @@
     padding: 8px 16px;
   }
   
-  /* Modal de confirmación personalizado */
 .modal-overlay {
   position: fixed;
   top: 0;

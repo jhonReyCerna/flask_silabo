@@ -8,12 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const unidadesContainer = document.getElementById('unidades-container');
     const mensaje = document.getElementById('mensaje');
     
-    // Referencias al modal
     const modalOverlay = document.getElementById('modal-restablecer');
     const modalConfirm = document.getElementById('modal-confirm');
     const modalCancel = document.getElementById('modal-cancel');
 
-    // Variable para controlar el estado de bloqueo
     let camposBloqueados = false;
 
     cargarDatosGuardados();
@@ -31,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     sesionesInput.addEventListener('input', actualizarSesiones);
     unidadesInput.addEventListener('input', limpiarFormulariosExistentes);
     
-    // Cerrar modal con tecla Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
             cerrarModal();
@@ -51,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.unidades_detalle) {
                     generarFormulariosUnidades();
                     cargarDetallesUnidades(data.unidades_detalle);
-                    // Ya se aplicó el bloqueo en generarFormulariosUnidades
                 }
             })
             .catch(error => {
@@ -80,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
             unidadesContainer.appendChild(unidadCard);
         }
 
-        // Bloquear campos y cambiar botones
         bloquearCamposBasicos();
         
         guardarBtn.style.display = 'block';
@@ -140,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Agregar listener para validar sesiones
         const sesionesUnidadInput = unidadDiv.querySelector(`#sesiones_unidad_${numero}`);
         sesionesUnidadInput.addEventListener('input', validarDistribucionSesiones);
 
@@ -178,10 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.querySelector(`#sesiones_unidad_${numero}`).value = unidad.sesiones || '';
                 card.querySelector(`#logro_unidad_${numero}`).value = unidad.logro || '';
                 
-                // Cargar instrumentos de evaluación
                 if (unidad.instrumentos && Array.isArray(unidad.instrumentos)) {
                     const container = card.querySelector(`#instrumentos_container_${numero}`);
-                    container.innerHTML = ''; // Limpiar contenido existente
+                    container.innerHTML = ''; 
                     
                     unidad.instrumentos.forEach((instrumento, idx) => {
                         const instrumentoDiv = document.createElement('div');
@@ -201,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function guardarUnidades(event) {
         event.preventDefault();
 
-        // Validar distribución de sesiones antes de guardar
         const totalSesiones = parseInt(sesionesInput.value);
         const unidadCards = document.querySelectorAll('.unidad-card');
         let sumaActual = 0;
@@ -243,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mensaje.className = `mensaje ${tipo}`;
         mensaje.style.display = 'block';
         
-        // Auto-ocultar mensajes de éxito después de 5 segundos
         if (tipo === 'exito') {
             setTimeout(() => {
                 mensaje.style.display = 'none';
@@ -251,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Funciones para manejar instrumentos de evaluación dinámicos
     window.agregarInstrumento = function(numeroUnidad) {
         const container = document.getElementById(`instrumentos_container_${numeroUnidad}`);
         const nuevoInstrumento = document.createElement('div');
@@ -268,7 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const instrumentoItem = boton.parentNode;
         const container = instrumentoItem.parentNode;
         
-        // No permitir eliminar si solo hay un instrumento
         if (container.children.length > 1) {
             instrumentoItem.remove();
         } else {
@@ -276,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Función para bloquear campos básicos
     function bloquearCamposBasicos() {
         sesionesInput.disabled = true;
         unidadesInput.disabled = true;
@@ -285,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
         camposBloqueados = true;
     }
 
-    // Función para desbloquear campos básicos
     function desbloquearCamposBasicos() {
         sesionesInput.disabled = false;
         unidadesInput.disabled = false;
@@ -294,47 +281,35 @@ document.addEventListener('DOMContentLoaded', function() {
         camposBloqueados = false;
     }
 
-    // Funciones para el modal de confirmación
     function mostrarModalRestablecer() {
         modalOverlay.classList.add('active');
-        // Prevenir scroll del body
         document.body.style.overflow = 'hidden';
     }
     
     function cerrarModal() {
         modalOverlay.classList.remove('active');
-        // Restaurar scroll del body
         document.body.style.overflow = 'auto';
     }
     
     function confirmarRestablecimiento() {
-        // Limpiar formularios
         unidadesContainer.innerHTML = '';
         
-        // Desbloquear campos
         desbloquearCamposBasicos();
         
-        // Ocultar botón guardar
         guardarBtn.style.display = 'none';
         
-        // Restablecer valores por defecto
         sesionesInput.value = '12';
         unidadesInput.value = '3';
         
-        // Cerrar modal
         cerrarModal();
         
-        // Mostrar mensaje con animación
         setTimeout(() => {
             mostrarMensaje('✅ Formulario restablecido. Puedes modificar sesiones y unidades nuevamente.', 'exito');
         }, 300);
     }
 
-    // Modificar las funciones actualizarSesiones y limpiarFormulariosExistentes
     function actualizarSesiones() {
-        // Solo permitir cambios si los campos no están bloqueados
         if (!camposBloqueados) {
-            // Si ya hay formularios generados, avisar que se deben regenerar
             if (unidadesContainer.children.length > 0) {
                 mostrarMensaje('Cambio detectado. Haz clic en "Generar Formularios" para actualizar', 'error');
                 guardarBtn.style.display = 'none';
@@ -343,7 +318,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function limpiarFormulariosExistentes() {
-        // Solo permitir cambios si los campos no están bloqueados
         if (!camposBloqueados) {
             if (unidadesContainer.children.length > 0) {
                 unidadesContainer.innerHTML = '';
