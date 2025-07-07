@@ -148,6 +148,16 @@
     margin: 0 auto;
 }
 
+.historial-container .finalizar-botones {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.historial-container #paginacionContainer {
+    margin-bottom: 40px;
+}
+
 .historial-row {
     cursor: pointer;
     transition: all 0.3s ease;
@@ -371,6 +381,15 @@
 
 #botonIrAPagina:hover {
     background: #218838;
+}
+
+#paginacionContainer + .finalizar-botones,
+.finalizar-botones:has([onclick*="location.reload"]) {
+    margin-top: 40px !important;
+}
+
+#paginacionContainer {
+    margin-bottom: 30px;
 }
 
 @media (max-width: 768px) {
