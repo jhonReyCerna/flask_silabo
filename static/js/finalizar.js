@@ -293,7 +293,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (data.success) {
                 const registros = data.historial.registros_completados || [];
-                registrosDisponibles = registros; 
+                
+                registrosDisponibles = [...registros].reverse(); 
                 
                 let historialHtml = `
                     <div class="finalizar-container" style="max-width: 1400px;">
