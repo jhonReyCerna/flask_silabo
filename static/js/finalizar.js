@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        verHistorialBtn.addEventListener('click', async function() {
+        document.getElementById('verHistorialBtn').addEventListener('click', async function() {
             mostrarMensaje('📋 Cargando historial...', 'info');
             await mostrarHistorial();
         });
@@ -259,35 +259,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 const registros = data.historial.registros_completados || [];
                 
                 let historialHtml = `
-                    <h2>📋 Historial de Sílabos Completados</h2>
-                    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white;">
+                    <div class="finalizar-container">
+                        <h1 class="finalizar-titulo">📋 Historial de Sílabos</h1>
+                        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white; color: black; margin: 20px 0;">
                 `;
                 
                 if (registros.length === 0) {
-                    historialHtml += '<p>No hay registros completados anteriormente.</p>';
+                    historialHtml += '<p style="color: #666; text-align: center; padding: 20px;">No hay registros completados anteriormente.</p>';
                 } else {
                     registros.forEach((registro, index) => {
                         const general = registro.general || {};
                         const metadatos = registro.metadatos || {};
                         
                         historialHtml += `
-                            <div style="border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px;">
-                                <h4>📚 ${general.asignatura || 'Sin nombre'}</h4>
-                                <p><strong>Código:</strong> ${general.codigo || 'N/A'}</p>
-                                <p><strong>Docente:</strong> ${general.docente || 'N/A'}</p>
-                                <p><strong>Finalizado:</strong> ${metadatos.fecha_finalizacion ? new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES') : 'N/A'}</p>
+                            <div style="border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 10px;">
+                                <h4 style="color: #333; margin: 0 0 10px 0;">📚 ${general.asignatura || 'Sin nombre'}</h4>
+                                <p style="margin: 5px 0; color: #666;"><strong>Código:</strong> ${general.codigo || 'N/A'}</p>
+                                <p style="margin: 5px 0; color: #666;"><strong>Docente:</strong> ${general.docente || 'N/A'}</p>
+                                <p style="margin: 5px 0; color: #666;"><strong>Finalizado:</strong> ${metadatos.fecha_finalizacion ? new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES') : 'N/A'}</p>
                             </div>
                         `;
                     });
                 }
                 
                 historialHtml += `
+                        </div>
+                        <div class="finalizar-botones">
+                            <button class="finalizar-btn" onclick="location.reload()">🔙 Volver</button>
+                        </div>
                     </div>
-                    <br>
-                    <button onclick="location.reload()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Volver</button>
                 `;
                 
-                document.querySelector('.finalizar-container').innerHTML = historialHtml;
+                document.querySelector('.finalizar-container').outerHTML = historialHtml;
             } else {
                 mostrarMensaje('❌ Error al cargar historial', 'error');
             }
