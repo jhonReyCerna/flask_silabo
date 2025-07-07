@@ -1,373 +1,5 @@
 {
-  "registro_actual": {
-    "general": {
-      "codigo": "M.FAP.03.01/R8",
-      "version": "1",
-      "fecha": "2024-03-08",
-      "maestria": "GERENCIA DEL MANTENIMIENTO",
-      "asignatura": "MANTENIMIENTO PRODUCTIVO TOTAL ",
-      "semestre": "A",
-      "docente": "DR. ING. ROBERT WILLIAM CASTILLO ALVA",
-      "horas_teoria": "16",
-      "horas_practica": "0",
-      "creditos": "4",
-      "sesiones": "12",
-      "semanas": "4",
-      "correo": "rcastilloa@unacvirtual.edu.pe",
-      "codigo_programa": "GM309",
-      "caracter": "Obligatorio",
-      "proposito": "Su desarrollo metodológico integra coloquios, talleres, análisis de casos prácticos  y  un proyecto integrador, mediante los cuales los estudiantes analizan organizaciones utilizando los fundamentos del TPM, articulan propuestas de valor alineadas con estrategias corporativas, diseñan y planifican el despliegue de un Plan Maestro de TPM. El curso tiene como propósito desarrollar en los estudiantes las competencias necesarias para diseñar, planificar y validar estrategias integrales de mantenimiento productivo total, preparándolos para liderar con éxito su implementación en contextos organizacionales. ",
-      "horario": "Horario: Sábado - Domingo",
-      "modalidad": "Virtual",
-      "link_virtual": "https://meet.google.com/dkn-vuof-tfy?authuser=0&hl=es"
-    },
-    "unidades": {
-      "sesiones": 12,
-      "unidades": 4,
-      "unidades_detalle": [
-        {
-          "numero": 1,
-          "nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "sesiones": 4,
-          "logro": "El estudiante elabora un informe que identifica y describe de forma precisa la estructura, los procesos clave y los activos críticos de la organización, vinculándolos coherentemente con la metodología JIMP y la norma ISO 55001:2024,\r\nevidenciando dominio sólido de los\r\nfundamentos del TPM.",
-          "instrumentos": [
-            "Listado de cotejo con escala estimativa",
-            "Rúbrica de avance de trabajo integrador aplicado grupal"
-          ]
-        },
-        {
-          "numero": 2,
-          "nombre": "Propuesta de Valor del TPM a la Organización",
-          "sesiones": 2,
-          "logro": "El estudiante desarrolla una propuesta de valor que diagnostica las mudas prioritarias, construye un mapa estratégico (BSC) y asigna responsabilidades mediante una matriz RACI, demostrando clara alineación con la estrategia corporativa y capacidad para argumentar los\r\nbeneficios del TPM.\r\n",
-          "instrumentos": [
-            "Listado de cotejo con escala estimativa",
-            "Rúbrica de avance de trabajo integrador aplicado grupal"
-          ]
-        },
-        {
-          "numero": 3,
-          "nombre": "Diseño del Plan Maestro de TPM",
-          "sesiones": 4,
-          "logro": "El estudiante diseña un Plan Maestro que integra de manera articulada los ocho pilares del TPM,\r\ndefine actividades, responsables, recursos y cronograma, y proyecta mejoras relevantes en el desempeño de los activos, mostrando\r\ncoherencia interna y factibilidad técnica.\r\n",
-          "instrumentos": [
-            "Listado de cotejo con escala estimativa",
-            "Rúbrica de avance de trabajo integrador aplicado grupal",
-            "Rúbrica de evaluación virtual individual"
-          ]
-        },
-        {
-          "numero": 4,
-          "nombre": "Verificación y Validación del Plan Estratégico de TPM",
-          "sesiones": 2,
-          "logro": "El estudiante presenta y defiende el Plan Maestro revisado, demostrando\r\nverificación y validación rigurosas respecto a los objetivos de la organización y a la norma ISO 55001:2024, y\r\nsustenta sus decisiones con argumentos técnicos y estratégicos sólidos ante el panel evaluador.\r\n",
-          "instrumentos": [
-            "Listado de cotejo con escala estimativa",
-            "Rúbrica del informe del trabajo integrador aplicado grupal",
-            "Rúbrica de video del proyecto integrador aplicado individual"
-          ]
-        }
-      ]
-    },
-    "competencias": {
-      "unidades_competencias": [
-        {
-          "unidad_numero": 1,
-          "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "competencias": [
-            {
-              "codigo": "RAE1 (CE1)",
-              "titulo": "Fundamentos del TPM según JIMP [Sesión 1, 2, 3 y 4]",
-              "descripcion": "Comprende y aplica los conceptos fundamentales del TPM según la metodología JIMP, incluyendo las 4 fases, la metodología de 12 pasos y los 8 pilares, para identificar, describir y analizar los componentes esenciales de una organización (estructura organizativa, procesos y activos) en el contexto deun sistemade gestión de mantenimiento basado en TPM, alineado con normativas como ISO 9001:2015, ISO 55000:2024 e ISO 55001:2024"
-            }
-          ]
-        },
-        {
-          "unidad_numero": 2,
-          "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
-          "competencias": [
-            {
-              "codigo": "RAE2 (CE2)",
-              "titulo": "Propuesta de Valor del TPM a la Organización [Sesión  5 y 6] \"",
-              "descripcion": "\"Desarrolla una propuesta de valor del TPM para una organización, alineada con los objetivos y estrategia de la organización; incluyendo la identificación de mudas, la definición del alcance del TPM, y utilizando herramientas de gestión como el mapa estratégico, la matriz RACI y el BSC.\""
-            }
-          ]
-        },
-        {
-          "unidad_numero": 3,
-          "unidad_nombre": "Diseño del Plan Maestro de TPM",
-          "competencias": [
-            {
-              "codigo": "RAE3 (CE3)",
-              "titulo": "Diseño del Plan Maestro de TPM [Sesión 7, 8, 9 y 10]",
-              "descripcion": "Desarrolla un Plan Maestro de TPM que integre los 8 pilares, detallando procesos, actividades, responsables y documentación, y que esté alineado con la metodología de los 12 pasos de JIMP.\""
-            }
-          ]
-        },
-        {
-          "unidad_numero": 4,
-          "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
-          "competencias": [
-            {
-              "codigo": "RAE4 (CE4)",
-              "titulo": "Verificación y Validación del Plan Estratégico de TPM [Sesión 11 y 12]",
-              "descripcion": "Evalúa y valida el plan estratégico de TPM utilizando matrices de verificación y validación, asegurando alineación con objetivos organizacionales, cumplimiento de normativas (ISO 55001:2024) y coherencia de los 8 pilares con evidencias documentadas."
-            }
-          ]
-        }
-      ]
-    },
-    "productos": {
-      "unidades_productos": [
-        {
-          "unidad_numero": 1,
-          "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "productos": [
-            {
-              "codigo": "PA1 (C1)",
-              "titulo": "Análisis Organizacional para TPM según JIMP",
-              "descripcion": "Analiza un caso práctico de una organización industrial para identificar, describir y evaluar sus componentes esenciales (estructura organizativa, procesos clave y portafolio de activos críticos) en relación con la metodología JIMP (4 fases, 12 pasos y 8 pilares) y las normativas ISO 55000:2024 e ISO 55001:2024, con el fin de diseñar un plan preliminar para la implementación de un sistema"
-            }
-          ]
-        },
-        {
-          "unidad_numero": 2,
-          "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
-          "productos": [
-            {
-              "codigo": "PA2 (C2)",
-              "titulo": "Informe Estratégico de Alineación del TPM",
-              "descripcion": "\"Elabora un plan maestro detallado que incluya los 8 pilares del TPM, especificando para cada pilar los procesos, actividades, responsables y documentación requerida, siguiendo la metodología de los 12 pasos de JIMP.\""
-            }
-          ]
-        },
-        {
-          "unidad_numero": 3,
-          "unidad_nombre": "Diseño del Plan Maestro de TPM",
-          "productos": [
-            {
-              "codigo": "PA3 (C3)",
-              "titulo": "Desarrollo del Plan Maestro de TPM",
-              "descripcion": "Evalúa críticamente un plan estratégico de TPM utilizando matrices de verificación y validación, aplicando criterios como alineación con objetivos organizacionales, cumplimiento normativo (ISO 55001:2024), coherencia interna y viabilidad técnica, para asegurar su efectividad y completitud."
-            }
-          ]
-        },
-        {
-          "unidad_numero": 4,
-          "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
-          "productos": [
-            {
-              "codigo": "PA4 (C4)",
-              "titulo": "Presentación Final del Plan de TPM",
-              "descripcion": "Presentar y defender un plan estratégico de TPM revisado, que incorpore mejoras basadas en la retroalimentación del docente y las mejores prácticas discutidas, demostrando cómo cumple con los criterios de verificación y validación y se alinea con los objetivos organizacionales."
-            }
-          ]
-        }
-      ]
-    },
-    "sesiones": {
-      "unidades_sesiones": [
-        {
-          "unidad_numero": 1,
-          "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "total_sesiones": 4,
-          "sesiones": [
-            {
-              "numero_sesion": 1,
-              "temario": "Sociabilización del silabo\nFilosofía de Calidad Total.\nFilosofía Kaizen.\nTérminos y definiciones del TPM.\nMetodología del TPM\nMétodos, Técnicas y Herramientas asociados al TPM\nEvolución del TPM.\nAplicabilidad del TPM en las organizaciones"
-            },
-            {
-              "numero_sesion": 2,
-              "temario": "Mejora continua, gestión basada en procesos y ciclo PHVA en industria de procesos y\nmanufactura.\nConvergencia con ISO 9001:2015 y TPM.\nConvergencia con ISO 55000:2024 y TPM.\nConvergencia con ISO 55001:2024 y TPM.\nFramework GFMAM y TPM."
-            },
-            {
-              "numero_sesion": 3,
-              "temario": "Estructura del framework JIMP (4 fases, 12 pasos, 8 pilares).\nLas 16 pérdidas del TPM.\nLas 6 mayores pérdidas.\nBeneficios en P (Productividad), Q (Calidad), C (Costos), D (Entrega), S (Seguridad), M (Moral).\nCasos éxito de implementación del TPM"
-            },
-            {
-              "numero_sesion": 4,
-              "temario": "Las 4 fases del TPM.\nMetodología de los 12 pasos.\nLos 8 pilares del TPM."
-            }
-          ]
-        },
-        {
-          "unidad_numero": 2,
-          "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
-          "total_sesiones": 2,
-          "sesiones": [
-            {
-              "numero_sesion": 5,
-              "temario": "Contexto y partes interesadas de la organización\nProductos y servicios\nVolúmenes de producción\nProcesos de la organización\nAnálisis de la estrategia organizacional\nIdentificación de mudas\nPropuesta de valor del TPM\nDefinición del alcance del TPM\nEstablecimiento de objetivos y metas\nDefinición de estrategias e iniciativas"
-            },
-            {
-              "numero_sesion": 6,
-              "temario": "Creación del mapa estratégico\nAsignación de costos y responsables (matriz RACI)\nEstablecimiento de KPIs y uso del BSC"
-            }
-          ]
-        },
-        {
-          "unidad_numero": 3,
-          "unidad_nombre": "Diseño del Plan Maestro de TPM",
-          "total_sesiones": 4,
-          "sesiones": [
-            {
-              "numero_sesion": 7,
-              "temario": "Plan Maestro: visión general\nPilar  1: Mantenimiento Planificado\nPilar  2: Mantenimiento Autónomo"
-            },
-            {
-              "numero_sesion": 8,
-              "temario": "Pilar 3: Mantenimiento de Calidad\nPilar 4: Mejora Enfocada\nPilar 5: Educación y Entrenamiento"
-            },
-            {
-              "numero_sesion": 9,
-              "temario": "Pilar 6: Mantenimiento en la Etapa Inicial\nPilar 7: Seguridad, Salud y Medio Ambiente\nPilar 8: TPM en Áreas Administrativas"
-            },
-            {
-              "numero_sesion": 10,
-              "temario": "Estructura del Plan Maestro\nRevisión de los 12 pasos de JIM"
-            }
-          ]
-        },
-        {
-          "unidad_numero": 4,
-          "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
-          "total_sesiones": 2,
-          "sesiones": [
-            {
-              "numero_sesion": 11,
-              "temario": "Presentación del trabajo integrador\nVerificación por el docente\nRetroalimentación y discusión"
-            },
-            {
-              "numero_sesion": 12,
-              "temario": "Exposición del trabajo integrador\nValidación por el docente\nDiscusión y mejores prácticas"
-            }
-          ]
-        }
-      ]
-    },
-    "cronograma": {
-      "fecha_inicio": "2025-07-03",
-      "cronograma": [
-        {
-          "sesion": 1,
-          "unidad": 1,
-          "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Sábado",
-          "fecha": "05/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 2,
-          "unidad": 1,
-          "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Domingo",
-          "fecha": "06/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 3,
-          "unidad": 1,
-          "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Sábado",
-          "fecha": "12/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 4,
-          "unidad": 1,
-          "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Domingo",
-          "fecha": "13/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 5,
-          "unidad": 2,
-          "nombreUnidad": "Propuesta de Valor del TPM a la Organización",
-          "dia": "Sábado",
-          "fecha": "19/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 6,
-          "unidad": 2,
-          "nombreUnidad": "Propuesta de Valor del TPM a la Organización",
-          "dia": "Domingo",
-          "fecha": "20/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 7,
-          "unidad": 3,
-          "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Sábado",
-          "fecha": "26/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 8,
-          "unidad": 3,
-          "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Domingo",
-          "fecha": "27/07/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 9,
-          "unidad": 3,
-          "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Sábado",
-          "fecha": "02/08/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 10,
-          "unidad": 3,
-          "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Domingo",
-          "fecha": "03/08/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 11,
-          "unidad": 4,
-          "nombreUnidad": "Verificación y Validación del Plan Estratégico de TPM",
-          "dia": "Sábado",
-          "fecha": "09/08/2025",
-          "horas": 9
-        },
-        {
-          "sesion": 12,
-          "unidad": 4,
-          "nombreUnidad": "Verificación y Validación del Plan Estratégico de TPM",
-          "dia": "Domingo",
-          "fecha": "10/08/2025",
-          "horas": 9
-        }
-      ]
-    },
-    "referencias": {
-      "libros": [
-        {
-          "autores": {
-            "0": {
-              "apellido": "Cerna",
-              "inicial": "J."
-            },
-            "1": {
-              "apellido": "Perez ",
-              "inicial": "S."
-            }
-          },
-          "año": "2025",
-          "editorial": "Editorial Alfa",
-          "titulo": "La computación"
-        }
-      ],
-      "articulos": [],
-      "web": []
-    }
-  },
+  "registro_actual": {},
   "registros_completados": [
     {
       "general": {
@@ -1120,6 +752,384 @@
         "fecha_finalizacion": "2025-07-06T23:30:28.233296",
         "estado": "completado",
         "id_registro": 2
+      }
+    },
+    {
+      "general": {
+        "codigo": "M.FAP.03.01/R8",
+        "version": "1",
+        "fecha": "2024-03-08",
+        "maestria": "GERENCIA DEL MANTENIMIENTO",
+        "asignatura": "MANTENIMIENTO PRODUCTIVO TOTAL ",
+        "semestre": "A",
+        "docente": "DR. ING. ROBERT WILLIAM CASTILLO ALVA",
+        "horas_teoria": "16",
+        "horas_practica": "0",
+        "creditos": "4",
+        "sesiones": "12",
+        "semanas": "4",
+        "correo": "rcastilloa@unacvirtual.edu.pe",
+        "codigo_programa": "GM309",
+        "caracter": "Obligatorio",
+        "proposito": "Su desarrollo metodológico integra coloquios, talleres, análisis de casos prácticos  y  un proyecto integrador, mediante los cuales los estudiantes analizan organizaciones utilizando los fundamentos del TPM, articulan propuestas de valor alineadas con estrategias corporativas, diseñan y planifican el despliegue de un Plan Maestro de TPM. El curso tiene como propósito desarrollar en los estudiantes las competencias necesarias para diseñar, planificar y validar estrategias integrales de mantenimiento productivo total, preparándolos para liderar con éxito su implementación en contextos organizacionales. ",
+        "horario": "Horario: Sábado - Domingo",
+        "modalidad": "Virtual",
+        "link_virtual": "https://meet.google.com/dkn-vuof-tfy?authuser=0&hl=es"
+      },
+      "unidades": {
+        "sesiones": 12,
+        "unidades": 4,
+        "unidades_detalle": [
+          {
+            "numero": 1,
+            "nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "sesiones": 4,
+            "logro": "El estudiante elabora un informe que identifica y describe de forma precisa la estructura, los procesos clave y los activos críticos de la organización, vinculándolos coherentemente con la metodología JIMP y la norma ISO 55001:2024,\r\nevidenciando dominio sólido de los\r\nfundamentos del TPM.",
+            "instrumentos": [
+              "Listado de cotejo con escala estimativa",
+              "Rúbrica de avance de trabajo integrador aplicado grupal"
+            ]
+          },
+          {
+            "numero": 2,
+            "nombre": "Propuesta de Valor del TPM a la Organización",
+            "sesiones": 2,
+            "logro": "El estudiante desarrolla una propuesta de valor que diagnostica las mudas prioritarias, construye un mapa estratégico (BSC) y asigna responsabilidades mediante una matriz RACI, demostrando clara alineación con la estrategia corporativa y capacidad para argumentar los\r\nbeneficios del TPM.\r\n",
+            "instrumentos": [
+              "Listado de cotejo con escala estimativa",
+              "Rúbrica de avance de trabajo integrador aplicado grupal"
+            ]
+          },
+          {
+            "numero": 3,
+            "nombre": "Diseño del Plan Maestro de TPM",
+            "sesiones": 4,
+            "logro": "El estudiante diseña un Plan Maestro que integra de manera articulada los ocho pilares del TPM,\r\ndefine actividades, responsables, recursos y cronograma, y proyecta mejoras relevantes en el desempeño de los activos, mostrando\r\ncoherencia interna y factibilidad técnica.\r\n",
+            "instrumentos": [
+              "Listado de cotejo con escala estimativa",
+              "Rúbrica de avance de trabajo integrador aplicado grupal",
+              "Rúbrica de evaluación virtual individual"
+            ]
+          },
+          {
+            "numero": 4,
+            "nombre": "Verificación y Validación del Plan Estratégico de TPM",
+            "sesiones": 2,
+            "logro": "El estudiante presenta y defiende el Plan Maestro revisado, demostrando\r\nverificación y validación rigurosas respecto a los objetivos de la organización y a la norma ISO 55001:2024, y\r\nsustenta sus decisiones con argumentos técnicos y estratégicos sólidos ante el panel evaluador.\r\n",
+            "instrumentos": [
+              "Listado de cotejo con escala estimativa",
+              "Rúbrica del informe del trabajo integrador aplicado grupal",
+              "Rúbrica de video del proyecto integrador aplicado individual"
+            ]
+          }
+        ]
+      },
+      "competencias": {
+        "unidades_competencias": [
+          {
+            "unidad_numero": 1,
+            "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "competencias": [
+              {
+                "codigo": "RAE1 (CE1)",
+                "titulo": "Fundamentos del TPM según JIMP [Sesión 1, 2, 3 y 4]",
+                "descripcion": "Comprende y aplica los conceptos fundamentales del TPM según la metodología JIMP, incluyendo las 4 fases, la metodología de 12 pasos y los 8 pilares, para identificar, describir y analizar los componentes esenciales de una organización (estructura organizativa, procesos y activos) en el contexto deun sistemade gestión de mantenimiento basado en TPM, alineado con normativas como ISO 9001:2015, ISO 55000:2024 e ISO 55001:2024"
+              }
+            ]
+          },
+          {
+            "unidad_numero": 2,
+            "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
+            "competencias": [
+              {
+                "codigo": "RAE2 (CE2)",
+                "titulo": "Propuesta de Valor del TPM a la Organización [Sesión  5 y 6] \"",
+                "descripcion": "\"Desarrolla una propuesta de valor del TPM para una organización, alineada con los objetivos y estrategia de la organización; incluyendo la identificación de mudas, la definición del alcance del TPM, y utilizando herramientas de gestión como el mapa estratégico, la matriz RACI y el BSC.\""
+              }
+            ]
+          },
+          {
+            "unidad_numero": 3,
+            "unidad_nombre": "Diseño del Plan Maestro de TPM",
+            "competencias": [
+              {
+                "codigo": "RAE3 (CE3)",
+                "titulo": "Diseño del Plan Maestro de TPM [Sesión 7, 8, 9 y 10]",
+                "descripcion": "Desarrolla un Plan Maestro de TPM que integre los 8 pilares, detallando procesos, actividades, responsables y documentación, y que esté alineado con la metodología de los 12 pasos de JIMP.\""
+              }
+            ]
+          },
+          {
+            "unidad_numero": 4,
+            "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
+            "competencias": [
+              {
+                "codigo": "RAE4 (CE4)",
+                "titulo": "Verificación y Validación del Plan Estratégico de TPM [Sesión 11 y 12]",
+                "descripcion": "Evalúa y valida el plan estratégico de TPM utilizando matrices de verificación y validación, asegurando alineación con objetivos organizacionales, cumplimiento de normativas (ISO 55001:2024) y coherencia de los 8 pilares con evidencias documentadas."
+              }
+            ]
+          }
+        ]
+      },
+      "productos": {
+        "unidades_productos": [
+          {
+            "unidad_numero": 1,
+            "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "productos": [
+              {
+                "codigo": "PA1 (C1)",
+                "titulo": "Análisis Organizacional para TPM según JIMP",
+                "descripcion": "Analiza un caso práctico de una organización industrial para identificar, describir y evaluar sus componentes esenciales (estructura organizativa, procesos clave y portafolio de activos críticos) en relación con la metodología JIMP (4 fases, 12 pasos y 8 pilares) y las normativas ISO 55000:2024 e ISO 55001:2024, con el fin de diseñar un plan preliminar para la implementación de un sistema"
+              }
+            ]
+          },
+          {
+            "unidad_numero": 2,
+            "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
+            "productos": [
+              {
+                "codigo": "PA2 (C2)",
+                "titulo": "Informe Estratégico de Alineación del TPM",
+                "descripcion": "\"Elabora un plan maestro detallado que incluya los 8 pilares del TPM, especificando para cada pilar los procesos, actividades, responsables y documentación requerida, siguiendo la metodología de los 12 pasos de JIMP.\""
+              }
+            ]
+          },
+          {
+            "unidad_numero": 3,
+            "unidad_nombre": "Diseño del Plan Maestro de TPM",
+            "productos": [
+              {
+                "codigo": "PA3 (C3)",
+                "titulo": "Desarrollo del Plan Maestro de TPM",
+                "descripcion": "Evalúa críticamente un plan estratégico de TPM utilizando matrices de verificación y validación, aplicando criterios como alineación con objetivos organizacionales, cumplimiento normativo (ISO 55001:2024), coherencia interna y viabilidad técnica, para asegurar su efectividad y completitud."
+              }
+            ]
+          },
+          {
+            "unidad_numero": 4,
+            "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
+            "productos": [
+              {
+                "codigo": "PA4 (C4)",
+                "titulo": "Presentación Final del Plan de TPM",
+                "descripcion": "Presentar y defender un plan estratégico de TPM revisado, que incorpore mejoras basadas en la retroalimentación del docente y las mejores prácticas discutidas, demostrando cómo cumple con los criterios de verificación y validación y se alinea con los objetivos organizacionales."
+              }
+            ]
+          }
+        ]
+      },
+      "sesiones": {
+        "unidades_sesiones": [
+          {
+            "unidad_numero": 1,
+            "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "total_sesiones": 4,
+            "sesiones": [
+              {
+                "numero_sesion": 1,
+                "temario": "Sociabilización del silabo\nFilosofía de Calidad Total.\nFilosofía Kaizen.\nTérminos y definiciones del TPM.\nMetodología del TPM\nMétodos, Técnicas y Herramientas asociados al TPM\nEvolución del TPM.\nAplicabilidad del TPM en las organizaciones"
+              },
+              {
+                "numero_sesion": 2,
+                "temario": "Mejora continua, gestión basada en procesos y ciclo PHVA en industria de procesos y\nmanufactura.\nConvergencia con ISO 9001:2015 y TPM.\nConvergencia con ISO 55000:2024 y TPM.\nConvergencia con ISO 55001:2024 y TPM.\nFramework GFMAM y TPM."
+              },
+              {
+                "numero_sesion": 3,
+                "temario": "Estructura del framework JIMP (4 fases, 12 pasos, 8 pilares).\nLas 16 pérdidas del TPM.\nLas 6 mayores pérdidas.\nBeneficios en P (Productividad), Q (Calidad), C (Costos), D (Entrega), S (Seguridad), M (Moral).\nCasos éxito de implementación del TPM"
+              },
+              {
+                "numero_sesion": 4,
+                "temario": "Las 4 fases del TPM.\nMetodología de los 12 pasos.\nLos 8 pilares del TPM."
+              }
+            ]
+          },
+          {
+            "unidad_numero": 2,
+            "unidad_nombre": "Propuesta de Valor del TPM a la Organización",
+            "total_sesiones": 2,
+            "sesiones": [
+              {
+                "numero_sesion": 5,
+                "temario": "Contexto y partes interesadas de la organización\nProductos y servicios\nVolúmenes de producción\nProcesos de la organización\nAnálisis de la estrategia organizacional\nIdentificación de mudas\nPropuesta de valor del TPM\nDefinición del alcance del TPM\nEstablecimiento de objetivos y metas\nDefinición de estrategias e iniciativas"
+              },
+              {
+                "numero_sesion": 6,
+                "temario": "Creación del mapa estratégico\nAsignación de costos y responsables (matriz RACI)\nEstablecimiento de KPIs y uso del BSC"
+              }
+            ]
+          },
+          {
+            "unidad_numero": 3,
+            "unidad_nombre": "Diseño del Plan Maestro de TPM",
+            "total_sesiones": 4,
+            "sesiones": [
+              {
+                "numero_sesion": 7,
+                "temario": "Plan Maestro: visión general\nPilar  1: Mantenimiento Planificado\nPilar  2: Mantenimiento Autónomo"
+              },
+              {
+                "numero_sesion": 8,
+                "temario": "Pilar 3: Mantenimiento de Calidad\nPilar 4: Mejora Enfocada\nPilar 5: Educación y Entrenamiento"
+              },
+              {
+                "numero_sesion": 9,
+                "temario": "Pilar 6: Mantenimiento en la Etapa Inicial\nPilar 7: Seguridad, Salud y Medio Ambiente\nPilar 8: TPM en Áreas Administrativas"
+              },
+              {
+                "numero_sesion": 10,
+                "temario": "Estructura del Plan Maestro\nRevisión de los 12 pasos de JIM"
+              }
+            ]
+          },
+          {
+            "unidad_numero": 4,
+            "unidad_nombre": "Verificación y Validación del Plan Estratégico de TPM",
+            "total_sesiones": 2,
+            "sesiones": [
+              {
+                "numero_sesion": 11,
+                "temario": "Presentación del trabajo integrador\nVerificación por el docente\nRetroalimentación y discusión"
+              },
+              {
+                "numero_sesion": 12,
+                "temario": "Exposición del trabajo integrador\nValidación por el docente\nDiscusión y mejores prácticas"
+              }
+            ]
+          }
+        ]
+      },
+      "cronograma": {
+        "fecha_inicio": "2025-07-03",
+        "cronograma": [
+          {
+            "sesion": 1,
+            "unidad": 1,
+            "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "dia": "Sábado",
+            "fecha": "05/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 2,
+            "unidad": 1,
+            "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "dia": "Domingo",
+            "fecha": "06/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 3,
+            "unidad": 1,
+            "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "dia": "Sábado",
+            "fecha": "12/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 4,
+            "unidad": 1,
+            "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "dia": "Domingo",
+            "fecha": "13/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 5,
+            "unidad": 2,
+            "nombreUnidad": "Propuesta de Valor del TPM a la Organización",
+            "dia": "Sábado",
+            "fecha": "19/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 6,
+            "unidad": 2,
+            "nombreUnidad": "Propuesta de Valor del TPM a la Organización",
+            "dia": "Domingo",
+            "fecha": "20/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 7,
+            "unidad": 3,
+            "nombreUnidad": "Diseño del Plan Maestro de TPM",
+            "dia": "Sábado",
+            "fecha": "26/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 8,
+            "unidad": 3,
+            "nombreUnidad": "Diseño del Plan Maestro de TPM",
+            "dia": "Domingo",
+            "fecha": "27/07/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 9,
+            "unidad": 3,
+            "nombreUnidad": "Diseño del Plan Maestro de TPM",
+            "dia": "Sábado",
+            "fecha": "02/08/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 10,
+            "unidad": 3,
+            "nombreUnidad": "Diseño del Plan Maestro de TPM",
+            "dia": "Domingo",
+            "fecha": "03/08/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 11,
+            "unidad": 4,
+            "nombreUnidad": "Verificación y Validación del Plan Estratégico de TPM",
+            "dia": "Sábado",
+            "fecha": "09/08/2025",
+            "horas": 9
+          },
+          {
+            "sesion": 12,
+            "unidad": 4,
+            "nombreUnidad": "Verificación y Validación del Plan Estratégico de TPM",
+            "dia": "Domingo",
+            "fecha": "10/08/2025",
+            "horas": 9
+          }
+        ]
+      },
+      "referencias": {
+        "libros": [
+          {
+            "autores": [
+              {
+                "apellido": "Cerna",
+                "inicial": "J."
+              },
+              {
+                "apellido": "Perez ",
+                "inicial": "S."
+              },
+              {
+                "apellido": "Alvarado",
+                "inicial": "N."
+              }
+            ],
+            "año": "2025",
+            "editorial": "Editorial Alfa",
+            "titulo": "La computación"
+          }
+        ],
+        "articulos": [],
+        "web": []
+      },
+      "metadatos": {
+        "fecha_finalizacion": "2025-07-07T11:38:34.675432",
+        "estado": "completado",
+        "id_registro": 3
       }
     }
   ]

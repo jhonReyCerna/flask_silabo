@@ -41,6 +41,24 @@
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
 }
 
+/* Estados para campos bloqueados */
+.form-row input:disabled,
+.form-row select:disabled,
+.form-row textarea:disabled {
+  background: #f5f5f5;
+  color: #666;
+  border-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.form-row input:disabled:focus,
+.form-row select:disabled:focus,
+.form-row textarea:disabled:focus {
+  border-color: #ccc;
+  box-shadow: none;
+}
+
 #unidades-container {
   margin: 2rem 0;
   display: grid;
@@ -160,6 +178,17 @@
 .btn-secondary:hover {
   background: #f8f9fa;
   border-color: #bbb;
+}
+
+.btn-warning {
+  background: #ff9800;
+  color: #ffffff;
+  border-color: #ff9800;
+}
+
+.btn-warning:hover {
+  background: #f57c00;
+  border-color: #f57c00;
 }
 
 .mensaje {

@@ -3,13 +3,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const sesionesInput = document.getElementById('sesiones');
     const unidadesInput = document.getElementById('unidades');
     const generarBtn = document.getElementById('generar-unidades');
+    const restablecerBtn = document.getElementById('restablecer-unidades');
     const guardarBtn = document.querySelector('button[type="submit"]');
     const unidadesContainer = document.getElementById('unidades-container');
     const mensaje = document.getElementById('mensaje');
 
+    // Variable para controlar el estado de bloqueo
+    let camposBloqueados = false;
+
     cargarDatosGuardados();
 
     generarBtn.addEventListener('click', generarFormulariosUnidades);
+    restablecerBtn.addEventListener('click', restablecerFormulario);
     form.addEventListener('submit', guardarUnidades);
     sesionesInput.addEventListener('input', actualizarSesiones);
     unidadesInput.addEventListener('input', limpiarFormulariosExistentes);
@@ -27,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.unidades_detalle) {
                     generarFormulariosUnidades();
                     cargarDetallesUnidades(data.unidades_detalle);
+                    // Ya se aplicó el bloqueo en generarFormulariosUnidades
                 }
             })
             .catch(error => {
@@ -55,8 +61,11 @@ document.addEventListener('DOMContentLoaded', function() {
             unidadesContainer.appendChild(unidadCard);
         }
 
+        // Bloquear campos y cambiar botones
+        bloquearCamposBasicos();
+        
         guardarBtn.style.display = 'block';
-        mostrarMensaje('Formularios de unidades generados correctamente', 'exito');
+        mostrarMensaje('Formularios de unidades generados correctamente. Los campos básicos están bloqueados.', 'exito');
         
         unidadesContainer.scrollIntoView({ 
             behavior: 'smooth', 
@@ -138,22 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
             mostrarMensaje(`Distribución correcta: ${sumaActual}/${totalSesiones} sesiones`, 'exito');
         } else {
             mensaje.style.display = 'none';
-        }
-    }
-
-    function actualizarSesiones() {
-        // Si ya hay formularios generados, avisar que se deben regenerar
-        if (unidadesContainer.children.length > 0) {
-            mostrarMensaje('Cambio detectado. Haz clic en "Generar Formularios" para actualizar', 'error');
-            guardarBtn.style.display = 'none';
-        }
-    }
-
-    function limpiarFormulariosExistentes() {
-        if (unidadesContainer.children.length > 0) {
-            unidadesContainer.innerHTML = '';
-            guardarBtn.style.display = 'none';
-            mostrarMensaje('Número de unidades cambiado. Genera los formularios nuevamente', 'error');
         }
     }
 
@@ -263,4 +256,66 @@ document.addEventListener('DOMContentLoaded', function() {
             mostrarMensaje('Debe haber al menos un instrumento de evaluación por unidad', 'error');
         }
     };
+
+    // Función para bloquear campos básicos
+    function bloquearCamposBasicos() {
+        sesionesInput.disabled = true;
+        unidadesInput.disabled = true;
+        generarBtn.style.display = 'none';
+        restablecerBtn.style.display = 'inline-block';
+        camposBloqueados = true;
+    }
+
+    // Función para desbloquear campos básicos
+    function desbloquearCamposBasicos() {
+        sesionesInput.disabled = false;
+        unidadesInput.disabled = false;
+        generarBtn.style.display = 'inline-block';
+        restablecerBtn.style.display = 'none';
+        camposBloqueados = false;
+    }
+
+    // Función para restablecer el formulario
+    function restablecerFormulario() {
+        if (confirm('¿Estás seguro de que quieres restablecer? Se perderán todos los formularios generados.')) {
+            // Limpiar formularios
+            unidadesContainer.innerHTML = '';
+            
+            // Desbloquear campos
+            desbloquearCamposBasicos();
+            
+            // Ocultar botón guardar
+            guardarBtn.style.display = 'none';
+            
+            // Restablecer valores por defecto
+            sesionesInput.value = '12';
+            unidadesInput.value = '3';
+            
+            // Mostrar mensaje
+            mostrarMensaje('Formulario restablecido. Puedes modificar sesiones y unidades nuevamente.', 'exito');
+        }
+    }
+
+    // Modificar las funciones actualizarSesiones y limpiarFormulariosExistentes
+    function actualizarSesiones() {
+        // Solo permitir cambios si los campos no están bloqueados
+        if (!camposBloqueados) {
+            // Si ya hay formularios generados, avisar que se deben regenerar
+            if (unidadesContainer.children.length > 0) {
+                mostrarMensaje('Cambio detectado. Haz clic en "Generar Formularios" para actualizar', 'error');
+                guardarBtn.style.display = 'none';
+            }
+        }
+    }
+
+    function limpiarFormulariosExistentes() {
+        // Solo permitir cambios si los campos no están bloqueados
+        if (!camposBloqueados) {
+            if (unidadesContainer.children.length > 0) {
+                unidadesContainer.innerHTML = '';
+                guardarBtn.style.display = 'none';
+                mostrarMensaje('Número de unidades cambiado. Genera los formularios nuevamente', 'error');
+            }
+        }
+    }
 });
