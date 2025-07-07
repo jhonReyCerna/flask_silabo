@@ -950,19 +950,16 @@ def api_estadisticas_historial():
                 }
             })
         
-        # Análisis por maestría
         maestrias = {}
         for registro in registros:
             maestria = registro.get('general', {}).get('maestria', 'Sin especificar')
             maestrias[maestria] = maestrias.get(maestria, 0) + 1
         
-        # Análisis por docente
         docentes = {}
         for registro in registros:
             docente = registro.get('general', {}).get('docente', 'Sin especificar')
             docentes[docente] = docentes.get(docente, 0) + 1
         
-        # Análisis por mes
         por_mes = {}
         for registro in registros:
             fecha_finalizacion = registro.get('metadatos', {}).get('fecha_finalizacion')
@@ -971,7 +968,6 @@ def api_estadisticas_historial():
                 mes_año = fecha.strftime('%Y-%m')
                 por_mes[mes_año] = por_mes.get(mes_año, 0) + 1
         
-        # Análisis por modalidad
         modalidades = {}
         for registro in registros:
             modalidad = registro.get('general', {}).get('modalidad', 'Sin especificar')
