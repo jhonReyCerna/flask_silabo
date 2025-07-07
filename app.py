@@ -195,7 +195,6 @@ def competencias():
 def guardar_competencias():
     """Guarda los datos del formulario de competencias con nueva estructura"""
     try:
-        # Cargar datos existentes para obtener las unidades
         datos = cargar_datos()
         unidades_data = datos.get('unidades', {})
         
@@ -205,7 +204,6 @@ def guardar_competencias():
                 'error': 'No se encontraron unidades. Debes crear las unidades primero.'
             }), 400
         
-        # Obtener datos JSON del frontend
         competencias_data = request.form.get('competencias_data')
         if not competencias_data:
             return jsonify({
@@ -221,7 +219,6 @@ def guardar_competencias():
                 'error': 'Datos de competencias inválidos.'
             }), 400
         
-        # Validar estructura de datos
         for unidad_comp in unidades_competencias:
             numero_unidad = unidad_comp.get('numero_unidad')
             competencias = unidad_comp.get('competencias', [])
@@ -238,7 +235,6 @@ def guardar_competencias():
                     'error': f'La unidad {numero_unidad} no puede tener más de 4 competencias.'
                 }), 400
             
-            # Validar que cada competencia tenga la estructura correcta
             for i, competencia in enumerate(competencias):
                 if not isinstance(competencia, dict):
                     return jsonify({
@@ -256,15 +252,12 @@ def guardar_competencias():
                         'error': f'Todas las competencias deben tener código, título y descripción.'
                     }), 400
         
-        # Estructurar datos para guardar
         datos_formulario = {
             'unidades_competencias': unidades_competencias
         }
         
-        # Cargar datos existentes y agregar competencias
         datos['competencias'] = datos_formulario
         
-        # Guardar datos actualizados
         guardar_datos(datos)
         
         print(f"DEBUG: Competencias guardadas exitosamente para {len(unidades_competencias)} unidades")
@@ -344,7 +337,6 @@ def guardar_productos():
                 'error': 'No se encontraron unidades. Debes crear las unidades primero.'
             }), 400
         
-        # Obtener datos JSON del frontend
         productos_data = request.form.get('productos_data')
         if not productos_data:
             return jsonify({
@@ -360,7 +352,6 @@ def guardar_productos():
                 'error': 'Datos de productos inválidos.'
             }), 400
         
-        # Validar estructura de datos
         for unidad_prod in unidades_productos:
             numero_unidad = unidad_prod.get('numero_unidad')
             productos = unidad_prod.get('productos', [])
@@ -377,7 +368,6 @@ def guardar_productos():
                     'error': f'La unidad {numero_unidad} no puede tener más de 4 productos.'
                 }), 400
             
-            # Validar que cada producto tenga la estructura correcta
             for i, producto in enumerate(productos):
                 if not isinstance(producto, dict):
                     return jsonify({
@@ -395,7 +385,6 @@ def guardar_productos():
                         'error': f'Todos los campos son obligatorios para el producto {i+1} de la unidad {numero_unidad}.'
                     }), 400
         
-        # Guardar productos
         datos['productos'] = {
             'unidades_productos': unidades_productos
         }
@@ -471,7 +460,6 @@ def guardar_sesiones():
                 'error': 'No se encontraron unidades. Debes crear las unidades primero.'
             }), 400
         
-        # Obtener datos JSON del frontend
         sesiones_data = request.form.get('sesiones_data')
         if not sesiones_data:
             return jsonify({
@@ -487,7 +475,6 @@ def guardar_sesiones():
                 'error': 'Datos de sesiones inválidos.'
             }), 400
         
-        # Validar estructura de datos
         for unidad_ses in unidades_sesiones:
             sesiones = unidad_ses.get('sesiones', [])
             if not isinstance(sesiones, list) or len(sesiones) < 1:
@@ -503,7 +490,6 @@ def guardar_sesiones():
                         'error': 'Cada sesión debe tener número y temario.'
                     }), 400
         
-        # Guardar en el archivo
         datos['sesiones'] = {
             'unidades_sesiones': unidades_sesiones
         }
@@ -624,7 +610,6 @@ def api_cargar_unidades_para_cronograma():
     datos = cargar_datos()
     unidades_data = datos.get('unidades', {})
     
-    # Transformar los datos para el cronograma
     unidades_list = []
     if 'unidades_detalle' in unidades_data:
         for i, unidad in enumerate(unidades_data['unidades_detalle']):
@@ -652,18 +637,14 @@ def guardar_referencias():
     try:
         referencias_data = request.get_json()
         
-        # Cargar datos existentes
         datos = cargar_datos()
         
-        # Actualizar referencias
         datos['referencias'] = {
-            'fecha_guardado': datetime.now().isoformat(),
             'libros': referencias_data.get('libros', []),
             'articulos': referencias_data.get('articulos', []),
             'web': referencias_data.get('web', [])
         }
         
-        # Guardar datos
         guardar_datos(datos)
         
         return jsonify({

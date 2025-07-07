@@ -82,15 +82,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (tipo === 'libros') {
             campos = `
                 <div class="referencia-campos libro">
-                    <div class="form-row">
-                        <label for="${tipo}-apellido-${numero}">Apellido del Autor:</label>
-                        <input type="text" id="${tipo}-apellido-${numero}" name="${tipo}[${numero-1}][apellido]" 
-                               value="${datos ? datos.apellido || '' : ''}" placeholder="Ej: García" required>
-                    </div>
-                    <div class="form-row">
-                        <label for="${tipo}-inicial-${numero}">Inicial del Nombre:</label>
-                        <input type="text" id="${tipo}-inicial-${numero}" name="${tipo}[${numero-1}][inicial]" 
-                               value="${datos ? datos.inicial || '' : ''}" placeholder="Ej: J." required>
+                    <div class="autores-section">
+                        <div class="autores-header">
+                            <h4>👤 Autores</h4>
+                            <button type="button" class="btn-agregar-autor" onclick="agregarAutor('${tipo}', ${numero})">
+                                + Agregar Autor
+                            </button>
+                        </div>
+                        <div class="autores-lista" id="${tipo}-autores-${numero}">
+                        </div>
                     </div>
                     <div class="form-row">
                         <label for="${tipo}-año-${numero}">Año:</label>
@@ -112,25 +112,15 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (tipo === 'articulos') {
             campos = `
                 <div class="referencia-campos articulo">
-                    <div class="form-row">
-                        <label for="${tipo}-apellido1-${numero}">Apellido Autor 1:</label>
-                        <input type="text" id="${tipo}-apellido1-${numero}" name="${tipo}[${numero-1}][apellido1]" 
-                               value="${datos ? datos.apellido1 || '' : ''}" placeholder="Ej: García" required>
-                    </div>
-                    <div class="form-row">
-                        <label for="${tipo}-inicial1-${numero}">Inicial Autor 1:</label>
-                        <input type="text" id="${tipo}-inicial1-${numero}" name="${tipo}[${numero-1}][inicial1]" 
-                               value="${datos ? datos.inicial1 || '' : ''}" placeholder="Ej: J." required>
-                    </div>
-                    <div class="form-row">
-                        <label for="${tipo}-apellido2-${numero}">Apellido Autor 2:</label>
-                        <input type="text" id="${tipo}-apellido2-${numero}" name="${tipo}[${numero-1}][apellido2]" 
-                               value="${datos ? datos.apellido2 || '' : ''}" placeholder="Ej: López (opcional)">
-                    </div>
-                    <div class="form-row">
-                        <label for="${tipo}-inicial2-${numero}">Inicial Autor 2:</label>
-                        <input type="text" id="${tipo}-inicial2-${numero}" name="${tipo}[${numero-1}][inicial2]" 
-                               value="${datos ? datos.inicial2 || '' : ''}" placeholder="Ej: M. (opcional)">
+                    <div class="autores-section">
+                        <div class="autores-header">
+                            <h4>👤 Autores</h4>
+                            <button type="button" class="btn-agregar-autor" onclick="agregarAutor('${tipo}', ${numero})">
+                                + Agregar Autor
+                            </button>
+                        </div>
+                        <div class="autores-lista" id="${tipo}-autores-${numero}">
+                        </div>
                     </div>
                     <div class="form-row">
                         <label for="${tipo}-año-${numero}">Año:</label>
@@ -172,10 +162,15 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (tipo === 'web') {
             campos = `
                 <div class="referencia-campos web">
-                    <div class="form-row">
-                        <label for="${tipo}-autor-${numero}">Autor:</label>
-                        <input type="text" id="${tipo}-autor-${numero}" name="${tipo}[${numero-1}][autor]" 
-                               value="${datos ? datos.autor || '' : ''}" placeholder="Ej: García, J." required>
+                    <div class="autores-section">
+                        <div class="autores-header">
+                            <h4>👤 Autores</h4>
+                            <button type="button" class="btn-agregar-autor" onclick="agregarAutor('${tipo}', ${numero})">
+                                + Agregar Autor
+                            </button>
+                        </div>
+                        <div class="autores-lista" id="${tipo}-autores-${numero}">
+                        </div>
                     </div>
                     <div class="form-row">
                         <label for="${tipo}-año-${numero}">Año:</label>
@@ -237,6 +232,14 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         container.appendChild(referenciaDiv);
+
+        if (datos && datos.autores && datos.autores.length > 0) {
+            datos.autores.forEach((autor, index) => {
+                agregarAutor(tipo, numero, autor);
+            });
+        } else {
+            agregarAutor(tipo, numero);
+        }
     }
 
     window.eliminarReferencia = function(tipo, numero) {
@@ -257,6 +260,16 @@ document.addEventListener('DOMContentLoaded', function() {
             let tipoTexto = tipo === 'libros' ? 'Libro' : (tipo === 'articulos' ? 'Artículo' : 'Página Web');
             numeroElement.textContent = `${tipoTexto} #${nuevoNumero}`;
             
+            const autoresContainer = referencia.querySelector('.autores-lista');
+            if (autoresContainer) {
+                autoresContainer.id = `${tipo}-autores-${nuevoNumero}`;
+            }
+            
+            const btnAgregarAutor = referencia.querySelector('.btn-agregar-autor');
+            if (btnAgregarAutor) {
+                btnAgregarAutor.setAttribute('onclick', `agregarAutor('${tipo}', ${nuevoNumero})`);
+            }
+            
             const campos = referencia.querySelectorAll('input, select');
             campos.forEach(campo => {
                 const oldName = campo.name;
@@ -264,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 campo.name = newName;
                 
                 const oldId = campo.id;
-                const newId = oldId.replace(/-\d+$/, `-${nuevoNumero}`);
+                const newId = oldId.replace(/-\d+(-\d+)?$/, `-${nuevoNumero}$1`);
                 campo.id = newId;
             });
             
@@ -272,9 +285,86 @@ document.addEventListener('DOMContentLoaded', function() {
             btnEliminar.setAttribute('onclick', `eliminarReferencia('${tipo}', ${nuevoNumero})`);
             
             referencia.id = `${tipo}-${nuevoNumero}`;
+            
+            renumerarAutores(tipo, nuevoNumero);
         });
         
         contadores[tipo] = referencias.length + 1;
+    }
+
+    window.agregarAutor = function(tipo, numeroReferencia, autorData = null) {
+        const autoresContainer = document.getElementById(`${tipo}-autores-${numeroReferencia}`);
+        const numeroAutor = autoresContainer.children.length + 1;
+        
+        const autorDiv = document.createElement('div');
+        autorDiv.className = 'autor-item';
+        autorDiv.id = `${tipo}-autor-${numeroReferencia}-${numeroAutor}`;
+        
+        autorDiv.innerHTML = `
+            <div class="autor-header">
+                <span class="autor-numero">Autor #${numeroAutor}</span>
+                <button type="button" class="btn-eliminar-autor" onclick="eliminarAutor('${tipo}', ${numeroReferencia}, ${numeroAutor})">
+                    Eliminar
+                </button>
+            </div>
+            <div class="autor-campos">
+                <div class="form-row">
+                    <label for="${tipo}-autor-apellido-${numeroReferencia}-${numeroAutor}">Apellido:</label>
+                    <input type="text" id="${tipo}-autor-apellido-${numeroReferencia}-${numeroAutor}" 
+                           name="${tipo}[${numeroReferencia-1}][autores][${numeroAutor-1}][apellido]" 
+                           value="${autorData ? autorData.apellido || '' : ''}" 
+                           placeholder="Ej: García" required>
+                </div>
+                <div class="form-row">
+                    <label for="${tipo}-autor-inicial-${numeroReferencia}-${numeroAutor}">Inicial:</label>
+                    <input type="text" id="${tipo}-autor-inicial-${numeroReferencia}-${numeroAutor}" 
+                           name="${tipo}[${numeroReferencia-1}][autores][${numeroAutor-1}][inicial]" 
+                           value="${autorData ? autorData.inicial || '' : ''}" 
+                           placeholder="Ej: J." required>
+                </div>
+            </div>
+        `;
+        
+        autoresContainer.appendChild(autorDiv);
+    };
+
+    window.eliminarAutor = function(tipo, numeroReferencia, numeroAutor) {
+        const autorElement = document.getElementById(`${tipo}-autor-${numeroReferencia}-${numeroAutor}`);
+        const autoresContainer = document.getElementById(`${tipo}-autores-${numeroReferencia}`);
+        
+        if (autorElement && autoresContainer.children.length > 1) {
+            autorElement.remove();
+            renumerarAutores(tipo, numeroReferencia);
+        } else if (autoresContainer.children.length === 1) {
+            alert('Debe haber al menos un autor por referencia.');
+        }
+    };
+
+    function renumerarAutores(tipo, numeroReferencia) {
+        const autoresContainer = document.getElementById(`${tipo}-autores-${numeroReferencia}`);
+        const autores = autoresContainer.querySelectorAll('.autor-item');
+        
+        autores.forEach((autor, index) => {
+            const nuevoNumero = index + 1;
+            const numeroElement = autor.querySelector('.autor-numero');
+            numeroElement.textContent = `Autor #${nuevoNumero}`;
+            
+            const campos = autor.querySelectorAll('input');
+            campos.forEach(campo => {
+                const oldName = campo.name;
+                const newName = oldName.replace(/\[autores\]\[\d+\]/, `[autores][${index}]`);
+                campo.name = newName;
+                
+                const oldId = campo.id;
+                const newId = oldId.replace(/-\d+$/, `-${nuevoNumero}`);
+                campo.id = newId;
+            });
+            
+            const btnEliminar = autor.querySelector('.btn-eliminar-autor');
+            btnEliminar.setAttribute('onclick', `eliminarAutor('${tipo}', ${numeroReferencia}, ${nuevoNumero})`);
+            
+            autor.id = `${tipo}-autor-${numeroReferencia}-${nuevoNumero}`;
+        });
     }
 
     function guardarReferencias(event) {

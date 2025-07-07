@@ -345,5 +345,26 @@
         "horas": 9
       }
     ]
+  },
+  "referencias": {
+    "libros": [
+      {
+        "autores": {
+          "0": {
+            "apellido": "Cerna",
+            "inicial": "J."
+          },
+          "1": {
+            "apellido": "Perez ",
+            "inicial": "S."
+          }
+        },
+        "año": "2025",
+        "editorial": "Editorial Alfa",
+        "titulo": "La computación"
+      }
+    ],
+    "articulos": [],
+    "web": []
   }
 }

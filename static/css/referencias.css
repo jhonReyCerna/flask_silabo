@@ -299,11 +299,121 @@
   font-weight: bold;
 }
 
+.autores-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+}
+
+.autores-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.autores-header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-agregar-autor {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.btn-agregar-autor:hover {
+  background-color: #0056b3;
+}
+
+.autores-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.autor-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.75rem;
+}
+
+.autor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.autor-numero {
+  font-weight: 600;
+  color: #495057;
+  font-size: 12px;
+}
+
+.btn-eliminar-autor {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background-color 0.2s;
+}
+
+.btn-eliminar-autor:hover {
+  background-color: #c82333;
+}
+
+.autor-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.autor-campos .form-row {
+  margin-bottom: 0;
+}
+
+.autor-campos .form-row label {
+  font-size: 12px;
+  margin-bottom: 0.25rem;
+}
+
+.autor-campos .form-row input {
+  padding: 0.5rem;
+  font-size: 13px;
+}
+
 @media (max-width: 768px) {
   .referencia-campos.libro,
   .referencia-campos.articulo,
   .referencia-campos.web {
     grid-template-columns: 1fr;
+  }
+  
+  .autor-campos {
+    grid-template-columns: 1fr;
+  }
+  
+  .autores-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
   }
   
   .form-buttons {
@@ -333,6 +443,20 @@
   .referencia-header {
     flex-direction: column;
     gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .autores-section {
+    padding: 0.75rem;
+  }
+  
+  .autor-item {
+    padding: 0.5rem;
+  }
+  
+  .autor-header {
+    flex-direction: column;
+    gap: 0.25rem;
     align-items: flex-start;
   }
 }
