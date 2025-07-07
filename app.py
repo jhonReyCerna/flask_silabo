@@ -14,16 +14,58 @@ app.static_folder = 'static'
 DATA_FILE = 'historial.json'
 
 def cargar_datos():
-    """Carga los datos del archivo JSON"""
+    """Carga los datos del registro actual"""
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'r', encoding='utf-8') as f:
+            historial = json.load(f)
+            registro_actual = historial.get('registro_actual', {})
+            return registro_actual
+    return {}
+
+def cargar_historial_completo():
+    """Carga todo el historial incluyendo registros completados"""
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
-    return {}
+    return {"registro_actual": {}, "registros_completados": []}
 
 def guardar_datos(datos):
-    """Guarda los datos en el archivo JSON"""
+    """Guarda los datos en el registro actual"""
+    historial = cargar_historial_completo()
+    historial['registro_actual'] = datos
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(datos, f, ensure_ascii=False, indent=2)
+        json.dump(historial, f, ensure_ascii=False, indent=2)
+
+def finalizar_registro():
+    """Finaliza el registro actual y lo mueve al historial"""
+    historial = cargar_historial_completo()
+    registro_actual = historial.get('registro_actual', {})
+    
+    if registro_actual:
+        registro_actual['metadatos'] = {
+            'fecha_finalizacion': datetime.now().isoformat(),
+            'estado': 'completado',
+            'id_registro': len(historial.get('registros_completados', [])) + 1
+        }
+        
+        if 'registros_completados' not in historial:
+            historial['registros_completados'] = []
+        historial['registros_completados'].append(registro_actual)
+        
+        historial['registro_actual'] = {}
+        
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(historial, f, ensure_ascii=False, indent=2)
+        
+        return True
+    return False
+
+def iniciar_nuevo_registro():
+    """Inicializa un nuevo registro vacío"""
+    historial = cargar_historial_completo()
+    historial['registro_actual'] = {}
+    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump(historial, f, ensure_ascii=False, indent=2)
 
 @app.route('/')
 def index():
@@ -688,7 +730,7 @@ def finalizar():
 
 @app.route('/generar_word')
 def generar_word():
-    """Genera y descarga un documento Word del sílabo"""
+    """Genera y descarga un documento Word del sílabo, luego finaliza el registro"""
     try:
         datos = cargar_datos()
         datos_general = datos.get('general', {})
@@ -707,6 +749,9 @@ def generar_word():
         
         nombre_archivo = generar_nombre_archivo(datos_general)
         
+        # Finalizar el registro después de generar el documento
+        finalizar_registro()
+        
         return send_file(
             tmp_file_path,
             as_attachment=True,
@@ -719,6 +764,59 @@ def generar_word():
             'success': False,
             'message': f'Error al generar el documento: {str(e)}'
         }), 500
+
+@app.route('/finalizar_registro', methods=['POST'])
+def finalizar_registro_route():
+    """Finaliza el registro actual y lo mueve al historial"""
+    try:
+        if finalizar_registro():
+            return jsonify({
+                'success': True,
+                'message': 'Registro finalizado exitosamente'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'No hay datos para finalizar'
+            })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al finalizar registro: {str(e)}'
+        })
+
+@app.route('/nuevo_registro', methods=['POST'])
+def nuevo_registro_route():
+    """Crea un nuevo registro vacío"""
+    try:
+        iniciar_nuevo_registro()
+        return jsonify({
+            'success': True,
+            'message': 'Nuevo registro iniciado correctamente'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al crear nuevo registro: {str(e)}'
+        })
+
+@app.route('/api/historial')
+def obtener_historial():
+    """Obtiene el historial completo de registros"""
+    try:
+        historial = cargar_historial_completo()
+        return jsonify({
+            'success': True,
+            'historial': {
+                'registro_actual': historial.get('registro_actual', {}),
+                'registros_completados': historial.get('registros_completados', [])
+            }
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al obtener historial: {str(e)}'
+        })
 
 if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)

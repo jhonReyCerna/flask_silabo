@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const modificarBtn = document.getElementById('modificarBtn');
     const vistaPreviaBtn = document.getElementById('vistaPreviaBtn');
     const generarDocumentoBtn = document.getElementById('generarDocumentoBtn');
+    const verHistorialBtn = document.getElementById('verHistorialBtn');
 
     function mostrarMensaje(texto, tipo = 'info') {
         const mensajeAnterior = document.querySelector('.mensaje-estado');
@@ -53,14 +54,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     generarDocumentoBtn.addEventListener('click', async function() {
-        mostrarMensaje('📄 Generando documento...', 'info');
+        mostrarMensaje('📄 Generando documento y finalizando registro...', 'info');
         
         const datos = await cargarDatos();
         if (datos && Object.keys(datos).length > 0) {
-            generarDocumento(datos);
+            await generarDocumento(datos);
         } else {
             mostrarMensaje('❌ No hay datos para generar el documento. Complete el formulario general primero.', 'error');
         }
+    });
+
+    verHistorialBtn.addEventListener('click', async function() {
+        mostrarMensaje('📋 Cargando historial...', 'info');
+        await mostrarHistorial();
     });
 
     function mostrarVistaPrevia(datos) {
@@ -175,7 +181,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
                 
-                mostrarMensaje('✅ Documento Word descargado correctamente', 'success');
+                mostrarMensaje('✅ Documento Word descargado correctamente. Registro finalizado.', 'success');
+                
+                mostrarOpcionesPosteriorFinalizacion();
+                
             } else {
                 const errorData = await response.json();
                 mostrarMensaje(`❌ ${errorData.message}`, 'error');
@@ -183,6 +192,108 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error al generar documento:', error);
             mostrarMensaje('❌ Error al generar el documento Word', 'error');
+        }
+    }
+
+    function mostrarOpcionesPosteriorFinalizacion() {
+        generarDocumentoBtn.disabled = true;
+        vistaPreviaBtn.disabled = true;
+        modificarBtn.disabled = true;
+        
+        const container = document.querySelector('.finalizar-container');
+        container.innerHTML = `
+            <h1 class="finalizar-titulo">🎉 ¡Registro Completado!</h1>
+            <p class="finalizar-mensaje">
+                Tu sílabo ha sido generado exitosamente y el registro ha sido guardado en el historial.
+            </p>
+            <p class="finalizar-mensaje">
+                ¿Qué deseas hacer ahora?
+            </p>
+            <div class="finalizar-botones">
+                <button class="finalizar-btn" id="nuevoRegistroBtn">🆕 Crear Nuevo Sílabo</button>
+                <button class="finalizar-btn" id="verHistorialBtn">📋 Ver Historial</button>
+                <button class="finalizar-btn" id="volverInicioBtn">🏠 Volver al Inicio</button>
+            </div>
+        `;
+        
+        document.getElementById('nuevoRegistroBtn').addEventListener('click', async function() {
+            mostrarMensaje('🆕 Creando nuevo registro...', 'info');
+            try {
+                const response = await fetch('/nuevo_registro', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    mostrarMensaje('✅ Nuevo registro creado. Redirigiendo...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/general';
+                    }, 1500);
+                } else {
+                    mostrarMensaje('❌ Error al crear nuevo registro', 'error');
+                }
+            } catch (error) {
+                console.error('Error al crear nuevo registro:', error);
+                mostrarMensaje('❌ Error al crear nuevo registro', 'error');
+            }
+        });
+        
+        verHistorialBtn.addEventListener('click', async function() {
+            mostrarMensaje('📋 Cargando historial...', 'info');
+            await mostrarHistorial();
+        });
+        
+        document.getElementById('volverInicioBtn').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    }
+
+    async function mostrarHistorial() {
+        try {
+            const response = await fetch('/api/historial');
+            const data = await response.json();
+            
+            if (data.success) {
+                const registros = data.historial.registros_completados || [];
+                
+                let historialHtml = `
+                    <h2>📋 Historial de Sílabos Completados</h2>
+                    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white;">
+                `;
+                
+                if (registros.length === 0) {
+                    historialHtml += '<p>No hay registros completados anteriormente.</p>';
+                } else {
+                    registros.forEach((registro, index) => {
+                        const general = registro.general || {};
+                        const metadatos = registro.metadatos || {};
+                        
+                        historialHtml += `
+                            <div style="border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px;">
+                                <h4>📚 ${general.asignatura || 'Sin nombre'}</h4>
+                                <p><strong>Código:</strong> ${general.codigo || 'N/A'}</p>
+                                <p><strong>Docente:</strong> ${general.docente || 'N/A'}</p>
+                                <p><strong>Finalizado:</strong> ${metadatos.fecha_finalizacion ? new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES') : 'N/A'}</p>
+                            </div>
+                        `;
+                    });
+                }
+                
+                historialHtml += `
+                    </div>
+                    <br>
+                    <button onclick="location.reload()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Volver</button>
+                `;
+                
+                document.querySelector('.finalizar-container').innerHTML = historialHtml;
+            } else {
+                mostrarMensaje('❌ Error al cargar historial', 'error');
+            }
+        } catch (error) {
+            console.error('Error al cargar historial:', error);
+            mostrarMensaje('❌ Error al cargar historial', 'error');
         }
     }
 
