@@ -453,10 +453,10 @@ def crear_encabezado_profesional(datos):
         for unidad, tema in datos["temas_por_unidad"].items():
             add_unidad(f"{unidad}: ", tema)
     else:
-        add_unidad("Unidad I: ", "Fundamentos de la Gestión de Recursos Humanos, Planificación, Dirección")
-        add_unidad("Unidad II: ", "Administración y Conducción Estratégica – Actividades Claves de la Gerencia del Talento Humano.")
-        add_unidad("Unidad III: ", "Liderazgo y Gestión de Conflictos: Competencias del Gerente de Gestión de RR-HH– Actividad – Recursos institucionales.")
-        add_unidad("Unidad IV: ", "Innovación y Seguridad en la Gestión de RRHH, indicadores para el mejoramiento del clima, la productividad y el desarrollo organizacional.")
+        add_unidad("Unidad I: ", "Tema pendiente")
+        add_unidad("Unidad II: ", "Tema pendiente")
+        add_unidad("Unidad III: ", "Tema pendiente")
+        add_unidad("Unidad IV: ", "Tema pendiente")
 #----------------------------------------------------------------------------------------------------------------------------------------
     def capitalizar_despues_de_dos_puntos(texto):
         partes = texto.split(':')
@@ -537,10 +537,10 @@ def crear_encabezado_profesional(datos):
     actividades = datos.get("productos_actividades")
     if not actividades or not isinstance(actividades, list) or not actividades:
         actividades = [
-            ("PA1 (C1).", "Aplica las ciencias administrativas en la gestión de recursos humanos para el fortalecimiento de las capacidades del trabajador."),
-            ("PA2 (C2).", "Diseña y Analiza los perfiles de puestos de trabajo para el mejor reclutamiento del talento humano."),
-            ("PA3 (C3).", "Identifica la cultura organizacional y minimiza los conflictos laborales incentivando la productividad laboral con técnicas modernas de motivación, creatividad, innovación y gerenciación con liderazgo conductivo transformacional."),
-            ("PA4 (C4).", "Comprende la importancia del fortalecimiento y el desarrollo de las capacidades, competencias, actitudes y aptitudes del personal a efecto de lograr finalmente un excelente desempeño laboral.")
+            ("PA1 (C1).", "Producto pendiente"),
+            ("PA2 (C2).", "Producto pendiente"),
+            ("PA3 (C3).", "Producto pendiente"),
+            ("PA4 (C4).", "Producto pendiente")
         ]
 
     for codigo, texto in actividades:
@@ -692,67 +692,80 @@ def crear_encabezado_profesional(datos):
     )
     crear_parrafo_estandarizado(doc, responsabilidad_social_texto, justificado=True, tamano=12)
 #------------------------------------------------------------------------------------------------------
-    def obtener_fechas_unidades(cronograma):
+    def obtener_fechas_unidades(cronograma_data):
         fechas = {}
-        if not cronograma or not isinstance(cronograma, dict):
+        if not cronograma_data or not isinstance(cronograma_data, dict):
+            return fechas
+        
+        # Manejar la estructura del cronograma del usuario
+        cronograma_array = cronograma_data.get("cronograma", [])
+        if not cronograma_array:
             return fechas
             
-        for unidad, sesiones in cronograma.items():
-            if sesiones and isinstance(sesiones, list):
-                fechas_sesiones = []
-                for sesion in sesiones:
-                    if isinstance(sesion, dict) and sesion.get("fecha"):
-                        fechas_sesiones.append(sesion.get("fecha", ""))
-                    elif isinstance(sesion, str):
-                        # Si sesion es string, ignorar por ahora
-                        continue
-                        
-                if fechas_sesiones:
-                    fechas[unidad] = {
-                        "inicio": fechas_sesiones[0],
-                        "termino": fechas_sesiones[-1]
-                    }
-                else:
-                    fechas[unidad] = {"inicio": "¿?", "termino": "¿?"}
+        # Agrupar sesiones por unidad
+        unidades_sesiones = {}
+        for sesion in cronograma_array:
+            if isinstance(sesion, dict) and sesion.get("unidad") and sesion.get("fecha"):
+                unidad_num = sesion.get("unidad")
+                unidad_key = f"Unidad {['I', 'II', 'III', 'IV'][unidad_num - 1]}"
+                
+                if unidad_key not in unidades_sesiones:
+                    unidades_sesiones[unidad_key] = []
+                
+                # Convertir fecha de formato DD/MM/YYYY a YYYY-MM-DD para ordenar
+                fecha_str = sesion.get("fecha", "")
+                if fecha_str and fecha_str != "Fecha pendiente":
+                    unidades_sesiones[unidad_key].append(fecha_str)
+        
+        # Obtener fechas de inicio y término para cada unidad
+        for unidad, fechas_sesiones in unidades_sesiones.items():
+            if fechas_sesiones:
+                # Ordenar las fechas (asumiendo formato DD/MM/YYYY)
+                fechas_ordenadas = sorted(fechas_sesiones)
+                fechas[unidad] = {
+                    "inicio": fechas_ordenadas[0],
+                    "termino": fechas_ordenadas[-1]
+                }
             else:
-                fechas[unidad] = {"inicio": "¿?", "termino": "¿?"}
+                fechas[unidad] = {"inicio": "Fecha pendiente", "termino": "Fecha pendiente"}
+                
         return fechas
-
-    temarios_por_unidad_y_sesion = {
-        "Unidad I-Sesión 1": "Introducción a la gestión de recursos humanos\nConceptos fundamentales\nImportancia estratégica",
-        "Unidad I-Sesión 2": "Planificación de recursos humanos\nAnálisis de puestos\nReclutamiento y selección",
-        "Unidad I-Sesión 3": "Desarrollo del talento humano\nCapacitación y entrenamiento\nEvaluación del desempeño",
-        "Unidad I-Sesión 4": "Sistemas de compensación\nBeneficios y políticas\nMotivación laboral",
-        "Unidad II-Sesión 5": "Administración estratégica de RRHH\nLiderazgo organizacional\nCultura empresarial",
-        "Unidad II-Sesión 6": "Gestión del cambio\nTransformación organizacional\nResistencia al cambio",
-        "Unidad II-Sesión 7": "Comunicación organizacional\nCanales de información\nFeedback efectivo",
-        "Unidad II-Sesión 8": "Trabajo en equipo\nSinergias organizacionales\nColaboración interdisciplinaria",
-        "Unidad III-Sesión 9": "Liderazgo y gestión de conflictos\nTipos de liderazgo\nResolución de problemas",
-        "Unidad III-Sesión 10": "Competencias gerenciales\nHabilidades directivas\nToma de decisiones",
-        "Unidad III-Sesión 11": "Gestión del clima laboral\nSatisfacción del empleado\nBienestar organizacional",
-        "Unidad III-Sesión 12": "Recursos institucionales\nOptimización de recursos\nEficiencia operativa",
-        "Unidad IV-Sesión 13": "Innovación en RRHH\nTecnologías emergentes\nDigitalización de procesos",
-        "Unidad IV-Sesión 14": "Seguridad y salud ocupacional\nPrevención de riesgos\nBienestar laboral",
-        "Unidad IV-Sesión 15": "Indicadores de gestión\nMétricas de productividad\nKPIs organizacionales",
-        "Unidad IV-Sesión 16": "Desarrollo organizacional\nMejora continua\nExcelencia operacional"
-    }
 
     doc.add_page_break()
 
     crear_parrafo_estandarizado(doc, "\nV. ORGANIZACIÓN DE LAS UNIDADES DE APRENDIZAJE", negrita=True, tamano=12, espaciado_antes=18, espaciado_despues=6, estilo='Heading 1')
 
-    fechas_unidades = obtener_fechas_unidades(datos.get("cronograma_generado", {}))
+    fechas_unidades = obtener_fechas_unidades(datos.get("cronograma", {}))
     temas_por_unidad = datos.get("temas_por_unidad", {})
-    cronograma = datos.get("cronograma_generado", {})
+    cronograma_data = datos.get("cronograma", {})
+    cronograma = cronograma_data.get("cronograma", [])
+    
+    # Convertir el cronograma del usuario a la estructura esperada
+    cronograma_estructurado = {}
+    if cronograma:
+        for sesion in cronograma:
+            if isinstance(sesion, dict) and sesion.get("unidad"):
+                unidad_num = sesion.get("unidad")
+                unidad_key = f"Unidad {['I', 'II', 'III', 'IV'][unidad_num - 1]}"
+                
+                if unidad_key not in cronograma_estructurado:
+                    cronograma_estructurado[unidad_key] = []
+                
+                cronograma_estructurado[unidad_key].append({
+                    "id": sesion.get("sesion", 1),
+                    "fecha": sesion.get("fecha", "Fecha pendiente"),
+                    "horas": str(sesion.get("horas", "Hora pendiente"))
+                })
+        cronograma = cronograma_estructurado
     
     # Asegurar que competencias tenga el formato correcto
     competencias = datos.get("competencias_especificas", [])
     if not competencias or not isinstance(competencias, list):
         competencias = [
-            ("RAE1 (CE1).", "Elabora y aplica un sistema de gestión del talento humano en la empresa, que permita obtener una ventaja competitiva."),
-            ("RAE2 (CE2).", "Demuestra liderazgo en la gestión del talento humano a través de la realización de actividades para lograr objetivos y metas establecidos, con eficacia, eficiencia y orientación a los resultados."),
-            ("RAE3 (CE3).", "Diseña estrategias innovadoras para la gestión del talento humano en contextos organizacionales complejos."),
-            ("RAE4 (CE4).", "Evalúa el impacto de las políticas de gestión del talento humano en el desarrollo organizacional.")
+            ("RAE1 (CE1).", "Competencia pendiente"),
+            ("RAE2 (CE2).", "Competencia pendiente"),
+            ("RAE3 (CE3).", "Competencia pendiente"),
+            ("RAE4 (CE4).", "Competencia pendiente")
         ]
     indicadores_por_unidad = datos.get("indicadores_por_unidad", {})
     instrumentos_por_unidad = datos.get("instrumentos_por_unidad", {})
@@ -761,28 +774,28 @@ def crear_encabezado_profesional(datos):
     if not cronograma:
         cronograma = {
             "Unidad I": [
-                {"id": 1, "fecha": "2025-03-03", "horas": "4"},
-                {"id": 2, "fecha": "2025-03-10", "horas": "4"},
-                {"id": 3, "fecha": "2025-03-17", "horas": "4"},
-                {"id": 4, "fecha": "2025-03-24", "horas": "4"}
+                {"id": 1, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 2, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 3, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 4, "fecha": "Fecha pendiente", "horas": "Hora pendiente"}
             ],
             "Unidad II": [
-                {"id": 5, "fecha": "2025-03-31", "horas": "4"},
-                {"id": 6, "fecha": "2025-04-07", "horas": "4"},
-                {"id": 7, "fecha": "2025-04-14", "horas": "4"},
-                {"id": 8, "fecha": "2025-04-21", "horas": "4"}
+                {"id": 5, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 6, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 7, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 8, "fecha": "Fecha pendiente", "horas": "Hora pendiente"}
             ],
             "Unidad III": [
-                {"id": 9, "fecha": "2025-04-28", "horas": "4"},
-                {"id": 10, "fecha": "2025-05-05", "horas": "4"},
-                {"id": 11, "fecha": "2025-05-12", "horas": "4"},
-                {"id": 12, "fecha": "2025-05-19", "horas": "4"}
+                {"id": 9, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 10, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 11, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 12, "fecha": "Fecha pendiente", "horas": "Hora pendiente"}
             ],
             "Unidad IV": [
-                {"id": 13, "fecha": "2025-05-26", "horas": "4"},
-                {"id": 14, "fecha": "2025-06-02", "horas": "4"},
-                {"id": 15, "fecha": "2025-06-09", "horas": "4"},
-                {"id": 16, "fecha": "2025-06-16", "horas": "4"}
+                {"id": 13, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 14, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 15, "fecha": "Fecha pendiente", "horas": "Hora pendiente"},
+                {"id": 16, "fecha": "Fecha pendiente", "horas": "Hora pendiente"}
             ]
         }
 
@@ -793,7 +806,8 @@ def crear_encabezado_profesional(datos):
 
         unidad_romana = f"Unidad {convertir_a_romano(i)}"
         tema_unidad = temas_por_unidad.get(unidad_romana, "Tema no definido").capitalize()
-        fechas = fechas_unidades.get(unidad, {"inicio": "¿?", "termino": "¿?"})
+        # Usar la clave correcta para obtener las fechas
+        fechas = fechas_unidades.get(unidad, fechas_unidades.get(unidad_romana, {"inicio": "Fecha pendiente", "termino": "Fecha pendiente"}))
         tabla = doc.add_table(rows=5, cols=5)
         tabla.style = 'Table Grid'
 
@@ -874,12 +888,12 @@ def crear_encabezado_profesional(datos):
             p_sesion.add_run(f"\n{horas_sesion} horas\n{fecha}")
             p_sesion.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_sesion.paragraph_format.space_before = Pt(24)
-            clave_tema = f"{unidad_romana}-Sesión {sesion_id}"
-            tema_sesion = temarios_por_unidad_y_sesion.get(
-                clave_tema,
-                f"Tema de la sesión {contador_sesion}"  
-            )
-
+            
+            # Obtener el tema de la sesión desde los datos del usuario
+            tema_sesion = "Tema pendiente"
+            if isinstance(sesion, dict) and 'temario' in sesion:
+                tema_sesion = sesion['temario']
+            
             p_tema = fila[1].paragraphs[0]
             p_tema.clear()
             for linea in tema_sesion.splitlines():
@@ -1064,11 +1078,11 @@ def crear_encabezado_profesional(datos):
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Error al cargar referencias: {e}")
         referencias_cargadas = [
-            {"referencia_formateada": "Chiavenato, I. (2020). Gestión del talento humano. McGraw Hill."},
-            {"referencia_formateada": "Robbins, S. & Judge, T. (2017). Comportamiento organizacional. Pearson."},
-            {"referencia_formateada": "Alles, M. (2018). Dirección estratégica de recursos humanos. Granica."},
-            {"referencia_formateada": "Ulrich, D. (2019). Recursos humanos Champions. Granica."},
-            {"referencia_formateada": "Werther, W. & Davis, K. (2019). Administración de recursos humanos. McGraw Hill."}
+            {"referencia_formateada": "Referencia pendiente"},
+            {"referencia_formateada": "Referencia pendiente"},
+            {"referencia_formateada": "Referencia pendiente"},
+            {"referencia_formateada": "Referencia pendiente"},
+            {"referencia_formateada": "Referencia pendiente"}
         ]
         print("Usando referencias predeterminadas")
 
@@ -1232,7 +1246,7 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
         datos_mapeados.update({
             'competencias_especificas': competencias_especificas,
             'productos_actividades': productos_actividades,
-            'cronograma_generado': datos_completos.get('cronograma', {}),
+            'cronograma': datos_completos.get('cronograma', {}),
             'referencias': datos_completos.get('referencias', {})
         })
                 
