@@ -1248,9 +1248,10 @@ def crear_encabezado_profesional(datos):
     try:
         with open("historial.json", "r", encoding="utf-8") as f:
             historial = json.load(f)
-            # Buscar en registros_completados
+            # Buscar en registros_completados - Solo los últimos 5 registros para optimizar
             if "registros_completados" in historial and historial["registros_completados"]:
-                for registro in reversed(historial["registros_completados"]):
+                registros_recientes = historial["registros_completados"][-5:]  # Solo últimos 5
+                for registro in reversed(registros_recientes):
                     if "referencias" in registro:
                         referencias_data = registro["referencias"]
                         
@@ -1259,49 +1260,58 @@ def crear_encabezado_profesional(datos):
                         if isinstance(referencias_data, dict):
                             todas_referencias = []
                             
-                            # Agregar libros
+                            # Agregar libros (máximo 10 para optimizar)
                             if "libros" in referencias_data and isinstance(referencias_data["libros"], list):
-                                for libro in referencias_data["libros"]:
+                                for libro in referencias_data["libros"][:10]:  # Límite de 10
                                     if isinstance(libro, dict):
                                         # Si ya tiene referencia formateada, usarla
                                         if "referencia_formateada" in libro:
                                             todas_referencias.append(libro)
                                         # Si no, formatear desde los campos individuales
                                         elif "titulo" in libro:
-                                            ref_formateada = formatear_referencia_libro(libro)
-                                            todas_referencias.append({"referencia_formateada": ref_formateada})
+                                            try:
+                                                ref_formateada = formatear_referencia_libro(libro)
+                                                todas_referencias.append({"referencia_formateada": ref_formateada})
+                                            except:
+                                                todas_referencias.append({"referencia_formateada": "Referencia pendiente"})
                             
-                            # Agregar artículos
+                            # Agregar artículos (máximo 10 para optimizar)
                             if "articulos" in referencias_data and isinstance(referencias_data["articulos"], list):
-                                for articulo in referencias_data["articulos"]:
+                                for articulo in referencias_data["articulos"][:10]:  # Límite de 10
                                     if isinstance(articulo, dict):
                                         # Si ya tiene referencia formateada, usarla
                                         if "referencia_formateada" in articulo:
                                             todas_referencias.append(articulo)
                                         # Si no, formatear desde los campos individuales
                                         elif "titulo" in articulo:
-                                            ref_formateada = formatear_referencia_articulo(articulo)
-                                            todas_referencias.append({"referencia_formateada": ref_formateada})
+                                            try:
+                                                ref_formateada = formatear_referencia_articulo(articulo)
+                                                todas_referencias.append({"referencia_formateada": ref_formateada})
+                                            except:
+                                                todas_referencias.append({"referencia_formateada": "Referencia pendiente"})
                             
-                            # Agregar referencias web
+                            # Agregar referencias web (máximo 10 para optimizar)
                             if "web" in referencias_data and isinstance(referencias_data["web"], list):
-                                for web in referencias_data["web"]:
+                                for web in referencias_data["web"][:10]:  # Límite de 10
                                     if isinstance(web, dict):
                                         # Si ya tiene referencia formateada, usarla
                                         if "referencia_formateada" in web:
                                             todas_referencias.append(web)
                                         # Si no, formatear desde los campos individuales
                                         elif "titulo" in web or "url" in web:
-                                            ref_formateada = formatear_referencia_web(web)
-                                            todas_referencias.append({"referencia_formateada": ref_formateada})
+                                            try:
+                                                ref_formateada = formatear_referencia_web(web)
+                                                todas_referencias.append({"referencia_formateada": ref_formateada})
+                                            except:
+                                                todas_referencias.append({"referencia_formateada": "Referencia pendiente"})
                             
                             if todas_referencias:
-                                referencias_cargadas = todas_referencias
+                                referencias_cargadas = todas_referencias[:10]  # Máximo 10 referencias
                                 break
                         
                         # Estructura antigua: enlaces_referencia
                         elif "enlaces_referencia" in referencias_data:
-                            referencias_cargadas = referencias_data["enlaces_referencia"]
+                            referencias_cargadas = referencias_data["enlaces_referencia"][:10]  # Máximo 10
                             break
             
             # Si no encontramos referencias, usar valores por defecto
@@ -1314,8 +1324,8 @@ def crear_encabezado_profesional(datos):
                     {"referencia_formateada": "Referencia pendiente"}
                 ]
                 
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Error al cargar referencias: {e}")
+    except (FileNotFoundError, json.JSONDecodeError, Exception) as e:
+        print(f"⚠ Error al cargar referencias (usando predeterminadas): {str(e)[:100]}...")
         referencias_cargadas = [
             {"referencia_formateada": "Referencia pendiente"},
             {"referencia_formateada": "Referencia pendiente"},
@@ -1323,7 +1333,6 @@ def crear_encabezado_profesional(datos):
             {"referencia_formateada": "Referencia pendiente"},
             {"referencia_formateada": "Referencia pendiente"}
         ]
-        print("Usando referencias predeterminadas")
 
     for referencia in referencias_cargadas:
         try:
