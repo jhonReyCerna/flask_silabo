@@ -154,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function guardarSesiones(event) {
         event.preventDefault();
 
-        // Recopilar datos de todas las sesiones
         const unidadesSesiones = [];
         
         unidadesDisponibles.forEach((unidad, index) => {
@@ -184,13 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Validar que hay al menos una sesión
         if (unidadesSesiones.length === 0) {
             mostrarMensaje('Debes definir al menos una sesión para guardar', 'error');
             return;
         }
 
-        // Enviar datos al servidor
         const formData = new FormData();
         formData.append('sesiones_data', JSON.stringify(unidadesSesiones));
         
@@ -217,14 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
         mensaje.className = `mensaje ${tipo}`;
         mensaje.style.display = 'block';
         
-        // Auto-ocultar mensajes de éxito después de 5 segundos
         if (tipo === 'exito') {
             setTimeout(() => {
                 mensaje.style.display = 'none';
             }, 5000);
         }
         
-        // Hacer scroll hacia el mensaje
         mensaje.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'center' 

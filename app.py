@@ -741,7 +741,6 @@ def generar_word():
                 'message': 'No hay datos para generar el documento. Complete el formulario general primero.'
             }), 400
         
-        # Preparar todos los datos necesarios para generar el documento
         datos_completos = {
             'general': datos_general,
             'unidades': datos.get('unidades', {}),

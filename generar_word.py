@@ -73,7 +73,6 @@ def formatear_referencia_articulo(articulo):
         str: Referencia formateada
     """
     try:
-        # Extraer autores (mismo formato que libros)
         autores_str = ""
         if "autores" in articulo and isinstance(articulo["autores"], dict):
             autores_list = []
@@ -95,7 +94,6 @@ def formatear_referencia_articulo(articulo):
                 else:
                     autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
         
-        # Extraer otros campos
         titulo = articulo.get("titulo", "Título pendiente")
         año = articulo.get("año", "Año pendiente")
         revista = articulo.get("revista", "Revista pendiente")
@@ -103,7 +101,6 @@ def formatear_referencia_articulo(articulo):
         numero = articulo.get("numero", "")
         paginas = articulo.get("paginas", "")
         
-        # Formatear referencia
         referencia = f"{autores_str if autores_str else 'Autor pendiente'} ({año}). {titulo}. {revista}"
         
         if volumen:
@@ -830,12 +827,10 @@ def crear_encabezado_profesional(datos):
         if not cronograma_data or not isinstance(cronograma_data, dict):
             return fechas
         
-        # Manejar la estructura del cronograma del usuario
         cronograma_array = cronograma_data.get("cronograma", [])
         if not cronograma_array:
             return fechas
             
-        # Agrupar sesiones por unidad
         unidades_sesiones = {}
         for sesion in cronograma_array:
             if isinstance(sesion, dict) and sesion.get("unidad") and sesion.get("fecha"):
@@ -845,15 +840,12 @@ def crear_encabezado_profesional(datos):
                 if unidad_key not in unidades_sesiones:
                     unidades_sesiones[unidad_key] = []
                 
-                # Convertir fecha de formato DD/MM/YYYY a YYYY-MM-DD para ordenar
                 fecha_str = sesion.get("fecha", "")
                 if fecha_str and fecha_str != "Fecha pendiente":
                     unidades_sesiones[unidad_key].append(fecha_str)
         
-        # Obtener fechas de inicio y término para cada unidad
         for unidad, fechas_sesiones in unidades_sesiones.items():
             if fechas_sesiones:
-                # Ordenar las fechas (asumiendo formato DD/MM/YYYY)
                 fechas_ordenadas = sorted(fechas_sesiones)
                 fechas[unidad] = {
                     "inicio": fechas_ordenadas[0],
@@ -880,7 +872,6 @@ def crear_encabezado_profesional(datos):
         if not unidades_sesiones:
             return temarios
             
-        # Procesar cada unidad de sesiones
         for unidad_sesiones in unidades_sesiones:
             if not isinstance(unidad_sesiones, dict):
                 continue
@@ -905,10 +896,8 @@ def crear_encabezado_profesional(datos):
     cronograma_data = datos.get("cronograma", {})
     cronograma = cronograma_data.get("cronograma", [])
     
-    # Obtener temarios de sesiones
     temarios_sesiones = obtener_temarios_sesiones(datos)
     
-    # Convertir el cronograma del usuario a la estructura esperada
     cronograma_estructurado = {}
     if cronograma:
         for sesion in cronograma:
@@ -926,7 +915,6 @@ def crear_encabezado_profesional(datos):
                 })
         cronograma = cronograma_estructurado
     
-    # Asegurar que competencias tenga el formato correcto
     competencias = datos.get("competencias_especificas", [])
     if not competencias or not isinstance(competencias, list):
         competencias = [
@@ -974,7 +962,6 @@ def crear_encabezado_profesional(datos):
 
         unidad_romana = f"Unidad {convertir_a_romano(i)}"
         tema_unidad = temas_por_unidad.get(unidad_romana, "Tema no definido").capitalize()
-        # Usar la clave correcta para obtener las fechas
         fechas = fechas_unidades.get(unidad, fechas_unidades.get(unidad_romana, {"inicio": "Fecha pendiente", "termino": "Fecha pendiente"}))
         tabla = doc.add_table(rows=5, cols=5)
         tabla.style = 'Table Grid'
@@ -1013,7 +1000,6 @@ def crear_encabezado_profesional(datos):
                 productos_limpios.append((p[0], "Título no definido", "Contenido no definido"))
         datos["productos_actividades"] = productos_limpios
 
-        # Buscar producto con diferentes variaciones del código
         codigo_buscado_1 = f"PA{i}(C{i})"
         codigo_buscado_2 = f"PA{i} (C{i})"
         producto = None
@@ -1051,13 +1037,11 @@ def crear_encabezado_profesional(datos):
         for sesion in sesiones:
             fila = tabla.add_row().cells
             
-            # Asegurar que sesion sea un diccionario
             if isinstance(sesion, dict):
                 fecha = sesion.get("fecha", "Fecha pendiente")
                 horas_sesion = sesion.get("horas", "4")
                 sesion_id = sesion.get('id', contador_sesion)
             else:
-                # Si sesion no es diccionario, usar valores por defecto
                 fecha = "Fecha pendiente"
                 horas_sesion = "4"
                 sesion_id = contador_sesion
@@ -1068,7 +1052,6 @@ def crear_encabezado_profesional(datos):
             p_sesion.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_sesion.paragraph_format.space_before = Pt(24)
             
-            # Obtener el tema de la sesión desde los datos de sesiones
             tema_sesion = temarios_sesiones.get(contador_sesion, "Tema pendiente")
             
             p_tema = fila[1].paragraphs[0]
@@ -1248,26 +1231,23 @@ def crear_encabezado_profesional(datos):
     try:
         with open("historial.json", "r", encoding="utf-8") as f:
             historial = json.load(f)
-            # Buscar en registros_completados - Solo los últimos 5 registros para optimizar
+            
             if "registros_completados" in historial and historial["registros_completados"]:
-                registros_recientes = historial["registros_completados"][-5:]  # Solo últimos 5
+                registros_recientes = historial["registros_completados"][-5:]  
                 for registro in reversed(registros_recientes):
                     if "referencias" in registro:
                         referencias_data = registro["referencias"]
                         
-                        # Intentar diferentes estructuras de referencias
-                        # Estructura nueva: libros, articulos, web
                         if isinstance(referencias_data, dict):
                             todas_referencias = []
                             
-                            # Agregar libros (máximo 10 para optimizar)
                             if "libros" in referencias_data and isinstance(referencias_data["libros"], list):
-                                for libro in referencias_data["libros"][:10]:  # Límite de 10
+                                for libro in referencias_data["libros"][:10]: 
                                     if isinstance(libro, dict):
-                                        # Si ya tiene referencia formateada, usarla
+                                        
                                         if "referencia_formateada" in libro:
                                             todas_referencias.append(libro)
-                                        # Si no, formatear desde los campos individuales
+                                       
                                         elif "titulo" in libro:
                                             try:
                                                 ref_formateada = formatear_referencia_libro(libro)
@@ -1275,14 +1255,13 @@ def crear_encabezado_profesional(datos):
                                             except:
                                                 todas_referencias.append({"referencia_formateada": "Referencia pendiente"})
                             
-                            # Agregar artículos (máximo 10 para optimizar)
                             if "articulos" in referencias_data and isinstance(referencias_data["articulos"], list):
-                                for articulo in referencias_data["articulos"][:10]:  # Límite de 10
+                                for articulo in referencias_data["articulos"][:10]:  
                                     if isinstance(articulo, dict):
-                                        # Si ya tiene referencia formateada, usarla
+                                     
                                         if "referencia_formateada" in articulo:
                                             todas_referencias.append(articulo)
-                                        # Si no, formatear desde los campos individuales
+                                        
                                         elif "titulo" in articulo:
                                             try:
                                                 ref_formateada = formatear_referencia_articulo(articulo)
@@ -1290,14 +1269,13 @@ def crear_encabezado_profesional(datos):
                                             except:
                                                 todas_referencias.append({"referencia_formateada": "Referencia pendiente"})
                             
-                            # Agregar referencias web (máximo 10 para optimizar)
                             if "web" in referencias_data and isinstance(referencias_data["web"], list):
-                                for web in referencias_data["web"][:10]:  # Límite de 10
+                                for web in referencias_data["web"][:10]:  
                                     if isinstance(web, dict):
-                                        # Si ya tiene referencia formateada, usarla
+                                        
                                         if "referencia_formateada" in web:
                                             todas_referencias.append(web)
-                                        # Si no, formatear desde los campos individuales
+                                    
                                         elif "titulo" in web or "url" in web:
                                             try:
                                                 ref_formateada = formatear_referencia_web(web)
@@ -1306,15 +1284,13 @@ def crear_encabezado_profesional(datos):
                                                 todas_referencias.append({"referencia_formateada": "Referencia pendiente"})
                             
                             if todas_referencias:
-                                referencias_cargadas = todas_referencias[:10]  # Máximo 10 referencias
+                                referencias_cargadas = todas_referencias[:10] 
                                 break
                         
-                        # Estructura antigua: enlaces_referencia
                         elif "enlaces_referencia" in referencias_data:
-                            referencias_cargadas = referencias_data["enlaces_referencia"][:10]  # Máximo 10
+                            referencias_cargadas = referencias_data["enlaces_referencia"][:10] 
                             break
             
-            # Si no encontramos referencias, usar valores por defecto
             if not referencias_cargadas:
                 referencias_cargadas = [
                     {"referencia_formateada": "Referencia pendiente"},
@@ -1407,7 +1383,6 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             'SLB-DOC': ''
         }
     else:
-        # Extraer datos generales
         datos_general_raw = datos_completos.get('general', {})
         
         datos_mapeados = {}
@@ -1463,13 +1438,11 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             if campo not in datos_mapeados:
                 datos_mapeados[campo] = valor_defecto
         
-        # Procesar datos de unidades para crear temas_por_unidad e indicadores_por_unidad
         datos_unidades = datos_completos.get('unidades', {})
         temas_por_unidad = {}
         indicadores_por_unidad = {}
         instrumentos_por_unidad = {}
         
-        # Primero intentar obtener desde datos de unidades
         if isinstance(datos_unidades, dict):
             unidades_detalle = datos_unidades.get('unidades_detalle', [])
             
@@ -1479,13 +1452,11 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                     logro_unidad = unidad.get('logro', f'Desarrolla competencias específicas de la unidad {i}')
                     instrumentos_unidad = unidad.get('instrumentos', ['Lista de cotejo', 'Rúbrica de evaluación'])
                     
-                    # Formatear el nombre de la unidad como clave
                     clave_unidad = f"Unidad {['I', 'II', 'III', 'IV'][i-1] if i <= 4 else str(i)}"
                     temas_por_unidad[clave_unidad] = nombre_unidad
                     indicadores_por_unidad[clave_unidad] = logro_unidad
                     instrumentos_por_unidad[clave_unidad] = instrumentos_unidad
-        
-        # Si no tenemos suficientes temas, intentar obtener desde datos de sesiones
+       
         if len(temas_por_unidad) < 4:
             datos_sesiones = datos_completos.get('sesiones', {})
             if isinstance(datos_sesiones, dict) and 'unidades_sesiones' in datos_sesiones:
@@ -1495,13 +1466,11 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                         nombre_unidad = unidad_sesion.get('unidad_nombre', f'Unidad {numero_unidad}')
                         if 1 <= numero_unidad <= 4:
                             clave_unidad = f"Unidad {['I', 'II', 'III', 'IV'][numero_unidad-1]}"
-                            # Solo agregar si no existe ya
                             if clave_unidad not in temas_por_unidad:
                                 temas_por_unidad[clave_unidad] = nombre_unidad
                                 indicadores_por_unidad[clave_unidad] = f'Desarrolla competencias específicas relacionadas con {nombre_unidad.lower()}'
                                 instrumentos_por_unidad[clave_unidad] = ['Lista de cotejo', 'Rúbrica de evaluación']
         
-        # Agregar los datos procesados a los datos mapeados
         if temas_por_unidad:
             datos_mapeados['temas_por_unidad'] = temas_por_unidad
         if indicadores_por_unidad:
@@ -1509,7 +1478,6 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
         if instrumentos_por_unidad:
             datos_mapeados['instrumentos_por_unidad'] = instrumentos_por_unidad
         
-        # Si no hay indicadores, crear valores por defecto profesionales
         if not indicadores_por_unidad:
             datos_mapeados['indicadores_por_unidad'] = {
                 'Unidad I': 'Demuestra dominio de los conceptos fundamentales de la asignatura',
@@ -1518,7 +1486,6 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                 'Unidad IV': 'Evalúa y sintetiza el aprendizaje obtenido'
             }
         
-        # Si no hay instrumentos, crear valores por defecto profesionales
         if not instrumentos_por_unidad:
             datos_mapeados['instrumentos_por_unidad'] = {
                 'Unidad I': ['Lista de cotejo', 'Prueba de conocimientos'],
@@ -1527,7 +1494,6 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                 'Unidad IV': ['Examen integrador', 'Presentación final']
             }
         
-        # Procesar datos de competencias para crear competencias_especificas
         datos_competencias = datos_completos.get('competencias', {})
         competencias_especificas = []
         
@@ -1542,7 +1508,6 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                             competencia_completa = f"{titulo}: {descripcion}"
                             competencias_especificas.append((codigo, competencia_completa))
         
-        # Procesar datos de productos para crear productos_actividades
         datos_productos = datos_completos.get('productos', {})
         productos_actividades = []
         
@@ -1557,7 +1522,6 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                             producto_completo = f"{titulo}: {descripcion}"
                             productos_actividades.append((codigo, producto_completo))
         
-        # Agregar otros datos necesarios
         datos_mapeados.update({
             'competencias_especificas': competencias_especificas,
             'productos_actividades': productos_actividades,

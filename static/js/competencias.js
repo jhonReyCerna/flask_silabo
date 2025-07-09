@@ -285,14 +285,12 @@ document.addEventListener('DOMContentLoaded', function() {
         mensaje.className = `mensaje ${tipo}`;
         mensaje.style.display = 'block';
         
-        // Auto-ocultar mensajes de éxito después de 5 segundos
         if (tipo === 'exito') {
             setTimeout(() => {
                 mensaje.style.display = 'none';
             }, 5000);
         }
         
-        // Hacer scroll hacia el mensaje
         mensaje.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'center' 
