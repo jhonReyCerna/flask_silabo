@@ -14,6 +14,139 @@ from datetime import datetime
 import json
 
 
+def formatear_referencia_libro(libro):
+    """
+    Formatea una referencia de libro desde los campos individuales
+    
+    Args:
+        libro (dict): Diccionario con campos como autores, titulo, año, editorial
+        
+    Returns:
+        str: Referencia formateada
+    """
+    try:
+        # Extraer autores
+        autores_str = ""
+        if "autores" in libro and isinstance(libro["autores"], dict):
+            autores_list = []
+            for key in sorted(libro["autores"].keys()):
+                autor = libro["autores"][key]
+                if isinstance(autor, dict) and "apellido" in autor:
+                    inicial = autor.get("inicial", "")
+                    apellido = autor.get("apellido", "")
+                    if inicial and apellido:
+                        autores_list.append(f"{apellido}, {inicial}")
+                    elif apellido:
+                        autores_list.append(apellido)
+            
+            if autores_list:
+                if len(autores_list) == 1:
+                    autores_str = autores_list[0]
+                elif len(autores_list) == 2:
+                    autores_str = f"{autores_list[0]} y {autores_list[1]}"
+                else:
+                    autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
+        
+        # Extraer otros campos
+        titulo = libro.get("titulo", "Título pendiente")
+        año = libro.get("año", "Año pendiente")
+        editorial = libro.get("editorial", "Editorial pendiente")
+        
+        # Formatear referencia
+        if autores_str:
+            return f"{autores_str} ({año}). {titulo}. {editorial}."
+        else:
+            return f"Autor pendiente ({año}). {titulo}. {editorial}."
+    
+    except Exception:
+        return "Referencia pendiente"
+
+
+def formatear_referencia_articulo(articulo):
+    """
+    Formatea una referencia de artículo desde los campos individuales
+    
+    Args:
+        articulo (dict): Diccionario con campos como autores, titulo, año, revista
+        
+    Returns:
+        str: Referencia formateada
+    """
+    try:
+        # Extraer autores (mismo formato que libros)
+        autores_str = ""
+        if "autores" in articulo and isinstance(articulo["autores"], dict):
+            autores_list = []
+            for key in sorted(articulo["autores"].keys()):
+                autor = articulo["autores"][key]
+                if isinstance(autor, dict) and "apellido" in autor:
+                    inicial = autor.get("inicial", "")
+                    apellido = autor.get("apellido", "")
+                    if inicial and apellido:
+                        autores_list.append(f"{apellido}, {inicial}")
+                    elif apellido:
+                        autores_list.append(apellido)
+            
+            if autores_list:
+                if len(autores_list) == 1:
+                    autores_str = autores_list[0]
+                elif len(autores_list) == 2:
+                    autores_str = f"{autores_list[0]} y {autores_list[1]}"
+                else:
+                    autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
+        
+        # Extraer otros campos
+        titulo = articulo.get("titulo", "Título pendiente")
+        año = articulo.get("año", "Año pendiente")
+        revista = articulo.get("revista", "Revista pendiente")
+        volumen = articulo.get("volumen", "")
+        numero = articulo.get("numero", "")
+        paginas = articulo.get("paginas", "")
+        
+        # Formatear referencia
+        referencia = f"{autores_str if autores_str else 'Autor pendiente'} ({año}). {titulo}. {revista}"
+        
+        if volumen:
+            referencia += f", {volumen}"
+            if numero:
+                referencia += f"({numero})"
+        
+        if paginas:
+            referencia += f", {paginas}"
+        
+        referencia += "."
+        
+        return referencia
+    
+    except Exception:
+        return "Referencia pendiente"
+
+
+def formatear_referencia_web(web):
+    """
+    Formatea una referencia web desde los campos individuales
+    
+    Args:
+        web (dict): Diccionario con campos como titulo, url, fecha_acceso
+        
+    Returns:
+        str: Referencia formateada
+    """
+    try:
+        titulo = web.get("titulo", "Título pendiente")
+        url = web.get("url", "URL pendiente")
+        fecha_acceso = web.get("fecha_acceso", "Fecha pendiente")
+        autor = web.get("autor", "")
+        
+        if autor:
+            return f"{autor}. {titulo}. Recuperado de {url}. Acceso: {fecha_acceso}."
+        else:
+            return f"{titulo}. Recuperado de {url}. Acceso: {fecha_acceso}."
+    
+    except Exception:
+        return "Referencia pendiente"
+
+
 def insertar_campo(paragraph, tipo_campo):
     """
     Inserta un campo de Word en un párrafo (como PAGE o NUMPAGES)
@@ -731,6 +864,38 @@ def crear_encabezado_profesional(datos):
                 
         return fechas
 
+    def obtener_temarios_sesiones(datos_completos):
+        """
+        Obtiene los temarios de las sesiones desde los datos de sesiones
+        """
+        temarios = {}
+        if not datos_completos:
+            return temarios
+            
+        sesiones_data = datos_completos.get("sesiones", {})
+        if not isinstance(sesiones_data, dict):
+            return temarios
+            
+        unidades_sesiones = sesiones_data.get("unidades_sesiones", [])
+        if not unidades_sesiones:
+            return temarios
+            
+        # Procesar cada unidad de sesiones
+        for unidad_sesiones in unidades_sesiones:
+            if not isinstance(unidad_sesiones, dict):
+                continue
+                
+            unidad_numero = unidad_sesiones.get("unidad_numero", 0)
+            sesiones = unidad_sesiones.get("sesiones", [])
+            
+            for sesion in sesiones:
+                if isinstance(sesion, dict):
+                    numero_sesion = sesion.get("numero_sesion", 0)
+                    temario = sesion.get("temario", "Tema pendiente")
+                    temarios[numero_sesion] = temario
+                    
+        return temarios
+
     doc.add_page_break()
 
     crear_parrafo_estandarizado(doc, "\nV. ORGANIZACIÓN DE LAS UNIDADES DE APRENDIZAJE", negrita=True, tamano=12, espaciado_antes=18, espaciado_despues=6, estilo='Heading 1')
@@ -739,6 +904,9 @@ def crear_encabezado_profesional(datos):
     temas_por_unidad = datos.get("temas_por_unidad", {})
     cronograma_data = datos.get("cronograma", {})
     cronograma = cronograma_data.get("cronograma", [])
+    
+    # Obtener temarios de sesiones
+    temarios_sesiones = obtener_temarios_sesiones(datos)
     
     # Convertir el cronograma del usuario a la estructura esperada
     cronograma_estructurado = {}
@@ -900,10 +1068,8 @@ def crear_encabezado_profesional(datos):
             p_sesion.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_sesion.paragraph_format.space_before = Pt(24)
             
-            # Obtener el tema de la sesión desde los datos del usuario
-            tema_sesion = "Tema pendiente"
-            if isinstance(sesion, dict) and 'temario' in sesion:
-                tema_sesion = sesion['temario']
+            # Obtener el tema de la sesión desde los datos de sesiones
+            tema_sesion = temarios_sesiones.get(contador_sesion, "Tema pendiente")
             
             p_tema = fila[1].paragraphs[0]
             p_tema.clear()
@@ -1082,10 +1248,72 @@ def crear_encabezado_profesional(datos):
     try:
         with open("historial.json", "r", encoding="utf-8") as f:
             historial = json.load(f)
-            for registro in reversed(historial):
-                if "datos" in registro and "enlaces_referencia" in registro["datos"]:
-                    referencias_cargadas = registro["datos"]["enlaces_referencia"]
-                    break
+            # Buscar en registros_completados
+            if "registros_completados" in historial and historial["registros_completados"]:
+                for registro in reversed(historial["registros_completados"]):
+                    if "referencias" in registro:
+                        referencias_data = registro["referencias"]
+                        
+                        # Intentar diferentes estructuras de referencias
+                        # Estructura nueva: libros, articulos, web
+                        if isinstance(referencias_data, dict):
+                            todas_referencias = []
+                            
+                            # Agregar libros
+                            if "libros" in referencias_data and isinstance(referencias_data["libros"], list):
+                                for libro in referencias_data["libros"]:
+                                    if isinstance(libro, dict):
+                                        # Si ya tiene referencia formateada, usarla
+                                        if "referencia_formateada" in libro:
+                                            todas_referencias.append(libro)
+                                        # Si no, formatear desde los campos individuales
+                                        elif "titulo" in libro:
+                                            ref_formateada = formatear_referencia_libro(libro)
+                                            todas_referencias.append({"referencia_formateada": ref_formateada})
+                            
+                            # Agregar artículos
+                            if "articulos" in referencias_data and isinstance(referencias_data["articulos"], list):
+                                for articulo in referencias_data["articulos"]:
+                                    if isinstance(articulo, dict):
+                                        # Si ya tiene referencia formateada, usarla
+                                        if "referencia_formateada" in articulo:
+                                            todas_referencias.append(articulo)
+                                        # Si no, formatear desde los campos individuales
+                                        elif "titulo" in articulo:
+                                            ref_formateada = formatear_referencia_articulo(articulo)
+                                            todas_referencias.append({"referencia_formateada": ref_formateada})
+                            
+                            # Agregar referencias web
+                            if "web" in referencias_data and isinstance(referencias_data["web"], list):
+                                for web in referencias_data["web"]:
+                                    if isinstance(web, dict):
+                                        # Si ya tiene referencia formateada, usarla
+                                        if "referencia_formateada" in web:
+                                            todas_referencias.append(web)
+                                        # Si no, formatear desde los campos individuales
+                                        elif "titulo" in web or "url" in web:
+                                            ref_formateada = formatear_referencia_web(web)
+                                            todas_referencias.append({"referencia_formateada": ref_formateada})
+                            
+                            if todas_referencias:
+                                referencias_cargadas = todas_referencias
+                                break
+                        
+                        # Estructura antigua: enlaces_referencia
+                        elif "enlaces_referencia" in referencias_data:
+                            referencias_cargadas = referencias_data["enlaces_referencia"]
+                            break
+            
+            # Si no encontramos referencias, usar valores por defecto
+            if not referencias_cargadas:
+                referencias_cargadas = [
+                    {"referencia_formateada": "Referencia pendiente"},
+                    {"referencia_formateada": "Referencia pendiente"},
+                    {"referencia_formateada": "Referencia pendiente"},
+                    {"referencia_formateada": "Referencia pendiente"},
+                    {"referencia_formateada": "Referencia pendiente"}
+                ]
+                
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Error al cargar referencias: {e}")
         referencias_cargadas = [
@@ -1185,7 +1413,17 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             'maestria': 'SLB-PROG',
             'asignatura': 'SLB-ASSIG',
             'semestre': 'SLB-SEM',
-            'docente': 'SLB-DOC'
+            'docente': 'SLB-DOC',
+            'sesiones': 'SESIONES',
+            'semanas': 'SEMANAS',
+            'correo': 'SLB-CORREO', 
+            'modalidad': 'SLB-MODALIDAD',
+            'horas_teoria': 'SLB-HORAT',
+            'horas_practica': 'SLB-HORAP',
+            'creditos': 'CRED',
+            'codigo_programa': 'SLB-CODPROG',
+            'caracter': 'SLB-CARACTER',
+            'proposito': 'SLB-PROPOSITO'
         }
         
         for clave_flask, clave_slb in mapeo.items():
@@ -1199,7 +1437,17 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             'SLB-PROG': '',
             'SLB-ASSIG': '',
             'SLB-SEM': '',
-            'SLB-DOC': ''
+            'SLB-DOC': '',
+            'SESIONES': '16',
+            'SEMANAS': '4',
+            'SLB-CORREO': '',
+            'SLB-MODALIDAD': 'Virtual',
+            'SLB-HORAT': '0',
+            'SLB-HORAP': '0',
+            'CRED': '4',
+            'SLB-CODPROG': '',
+            'SLB-CARACTER': 'Obligatorio',
+            'SLB-PROPOSITO': ''
         }
         
         for campo, valor_defecto in campos_requeridos.items():
@@ -1208,9 +1456,11 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
         
         # Procesar datos de unidades para crear temas_por_unidad
         datos_unidades = datos_completos.get('unidades', {})
+        temas_por_unidad = {}
+        
+        # Primero intentar obtener desde datos de unidades
         if isinstance(datos_unidades, dict):
             unidades_detalle = datos_unidades.get('unidades_detalle', [])
-            temas_por_unidad = {}
             
             for i, unidad in enumerate(unidades_detalle, 1):
                 if isinstance(unidad, dict):
@@ -1218,10 +1468,24 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                     # Formatear el nombre de la unidad como clave
                     clave_unidad = f"Unidad {['I', 'II', 'III', 'IV'][i-1] if i <= 4 else str(i)}"
                     temas_por_unidad[clave_unidad] = nombre_unidad
-            
-            # Agregar los temas_por_unidad a los datos mapeados
-            if temas_por_unidad:
-                datos_mapeados['temas_por_unidad'] = temas_por_unidad
+        
+        # Si no tenemos suficientes temas, intentar obtener desde datos de sesiones
+        if len(temas_por_unidad) < 4:
+            datos_sesiones = datos_completos.get('sesiones', {})
+            if isinstance(datos_sesiones, dict) and 'unidades_sesiones' in datos_sesiones:
+                for unidad_sesion in datos_sesiones['unidades_sesiones']:
+                    if isinstance(unidad_sesion, dict):
+                        numero_unidad = unidad_sesion.get('unidad_numero', 0)
+                        nombre_unidad = unidad_sesion.get('unidad_nombre', f'Unidad {numero_unidad}')
+                        if 1 <= numero_unidad <= 4:
+                            clave_unidad = f"Unidad {['I', 'II', 'III', 'IV'][numero_unidad-1]}"
+                            # Solo agregar si no existe ya
+                            if clave_unidad not in temas_por_unidad:
+                                temas_por_unidad[clave_unidad] = nombre_unidad
+        
+        # Agregar los temas_por_unidad a los datos mapeados
+        if temas_por_unidad:
+            datos_mapeados['temas_por_unidad'] = temas_por_unidad
         
         # Procesar datos de competencias para crear competencias_especificas
         datos_competencias = datos_completos.get('competencias', {})
@@ -1258,7 +1522,8 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             'competencias_especificas': competencias_especificas,
             'productos_actividades': productos_actividades,
             'cronograma': datos_completos.get('cronograma', {}),
-            'referencias': datos_completos.get('referencias', {})
+            'referencias': datos_completos.get('referencias', {}),
+            'sesiones': datos_completos.get('sesiones', {})
         })
                 
         datos_general = datos_mapeados
