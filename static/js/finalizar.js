@@ -1524,7 +1524,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
     function limpiarPreferenciasUsuario() {
         localStorage.removeItem('historialPreferencias');
     }
