@@ -694,9 +694,19 @@ def crear_encabezado_profesional(datos):
 #------------------------------------------------------------------------------------------------------
     def obtener_fechas_unidades(cronograma):
         fechas = {}
+        if not cronograma or not isinstance(cronograma, dict):
+            return fechas
+            
         for unidad, sesiones in cronograma.items():
-            if sesiones:
-                fechas_sesiones = [sesion.get("fecha", "") for sesion in sesiones if sesion.get("fecha")]
+            if sesiones and isinstance(sesiones, list):
+                fechas_sesiones = []
+                for sesion in sesiones:
+                    if isinstance(sesion, dict) and sesion.get("fecha"):
+                        fechas_sesiones.append(sesion.get("fecha", ""))
+                    elif isinstance(sesion, str):
+                        # Si sesion es string, ignorar por ahora
+                        continue
+                        
                 if fechas_sesiones:
                     fechas[unidad] = {
                         "inicio": fechas_sesiones[0],
@@ -734,12 +744,16 @@ def crear_encabezado_profesional(datos):
     fechas_unidades = obtener_fechas_unidades(datos.get("cronograma_generado", {}))
     temas_por_unidad = datos.get("temas_por_unidad", {})
     cronograma = datos.get("cronograma_generado", {})
-    competencias = datos.get("competencias_especificas", [
-        ("RAE1 (CE1).", "Elabora y aplica un sistema de gestión del talento humano en la empresa, que permita obtener una ventaja competitiva."),
-        ("RAE2 (CE2).", "Demuestra liderazgo en la gestión del talento humano a través de la realización de actividades para lograr objetivos y metas establecidos, con eficacia, eficiencia y orientación a los resultados."),
-        ("RAE3 (CE3).", "Diseña estrategias innovadoras para la gestión del talento humano en contextos organizacionales complejos."),
-        ("RAE4 (CE4).", "Evalúa el impacto de las políticas de gestión del talento humano en el desarrollo organizacional.")
-    ])
+    
+    # Asegurar que competencias tenga el formato correcto
+    competencias = datos.get("competencias_especificas", [])
+    if not competencias or not isinstance(competencias, list):
+        competencias = [
+            ("RAE1 (CE1).", "Elabora y aplica un sistema de gestión del talento humano en la empresa, que permita obtener una ventaja competitiva."),
+            ("RAE2 (CE2).", "Demuestra liderazgo en la gestión del talento humano a través de la realización de actividades para lograr objetivos y metas establecidos, con eficacia, eficiencia y orientación a los resultados."),
+            ("RAE3 (CE3).", "Diseña estrategias innovadoras para la gestión del talento humano en contextos organizacionales complejos."),
+            ("RAE4 (CE4).", "Evalúa el impacto de las políticas de gestión del talento humano en el desarrollo organizacional.")
+        ]
     indicadores_por_unidad = datos.get("indicadores_por_unidad", {})
     instrumentos_por_unidad = datos.get("instrumentos_por_unidad", {})
     contador_sesion = 1
@@ -843,14 +857,24 @@ def crear_encabezado_profesional(datos):
 
         for sesion in sesiones:
             fila = tabla.add_row().cells
-            fecha = sesion.get("fecha", "Fecha pendiente")
-            horas_sesion = sesion.get("horas", "4") 
+            
+            # Asegurar que sesion sea un diccionario
+            if isinstance(sesion, dict):
+                fecha = sesion.get("fecha", "Fecha pendiente")
+                horas_sesion = sesion.get("horas", "4")
+                sesion_id = sesion.get('id', contador_sesion)
+            else:
+                # Si sesion no es diccionario, usar valores por defecto
+                fecha = "Fecha pendiente"
+                horas_sesion = "4"
+                sesion_id = contador_sesion
+                
             p_sesion = fila[0].paragraphs[0]
             p_sesion.add_run(f"SESIÓN {contador_sesion}").bold = True
             p_sesion.add_run(f"\n{horas_sesion} horas\n{fecha}")
             p_sesion.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_sesion.paragraph_format.space_before = Pt(24)
-            clave_tema = f"{unidad_romana}-Sesión {sesion.get('id', contador_sesion)}"
+            clave_tema = f"{unidad_romana}-Sesión {sesion_id}"
             tema_sesion = temarios_por_unidad_y_sesion.get(
                 clave_tema,
                 f"Tema de la sesión {contador_sesion}"  
@@ -1097,20 +1121,20 @@ def crear_encabezado_profesional(datos):
     return doc
 
 
-def generar_documento_word(datos_general=None, ruta_salida=None):
+def generar_documento_word(datos_completos=None, ruta_salida=None):
     """
     Genera un documento Word con encabezado profesional para el sílabo
     
     Args:
-        datos_general (dict, optional): Diccionario con los datos del formulario general.
-                                      Si es None, genera un documento con datos por defecto.
+        datos_completos (dict, optional): Diccionario con todos los datos del sílabo.
+                                        Si es None, genera un documento con datos por defecto.
         ruta_salida (str, optional): Ruta donde guardar el documento. Si es None, 
                                    se genera una ruta automática.
         
     Returns:
         Document: Objeto Document de python-docx con el contenido del sílabo
     """
-    if not datos_general:
+    if not datos_completos:
         datos_general = {
             'SLB-COD': '',
             'SLB-VER': '',
@@ -1121,9 +1145,12 @@ def generar_documento_word(datos_general=None, ruta_salida=None):
             'SLB-DOC': ''
         }
     else:
+        # Extraer datos generales
+        datos_general_raw = datos_completos.get('general', {})
+        
         datos_mapeados = {}
         
-        for key, value in datos_general.items():
+        for key, value in datos_general_raw.items():
             datos_mapeados[key] = value
         
         mapeo = {
@@ -1137,8 +1164,8 @@ def generar_documento_word(datos_general=None, ruta_salida=None):
         }
         
         for clave_flask, clave_slb in mapeo.items():
-            if clave_flask in datos_general and clave_slb not in datos_mapeados:
-                datos_mapeados[clave_slb] = datos_general[clave_flask]
+            if clave_flask in datos_general_raw and clave_slb not in datos_mapeados:
+                datos_mapeados[clave_slb] = datos_general_raw[clave_flask]
         
         campos_requeridos = {
             'SLB-COD': '',
@@ -1153,6 +1180,61 @@ def generar_documento_word(datos_general=None, ruta_salida=None):
         for campo, valor_defecto in campos_requeridos.items():
             if campo not in datos_mapeados:
                 datos_mapeados[campo] = valor_defecto
+        
+        # Procesar datos de unidades para crear temas_por_unidad
+        datos_unidades = datos_completos.get('unidades', {})
+        if isinstance(datos_unidades, dict):
+            unidades_detalle = datos_unidades.get('unidades_detalle', [])
+            temas_por_unidad = {}
+            
+            for i, unidad in enumerate(unidades_detalle, 1):
+                if isinstance(unidad, dict):
+                    nombre_unidad = unidad.get('nombre', f'Unidad {i}')
+                    # Formatear el nombre de la unidad como clave
+                    clave_unidad = f"Unidad {['I', 'II', 'III', 'IV'][i-1] if i <= 4 else str(i)}"
+                    temas_por_unidad[clave_unidad] = nombre_unidad
+            
+            # Agregar los temas_por_unidad a los datos mapeados
+            if temas_por_unidad:
+                datos_mapeados['temas_por_unidad'] = temas_por_unidad
+        
+        # Procesar datos de competencias para crear competencias_especificas
+        datos_competencias = datos_completos.get('competencias', {})
+        competencias_especificas = []
+        
+        if isinstance(datos_competencias, dict) and 'unidades_competencias' in datos_competencias:
+            for unidad_comp in datos_competencias['unidades_competencias']:
+                if isinstance(unidad_comp, dict) and 'competencias' in unidad_comp:
+                    for comp in unidad_comp['competencias']:
+                        if isinstance(comp, dict):
+                            codigo = comp.get('codigo', '')
+                            titulo = comp.get('titulo', '')
+                            descripcion = comp.get('descripcion', '')
+                            competencia_completa = f"{titulo}: {descripcion}"
+                            competencias_especificas.append((codigo, competencia_completa))
+        
+        # Procesar datos de productos para crear productos_actividades
+        datos_productos = datos_completos.get('productos', {})
+        productos_actividades = []
+        
+        if isinstance(datos_productos, dict) and 'unidades_productos' in datos_productos:
+            for unidad_prod in datos_productos['unidades_productos']:
+                if isinstance(unidad_prod, dict) and 'productos' in unidad_prod:
+                    for prod in unidad_prod['productos']:
+                        if isinstance(prod, dict):
+                            codigo = prod.get('codigo', '')
+                            titulo = prod.get('titulo', '')
+                            descripcion = prod.get('descripcion', '')
+                            producto_completo = f"{titulo}: {descripcion}"
+                            productos_actividades.append((codigo, producto_completo))
+        
+        # Agregar otros datos necesarios
+        datos_mapeados.update({
+            'competencias_especificas': competencias_especificas,
+            'productos_actividades': productos_actividades,
+            'cronograma_generado': datos_completos.get('cronograma', {}),
+            'referencias': datos_completos.get('referencias', {})
+        })
                 
         datos_general = datos_mapeados
     

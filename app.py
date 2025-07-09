@@ -741,7 +741,18 @@ def generar_word():
                 'message': 'No hay datos para generar el documento. Complete el formulario general primero.'
             }), 400
         
-        doc = generar_documento_word(datos_general)
+        # Preparar todos los datos necesarios para generar el documento
+        datos_completos = {
+            'general': datos_general,
+            'unidades': datos.get('unidades', {}),
+            'competencias': datos.get('competencias', {}),
+            'productos': datos.get('productos', {}),
+            'sesiones': datos.get('sesiones', {}),
+            'cronograma': datos.get('cronograma', {}),
+            'referencias': datos.get('referencias', {})
+        }
+        
+        doc = generar_documento_word(datos_completos)
         
         with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
             doc.save(tmp_file.name)
