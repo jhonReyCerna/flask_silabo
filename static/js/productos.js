@@ -3,13 +3,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const productosContainer = document.getElementById('productos-container');
     const mensaje = document.getElementById('mensaje');
     const mensajeSinUnidades = document.getElementById('mensaje-sin-unidades');
+    const restablecerBtn = document.getElementById('restablecer-productos');
+    
+    const modalOverlay = document.getElementById('modal-restablecer');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
     
     let unidadesDisponibles = [];
     let productosGuardados = [];
     let contadorGlobalProductos = 1; 
+    let unidadesBloqueadas = new Set(); 
+    
     cargarUnidadesYProductos();
 
     form.addEventListener('submit', guardarProductos);
+    restablecerBtn.addEventListener('click', mostrarModalRestablecer);
+    modalConfirm.addEventListener('click', confirmarRestablecimiento);
+    modalCancel.addEventListener('click', cerrarModal);
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            cerrarModal();
+        }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            cerrarModal();
+        }
+    });
+
+    function mostrarModalRestablecer() {
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    function confirmarRestablecimiento() {
+        productosContainer.innerHTML = '';
+        
+        productosGuardados = [];
+        contadorGlobalProductos = 1;
+        unidadesBloqueadas.clear(); 
+        
+        restablecerBtn.style.display = 'none';
+        
+        generarFormulariosProductos();
+        
+        cerrarModal();
+        
+        setTimeout(() => {
+            mostrarMensaje('✅ Formulario de productos restablecido. Todos los selectores están habilitados nuevamente.', 'exito');
+        }, 300);
+    }
 
     function cargarUnidadesYProductos() {
         fetch('/api/cargar_unidades_para_productos')
@@ -83,7 +132,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (productosGuardados.length > 0) {
             cargarDatosGuardados();
+            restablecerBtn.style.display = 'inline-block';
+            
         }
+    }
+
+    function bloquearUnidad(numeroUnidad) {
+        unidadesBloqueadas.add(numeroUnidad);
+        const selector = document.getElementById(`num_productos_${numeroUnidad}`);
+        const boton = document.querySelector(`button[onclick="generarProductosUnidad(${numeroUnidad})"]`);
+        
+        if (selector) selector.disabled = true;
+        if (boton) boton.disabled = true;
+    }
+    
+    function desbloquearUnidad(numeroUnidad) {
+        unidadesBloqueadas.delete(numeroUnidad);
+        const selector = document.getElementById(`num_productos_${numeroUnidad}`);
+        const boton = document.querySelector(`button[onclick="generarProductosUnidad(${numeroUnidad})"]`);
+        
+        if (selector) selector.disabled = false;
+        if (boton) boton.disabled = false;
+    }
+    
+    function isUnidadBloqueada(numeroUnidad) {
+        return unidadesBloqueadas.has(numeroUnidad);
     }
 
     function crearFormularioUnidad(unidad, numero) {
@@ -124,6 +197,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.generarProductosUnidad = function(numeroUnidad) {
+        if (isUnidadBloqueada(numeroUnidad)) return;
+        
         const selectNum = document.getElementById(`num_productos_${numeroUnidad}`);
         const numProductos = parseInt(selectNum.value);
         const container = document.getElementById(`productos_unidad_${numeroUnidad}`);
@@ -134,6 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const productoDiv = crearFormularioProducto(numeroUnidad, i);
             container.appendChild(productoDiv);
         }
+        
+        restablecerBtn.style.display = 'inline-block';
+        bloquearUnidad(numeroUnidad); 
         
         mostrarMensaje(`Formularios de productos generados para la Unidad ${numeroUnidad}`, 'exito');
     };
@@ -186,7 +264,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const selectNum = document.getElementById(`num_productos_${numeroUnidad}`);
                 if (selectNum) {
                     selectNum.value = productos.length.toString();
-                    generarProductosUnidad(numeroUnidad);
+                    
+                    const container = document.getElementById(`productos_unidad_${numeroUnidad}`);
+                    container.innerHTML = '';
+                    
+                    for (let i = 1; i <= productos.length; i++) {
+                        const productoDiv = crearFormularioProducto(numeroUnidad, i);
+                        container.appendChild(productoDiv);
+                    }
+                    
+                    bloquearUnidad(numeroUnidad);
                     
                     setTimeout(() => {
                         productos.forEach((prod, index) => {
