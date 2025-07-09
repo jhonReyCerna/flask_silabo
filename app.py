@@ -849,7 +849,8 @@ def cargar_registro_desde_historial():
                 'message': 'Índice de registro inválido'
             })
         
-        registro_seleccionado = registros_completados[registro_index]
+        indice_real = len(registros_completados) - 1 - registro_index
+        registro_seleccionado = registros_completados[indice_real]
         
         nuevo_registro_actual = {}
         for seccion, datos in registro_seleccionado.items():

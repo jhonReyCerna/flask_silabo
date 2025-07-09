@@ -339,10 +339,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; background: white; color: black; margin: 20px 0;">
                 `;
                 
-                if (registros.length === 0) {
+                if (registrosDisponibles.length === 0) {
                     historialHtml += '<p style="color: #666; text-align: center; padding: 40px;">No hay registros completados anteriormente.</p>';
                 } else {
-                    const maestriasUnicas = [...new Set(registros.map(r => r.general?.maestria).filter(m => m))];
+                    const maestriasUnicas = [...new Set(registrosDisponibles.map(r => r.general?.maestria).filter(m => m))];
                     
                     historialHtml += `
                         <table id="historialTable" style="width: 100%; border-collapse: collapse; font-size: 14px;">
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     window.maestriasUnicas = maestriasUnicas;
                     
-                    registros.forEach((registro, index) => {
+                    registrosDisponibles.forEach((registro, index) => {
                         const general = registro.general || {};
                         const metadatos = registro.metadatos || {};
                         const fechaFinalizacion = metadatos.fecha_finalizacion ? 
