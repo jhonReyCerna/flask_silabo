@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const competenciasContainer = document.getElementById('competencias-container');
     const mensaje = document.getElementById('mensaje');
     const mensajeSinUnidades = document.getElementById('mensaje-sin-unidades');
+    const restablecerBtn = document.getElementById('restablecer-competencias');
+    
+    const modalOverlay = document.getElementById('modal-restablecer');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
     
     let unidadesDisponibles = [];
     let competenciasGuardadas = [];
@@ -10,6 +15,20 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarUnidadesYCompetencias();
 
     form.addEventListener('submit', guardarCompetencias);
+    restablecerBtn.addEventListener('click', mostrarModalRestablecer);
+    modalConfirm.addEventListener('click', confirmarRestablecimiento);
+    modalCancel.addEventListener('click', cerrarModal);
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            cerrarModal();
+        }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            cerrarModal();
+        }
+    });
 
     function cargarUnidadesYCompetencias() {
         fetch('/api/cargar_unidades_para_competencias')
@@ -135,6 +154,15 @@ document.addEventListener('DOMContentLoaded', function() {
             container.appendChild(competenciaDiv);
         }
         
+        selectNum.disabled = true;
+        const button = selectNum.parentElement.querySelector('button');
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Formularios Generados';
+        }
+        
+        restablecerBtn.style.display = 'inline-block';
+        
         mostrarMensaje(`Formularios de competencias generados para la Unidad ${numeroUnidad}`, 'exito');
     };
 
@@ -207,6 +235,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             }
                         });
+                        
+                        selectNum.disabled = true;
+                        const button = selectNum.parentElement.querySelector('button');
+                        if (button) {
+                            button.disabled = true;
+                            button.textContent = 'Formularios Generados';
+                        }
+                       
+                        restablecerBtn.style.display = 'inline-block';
                     }, 100);
                 }
             }
@@ -216,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function guardarCompetencias(event) {
         event.preventDefault();
 
-        // Recopilar datos de todas las competencias
         const unidadesCompetencias = [];
         
         unidadesDisponibles.forEach((unidad, index) => {
@@ -252,13 +288,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Validar que hay al menos una competencia
         if (unidadesCompetencias.length === 0) {
             mostrarMensaje('Debes definir al menos una competencia para guardar', 'error');
             return;
         }
 
-        // Enviar datos al servidor
         const formData = new FormData();
         formData.append('competencias_data', JSON.stringify(unidadesCompetencias));
         
@@ -295,5 +329,32 @@ document.addEventListener('DOMContentLoaded', function() {
             behavior: 'smooth', 
             block: 'center' 
         });
+    }
+
+    function mostrarModalRestablecer() {
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function cerrarModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    
+    function confirmarRestablecimiento() {
+        competenciasContainer.innerHTML = '';
+        
+        competenciasGuardadas = [];
+        contadorGlobalCompetencias = 1;
+        
+        restablecerBtn.style.display = 'none';
+        
+        generarFormulariosCompetencias();
+        
+        cerrarModal();
+        
+        setTimeout(() => {
+            mostrarMensaje('✅ Formulario de competencias restablecido. Todos los selectores están habilitados nuevamente.', 'exito');
+        }, 300);
     }
 });
