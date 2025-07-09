@@ -845,7 +845,18 @@ def crear_encabezado_profesional(datos):
                 productos_limpios.append((p[0], "Título no definido", "Contenido no definido"))
         datos["productos_actividades"] = productos_limpios
 
-        producto = next((p for p in productos_limpios if p[0] == f"PA{i}(C{i})"), (f"PA{i}(C{i})", "Título no definido", "Contenido no definido"))
+        # Buscar producto con diferentes variaciones del código
+        codigo_buscado_1 = f"PA{i}(C{i})"
+        codigo_buscado_2 = f"PA{i} (C{i})"
+        producto = None
+        
+        for p in productos_limpios:
+            if p[0] == codigo_buscado_1 or p[0] == codigo_buscado_2:
+                producto = p
+                break
+        
+        if not producto:
+            producto = (f"PA{i} (C{i})", "Título no definido", "Contenido no definido")
         parrafo_prod = celda4.add_paragraph()
         parrafo_prod.paragraph_format.left_indent = Inches(0.5)
         parrafo_prod.add_run(f"{producto[0]} {producto[1].capitalize()}:").bold = True
