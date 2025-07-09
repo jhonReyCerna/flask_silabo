@@ -1046,7 +1046,7 @@ def crear_encabezado_profesional(datos):
                 paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  
             cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER  
 
-        indicador_unidad = indicadores_por_unidad.get(unidad_romana, "Indicador de logro pendiente")
+        indicador_unidad = indicadores_por_unidad.get(unidad_romana, f"Desarrolla competencias específicas relacionadas con {tema_unidad.lower()}")
 
         for sesion in sesiones:
             fila = tabla.add_row().cells
@@ -1094,7 +1094,7 @@ def crear_encabezado_profesional(datos):
         celda_instrum = tabla.cell(5, 3).merge(tabla.cell(num_filas - 1, 3))
         p_eval = celda_instrum.paragraphs[0]
         p_eval.clear()
-        for idx, instrumento in enumerate(instrumentos_por_unidad.get(unidad_romana, ["Instrumentos no definidos"])):
+        for idx, instrumento in enumerate(instrumentos_por_unidad.get(unidad_romana, ["Lista de cotejo", "Rúbrica de evaluación"])):
             if idx > 0:
                 p_eval = celda_instrum.add_paragraph()
             p_eval.add_run(f"• {instrumento}")
@@ -1463,9 +1463,11 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             if campo not in datos_mapeados:
                 datos_mapeados[campo] = valor_defecto
         
-        # Procesar datos de unidades para crear temas_por_unidad
+        # Procesar datos de unidades para crear temas_por_unidad e indicadores_por_unidad
         datos_unidades = datos_completos.get('unidades', {})
         temas_por_unidad = {}
+        indicadores_por_unidad = {}
+        instrumentos_por_unidad = {}
         
         # Primero intentar obtener desde datos de unidades
         if isinstance(datos_unidades, dict):
@@ -1474,9 +1476,14 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
             for i, unidad in enumerate(unidades_detalle, 1):
                 if isinstance(unidad, dict):
                     nombre_unidad = unidad.get('nombre', f'Unidad {i}')
+                    logro_unidad = unidad.get('logro', f'Desarrolla competencias específicas de la unidad {i}')
+                    instrumentos_unidad = unidad.get('instrumentos', ['Lista de cotejo', 'Rúbrica de evaluación'])
+                    
                     # Formatear el nombre de la unidad como clave
                     clave_unidad = f"Unidad {['I', 'II', 'III', 'IV'][i-1] if i <= 4 else str(i)}"
                     temas_por_unidad[clave_unidad] = nombre_unidad
+                    indicadores_por_unidad[clave_unidad] = logro_unidad
+                    instrumentos_por_unidad[clave_unidad] = instrumentos_unidad
         
         # Si no tenemos suficientes temas, intentar obtener desde datos de sesiones
         if len(temas_por_unidad) < 4:
@@ -1491,10 +1498,34 @@ def generar_documento_word(datos_completos=None, ruta_salida=None):
                             # Solo agregar si no existe ya
                             if clave_unidad not in temas_por_unidad:
                                 temas_por_unidad[clave_unidad] = nombre_unidad
+                                indicadores_por_unidad[clave_unidad] = f'Desarrolla competencias específicas relacionadas con {nombre_unidad.lower()}'
+                                instrumentos_por_unidad[clave_unidad] = ['Lista de cotejo', 'Rúbrica de evaluación']
         
-        # Agregar los temas_por_unidad a los datos mapeados
+        # Agregar los datos procesados a los datos mapeados
         if temas_por_unidad:
             datos_mapeados['temas_por_unidad'] = temas_por_unidad
+        if indicadores_por_unidad:
+            datos_mapeados['indicadores_por_unidad'] = indicadores_por_unidad
+        if instrumentos_por_unidad:
+            datos_mapeados['instrumentos_por_unidad'] = instrumentos_por_unidad
+        
+        # Si no hay indicadores, crear valores por defecto profesionales
+        if not indicadores_por_unidad:
+            datos_mapeados['indicadores_por_unidad'] = {
+                'Unidad I': 'Demuestra dominio de los conceptos fundamentales de la asignatura',
+                'Unidad II': 'Aplica conocimientos teóricos en situaciones prácticas',
+                'Unidad III': 'Integra conocimientos mediante proyectos aplicados',
+                'Unidad IV': 'Evalúa y sintetiza el aprendizaje obtenido'
+            }
+        
+        # Si no hay instrumentos, crear valores por defecto profesionales
+        if not instrumentos_por_unidad:
+            datos_mapeados['instrumentos_por_unidad'] = {
+                'Unidad I': ['Lista de cotejo', 'Prueba de conocimientos'],
+                'Unidad II': ['Rúbrica de evaluación', 'Casos prácticos'],
+                'Unidad III': ['Proyecto aplicado', 'Portafolio de evidencias'],
+                'Unidad IV': ['Examen integrador', 'Presentación final']
+            }
         
         # Procesar datos de competencias para crear competencias_especificas
         datos_competencias = datos_completos.get('competencias', {})
