@@ -148,6 +148,10 @@ main.content {
   background-color: #1976D2;
   color: white;
 }
+.top-buttons button.completed {
+  background-color: #1976D2;
+  color: white;
+}
 
 footer {
   background-color: #E3E7EB;

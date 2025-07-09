@@ -30,14 +30,14 @@
 
   <main class="content">
     <div class="top-buttons" id="topButtons">
-      <a href="{{ url_for('general') }}"><button class="{% if request.endpoint == 'general' %}selected{% endif %}"><span class="icon">📝</span>General</button></a>
-      <a href="{{ url_for('unidades') }}"><button class="{% if request.endpoint == 'unidades' %}selected{% endif %}"><span class="icon">📚</span>Unidades</button></a>
-      <a href="{{ url_for('competencias') }}"><button class="{% if request.endpoint == 'competencias' %}selected{% endif %}"><span class="icon">🎯</span>Competencias</button></a>
-      <a href="{{ url_for('productos') }}"><button class="{% if request.endpoint == 'productos' %}selected{% endif %}"><span class="icon">📦</span>Productos</button></a>
-      <a href="{{ url_for('sesiones') }}"><button class="{% if request.endpoint == 'sesiones' %}selected{% endif %}"><span class="icon">📅</span>Sesiones</button></a>
-      <a href="{{ url_for('cronograma') }}"><button class="{% if request.endpoint == 'cronograma' %}selected{% endif %}"><span class="icon">⏰</span>Cronograma</button></a>
-      <a href="{{ url_for('referencias') }}"><button class="{% if request.endpoint == 'referencias' %}selected{% endif %}"><span class="icon">🔗</span>Referencias</button></a>
-      <a href="{{ url_for('finalizar') }}"><button class="{% if request.endpoint == 'finalizar' %}selected{% endif %}"><span class="icon">✅</span>Finalizar</button></a>
+      <a href=""><button class="{% if request.endpoint == 'general' %}selected{% endif %} {% if request.endpoint in ['general', 'unidades', 'competencias', 'productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📝</span>General</button></a>
+      <a href=""><button class="{% if request.endpoint == 'unidades' %}selected{% endif %} {% if request.endpoint in ['unidades', 'competencias', 'productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📚</span>Unidades</button></a>
+      <a href=""><button class="{% if request.endpoint == 'competencias' %}selected{% endif %} {% if request.endpoint in ['competencias', 'productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">🎯</span>Competencias</button></a>
+      <a href=""><button class="{% if request.endpoint == 'productos' %}selected{% endif %} {% if request.endpoint in ['productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📦</span>Productos</button></a>
+      <a href=""><button class="{% if request.endpoint == 'sesiones' %}selected{% endif %} {% if request.endpoint in ['sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📅</span>Sesiones</button></a>
+      <a href=""><button class="{% if request.endpoint == 'cronograma' %}selected{% endif %} {% if request.endpoint in ['cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">⏰</span>Cronograma</button></a>
+      <a href=""><button class="{% if request.endpoint == 'referencias' %}selected{% endif %} {% if request.endpoint in ['referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">🔗</span>Referencias</button></a>
+      <a href=""><button class="{% if request.endpoint == 'finalizar' %}selected{% endif %} {% if request.endpoint in ['finalizar'] %}completed{% endif %}"><span class="icon">✅</span>Finalizar</button></a>
     </div>
     <section>
       <h2 id="titulo-principal">{% block titulo %}Contenido Principal{% endblock %}</h2>
