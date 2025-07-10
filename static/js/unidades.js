@@ -211,6 +211,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        const sesionesDisabled = sesionesInput.disabled;
+        const unidadesDisabled = unidadesInput.disabled;
+        sesionesInput.disabled = false;
+        unidadesInput.disabled = false;
+
         const formData = new FormData(form);
         
         fetch('/guardar_unidades', {
@@ -219,6 +224,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            sesionesInput.disabled = sesionesDisabled;
+            unidadesInput.disabled = unidadesDisabled;
+            
             if (data.success) {
                 mostrarMensaje(data.message, 'exito');
             } else {
@@ -226,6 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
+            sesionesInput.disabled = sesionesDisabled;
+            unidadesInput.disabled = unidadesDisabled;
             mostrarMensaje('Error al guardar los datos: ' + error.message, 'error');
         });
     }

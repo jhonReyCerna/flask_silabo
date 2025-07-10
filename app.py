@@ -160,8 +160,24 @@ def unidades():
 def guardar_unidades():
     """Guarda los datos del formulario de unidades"""
     try:
-        sesiones_total = int(request.form.get('sesiones'))
-        num_unidades = int(request.form.get('unidades'))
+        # Validar datos de entrada
+        sesiones_form = request.form.get('sesiones')
+        unidades_form = request.form.get('unidades')
+        
+        if not sesiones_form or not unidades_form:
+            return jsonify({
+                'success': False,
+                'message': 'Error: Faltan datos requeridos (sesiones o unidades)'
+            }), 400
+        
+        try:
+            sesiones_total = int(sesiones_form)
+            num_unidades = int(unidades_form)
+        except (ValueError, TypeError) as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: Valores inválidos para sesiones o unidades: {str(e)}'
+            }), 400
         
         print(f"DEBUG: Guardando unidades - Total sesiones: {sesiones_total}, Num unidades: {num_unidades}")
         
@@ -169,7 +185,12 @@ def guardar_unidades():
         suma_sesiones = 0
         
         for i in range(1, num_unidades + 1):
-            sesiones_unidad = int(request.form.get(f'sesiones_unidad_{i}', 0))
+            sesiones_unidad_form = request.form.get(f'sesiones_unidad_{i}', '0')
+            try:
+                sesiones_unidad = int(sesiones_unidad_form)
+            except (ValueError, TypeError):
+                sesiones_unidad = 0
+                
             suma_sesiones += sesiones_unidad
             
             instrumentos = request.form.getlist(f'instrumento_unidad_{i}[]')
