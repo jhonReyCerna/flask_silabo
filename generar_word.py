@@ -260,15 +260,8 @@ def crear_encabezado_profesional(datos):
 
     celda2_col1 = tabla.cell(2, 1)
     celda2_col1.merge(tabla.cell(2, 2))
-    p_registro = celda2_col1.paragraphs[0]
-    p_registro.clear() 
-    run_registro = p_registro.add_run("REGISTRO")
-    run_registro.font.size = Pt(8)
-    run_registro.font.name = "Arial"
+    celda2_col1.text = "REGISTRO"
     celda2_col1.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-    p_registro.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p_registro.paragraph_format.left_indent = Cm(-3.2)
-    p_registro.paragraph_format.right_indent = Cm(0)
     
     celda2_col2 = tabla.cell(2, 3)
     celda2_col2.merge(tabla.cell(2, 5))
@@ -278,16 +271,8 @@ def crear_encabezado_profesional(datos):
 
     celda3_col1 = tabla.cell(3, 1)
     celda3_col1.merge(tabla.cell(3, 2))
-    p_codigo = celda3_col1.paragraphs[0]
-    run_codigo = p_codigo.add_run(f"Código: {datos.get('SLB-COD', '')}")
-    run_codigo.font.size = Pt(8)
-    run_codigo.font.name = "Arial"
+    celda3_col1.text = f"Código: {datos.get('SLB-COD', '')}"
     celda3_col1.vertical_alignment = WD_ALIGN_VERTICAL.TOP
-    p_codigo.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p_codigo.paragraph_format.space_before = Pt(12)
-    p_codigo.paragraph_format.space_after = Pt(6)
-    p_codigo.paragraph_format.left_indent = Cm(0)
-    p_codigo.paragraph_format.right_indent = Cm(1.5)
 
     celda3_v = tabla.cell(3, 3)
     p_v = celda3_v.paragraphs[0]
@@ -323,16 +308,16 @@ def crear_encabezado_profesional(datos):
     for fila in tabla.rows[1:4]:
         for celda in fila.cells:
             for parrafo in celda.paragraphs:
-                parrafo.paragraph_format.space_before = Pt(6)
-                parrafo.paragraph_format.space_after = Pt(0)
                 for run in parrafo.runs:
                     run.font.size = Pt(8)
                     run.font.name = "Arial"
                 texto = parrafo.text.strip()
-                if texto in ["PROCESO NIVEL 0:", "REGISTRO", f"Código: {datos.get('SLB-COD', '')}"]:
+                if "PROCESO NIVEL 0:" in texto or "REGISTRO" in texto or "Código:" in texto:
                     parrafo.alignment = WD_ALIGN_PARAGRAPH.LEFT
                 else:
                     parrafo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                parrafo.paragraph_format.space_before = Pt(6)
+                parrafo.paragraph_format.space_after = Pt(0)
 
     for fila in tabla.rows[1:4]:
         fila.height = Inches(0.2)
