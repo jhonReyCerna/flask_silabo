@@ -126,7 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="temario_unidad_${numeroUnidad}_sesion_${numeroSesionLocal}">Temario de la Sesión:</label>
                     <textarea id="temario_unidad_${numeroUnidad}_sesion_${numeroSesionLocal}" 
                               name="temario_unidad_${numeroUnidad}_sesion_${numeroSesionLocal}"
-                              rows="4" 
+                              rows="6" 
+                              maxlength="10000"
                               placeholder="Describe el temario y contenido que se desarrollará en esta sesión..."
                               required></textarea>
                 </div>

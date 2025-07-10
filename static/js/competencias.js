@@ -188,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                            id="titulo_unidad_${numeroUnidad}_comp_${numeroCompetencia}" 
                            name="titulo_unidad_${numeroUnidad}_comp_${numeroCompetencia}"
                            placeholder="Título de la competencia..." 
+                           maxlength="2000"
                            required>
                 </div>
                 
@@ -195,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="descripcion_unidad_${numeroUnidad}_comp_${numeroCompetencia}">Descripción:</label>
                     <textarea id="descripcion_unidad_${numeroUnidad}_comp_${numeroCompetencia}" 
                               name="descripcion_unidad_${numeroUnidad}_comp_${numeroCompetencia}"
-                              rows="3" 
+                              rows="8" 
+                              maxlength="10000"
                               placeholder="Descripción detallada de la competencia..."
                               required></textarea>
                 </div>
@@ -207,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function cargarDatosGuardados() {
         competenciasGuardadas.forEach(unidadComp => {
-            const numeroUnidad = unidadComp.unidad_numero;
+            const numeroUnidad = unidadComp.numero_unidad;
             const competencias = unidadComp.competencias || [];
             
             if (competencias.length > 0) {
@@ -269,6 +271,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const titulo = document.getElementById(`titulo_unidad_${numeroUnidad}_comp_${numeroCompetencia}`)?.value || '';
                     const descripcion = document.getElementById(`descripcion_unidad_${numeroUnidad}_comp_${numeroCompetencia}`)?.value || '';
                     
+                    console.log(`DEBUG: Competencia ${numeroCompetencia} - Título: "${titulo}", Descripción length: ${descripcion.length}`);
+                    
                     if (titulo.trim() && descripcion.trim()) {
                         competenciasUnidad.push({
                             codigo: codigo,
@@ -280,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (competenciasUnidad.length > 0) {
                     unidadesCompetencias.push({
-                        unidad_numero: numeroUnidad,
+                        numero_unidad: numeroUnidad,
                         unidad_nombre: unidad.nombre || `Unidad ${numeroUnidad}`,
                         competencias: competenciasUnidad
                     });
@@ -295,6 +299,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData();
         formData.append('competencias_data', JSON.stringify(unidadesCompetencias));
+        
+        console.log('DEBUG: Datos a enviar:', unidadesCompetencias);
         
         fetch('/guardar_competencias', {
             method: 'POST',

@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="form-row full-width">
                         <label for="${tipo}-titulo-${numero}">Título del Libro:</label>
                         <input type="text" id="${tipo}-titulo-${numero}" name="${tipo}[${numero-1}][titulo]" 
+                               maxlength="2000"
                                value="${datos ? datos.titulo || '' : ''}" placeholder="Título completo del libro" required>
                     </div>
                 </div>
@@ -155,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="form-row full-width">
                         <label for="${tipo}-titulo-${numero}">Título del Artículo:</label>
                         <input type="text" id="${tipo}-titulo-${numero}" name="${tipo}[${numero-1}][titulo]" 
+                               maxlength="2000"
                                value="${datos ? datos.titulo || '' : ''}" placeholder="Título completo del artículo" required>
                     </div>
                 </div>
@@ -208,6 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="form-row full-width">
                         <label for="${tipo}-titulo-${numero}">Título de la Página:</label>
                         <input type="text" id="${tipo}-titulo-${numero}" name="${tipo}[${numero-1}][titulo]" 
+                               maxlength="2000"
                                value="${datos ? datos.titulo || '' : ''}" placeholder="Título de la página web" required>
                     </div>
                     <div class="form-row full-width">

@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-row">
                     <label for="nombre_unidad_${numero}">Nombre de la Unidad:</label>
                     <input type="text" id="nombre_unidad_${numero}" name="nombre_unidad_${numero}" 
-                           placeholder="Ej: Fundamentos teóricos..." required>
+                           maxlength="2000" placeholder="Ej: Fundamentos teóricos..." required>
                 </div>
                 
                 <div class="form-row">
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-row">
                     <label for="logro_unidad_${numero}">Indicador(es) de logro:</label>
                     <textarea id="logro_unidad_${numero}" name="logro_unidad_${numero}" 
-                              rows="3" placeholder="Describe los indicadores de logro de esta unidad..."
+                              rows="6" maxlength="10000" placeholder="Describe los indicadores de logro de esta unidad..."
                               required></textarea>
                 </div>
                 

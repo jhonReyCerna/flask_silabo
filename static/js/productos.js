@@ -238,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
                            id="titulo_unidad_${numeroUnidad}_prod_${numeroProducto}" 
                            name="titulo_unidad_${numeroUnidad}_prod_${numeroProducto}"
                            placeholder="Título del producto..." 
+                           maxlength="2000"
                            required>
                 </div>
                 
@@ -245,7 +246,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="descripcion_unidad_${numeroUnidad}_prod_${numeroProducto}">Descripción:</label>
                     <textarea id="descripcion_unidad_${numeroUnidad}_prod_${numeroProducto}" 
                               name="descripcion_unidad_${numeroUnidad}_prod_${numeroProducto}"
-                              rows="3" 
+                              rows="8" 
+                              maxlength="10000"
                               placeholder="Descripción detallada del producto..."
                               required></textarea>
                 </div>

@@ -642,15 +642,20 @@ def crear_encabezado_profesional(datos):
         parrafo_codigo_titulo.paragraph_format.space_after = Pt(0)    
 
         descripcion = capitalizar_despues_de_dos_puntos(descripcion.strip())
-        run_codigo_titulo = parrafo_codigo_titulo.add_run(f"{codigo} {descripcion.split(':')[0]}:")
+        # Dividir solo en el primer ':' para conservar el texto completo
+        partes = descripcion.split(':', 1)
+        titulo = partes[0] if len(partes) > 0 else ""
+        contenido = partes[1].strip() if len(partes) > 1 else ""
+        
+        run_codigo_titulo = parrafo_codigo_titulo.add_run(f"{codigo} {titulo}:")
         run_codigo_titulo.font.name = 'Times New Roman'
         run_codigo_titulo.font.size = Pt(12)
         run_codigo_titulo.bold = True
 
-        if len(descripcion.split(':')) > 1:
+        if contenido:
             parrafo_descripcion = doc.add_paragraph()
             parrafo_descripcion.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY  
-            run_desc = parrafo_descripcion.add_run(descripcion.split(':')[1].strip())
+            run_desc = parrafo_descripcion.add_run(contenido)
             run_desc.font.name = 'Times New Roman'
             run_desc.font.size = Pt(11)
             run_desc.font.color.rgb = RGBColor(0, 0, 0)
@@ -682,7 +687,12 @@ def crear_encabezado_profesional(datos):
         parrafo_codigo_titulo.paragraph_format.space_after = Pt(0)   
 
         texto = capitalizar_despues_de_dos_puntos(texto.strip())
-        run_codigo_titulo = parrafo_codigo_titulo.add_run(f"{codigo} {texto.split(':')[0]}:")
+        # Dividir solo en el primer ':' para conservar el texto completo
+        partes = texto.split(':', 1)
+        titulo = partes[0] if len(partes) > 0 else ""
+        contenido = partes[1].strip() if len(partes) > 1 else ""
+        
+        run_codigo_titulo = parrafo_codigo_titulo.add_run(f"{codigo} {titulo}:")
         run_codigo_titulo.font.name = 'Times New Roman'
         run_codigo_titulo.font.size = Pt(12)
         run_codigo_titulo.bold = True
@@ -693,8 +703,8 @@ def crear_encabezado_profesional(datos):
         parrafo_descripcion.paragraph_format.space_before = Pt(0)      
         parrafo_descripcion.paragraph_format.space_after = Pt(0)      
 
-        if len(texto.split(':')) > 1:
-            run_desc = parrafo_descripcion.add_run(texto.split(':')[1].strip())
+        if contenido:
+            run_desc = parrafo_descripcion.add_run(contenido)
             run_desc.font.name = 'Times New Roman'
             run_desc.font.size = Pt(11)
             run_desc.font.color.rgb = RGBColor(0, 0, 0)
@@ -974,15 +984,18 @@ def crear_encabezado_profesional(datos):
 
         if i <= len(competencias):
             codigo, descripcion = competencias[i - 1]
-            partes_descripcion = descripcion.split(":")
-            partes_descripcion = [parte.strip().capitalize() for parte in partes_descripcion]
+            # Dividir solo en el primer ':' para conservar el texto completo
+            partes = descripcion.split(':', 1)
+            titulo = partes[0].strip().capitalize() if len(partes) > 0 else ""
+            contenido = partes[1].strip() if len(partes) > 1 else ""
+            
             p_cod = celda3.add_paragraph()
             p_cod.paragraph_format.left_indent = Inches(0.5)
-            p_cod.add_run(f"{codigo} {partes_descripcion[0]}:").bold = True
-            if len(partes_descripcion) > 1:
+            p_cod.add_run(f"{codigo} {titulo}:").bold = True
+            if contenido:
                 p_desc = celda3.add_paragraph()
                 p_desc.paragraph_format.left_indent = Inches(0.5)
-                p_desc.add_run(partes_descripcion[1]).bold = False
+                p_desc.add_run(contenido).bold = False
         else:
             celda3.add_paragraph("• Competencia no definida para esta unidad.")
 

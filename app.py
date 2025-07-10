@@ -276,7 +276,9 @@ def guardar_competencias():
         
         try:
             unidades_competencias = json.loads(competencias_data)
-        except json.JSONDecodeError:
+            print(f"DEBUG: Datos de competencias recibidos: {unidades_competencias}")
+        except json.JSONDecodeError as e:
+            print(f"DEBUG: Error al decodificar JSON: {str(e)}")
             return jsonify({
                 'success': False,
                 'error': 'Datos de competencias inválidos.'
@@ -308,6 +310,8 @@ def guardar_competencias():
                 codigo = competencia.get('codigo', '').strip()
                 titulo = competencia.get('titulo', '').strip()
                 descripcion = competencia.get('descripcion', '').strip()
+                
+                print(f"DEBUG: Competencia {i+1} - Código: {codigo}, Título: {titulo[:50]}..., Descripción: {descripcion[:100]}...")
                 
                 if not codigo or not titulo or not descripcion:
                     return jsonify({
