@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const modificarBtn = document.getElementById('modificarBtn');
     const vistaPreviaBtn = document.getElementById('vistaPreviaBtn');
     const generarDocumentoBtn = document.getElementById('generarDocumentoBtn');
     const verHistorialBtn = document.getElementById('verHistorialBtn');
@@ -133,12 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    modificarBtn.addEventListener('click', function() {
-        mostrarMensaje('🔄 Redirigiendo al formulario general...', 'info');
-        setTimeout(() => {
-            window.location.href = '/general';
-        }, 1000);
-    });
 
     vistaPreviaBtn.addEventListener('click', async function() {
         const boton = this;
@@ -228,8 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function mostrarOpcionesPosteriorFinalizacion() {
         generarDocumentoBtn.disabled = true;
         vistaPreviaBtn.disabled = true;
-        modificarBtn.disabled = true;
-        
+        // modificarBtn ya no existe
         const container = document.querySelector('.finalizar-container');
         container.innerHTML = `
             <h1 class="finalizar-titulo">🎉 ¡Registro Completado!</h1>
