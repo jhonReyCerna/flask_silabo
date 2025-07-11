@@ -25,34 +25,44 @@ def formatear_referencia_libro(libro):
         str: Referencia formateada
     """
     try:
-        # Extraer autores
-        autores_str = ""
-        if "autores" in libro and isinstance(libro["autores"], dict):
-            autores_list = []
-            for key in sorted(libro["autores"].keys()):
-                autor = libro["autores"][key]
-                if isinstance(autor, dict) and "apellido" in autor:
-                    inicial = autor.get("inicial", "")
-                    apellido = autor.get("apellido", "")
-                    if inicial and apellido:
+        autores = libro.get('autores', [])
+        autores_list = []
+        if isinstance(autores, dict):
+            for key in sorted(autores.keys()):
+                autor = autores[key]
+                if isinstance(autor, dict):
+                    apellido = autor.get('apellido', '').strip()
+                    nombre = autor.get('nombre', '').strip()
+                    inicial = nombre[0] + '.' if nombre else autor.get('inicial', '')
+                    if apellido and inicial:
                         autores_list.append(f"{apellido}, {inicial}")
                     elif apellido:
                         autores_list.append(apellido)
-            
-            if autores_list:
-                if len(autores_list) == 1:
-                    autores_str = autores_list[0]
-                elif len(autores_list) == 2:
-                    autores_str = f"{autores_list[0]} y {autores_list[1]}"
-                else:
-                    autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
-        
-        # Extraer otros campos
+        elif isinstance(autores, list):
+            for autor in autores:
+                if isinstance(autor, dict):
+                    apellido = autor.get('apellido', '').strip()
+                    nombre = autor.get('nombre', '').strip()
+                    inicial = nombre[0] + '.' if nombre else autor.get('inicial', '')
+                    if apellido and inicial:
+                        autores_list.append(f"{apellido}, {inicial}")
+                    elif apellido:
+                        autores_list.append(apellido)
+                elif isinstance(autor, str):
+                    autores_list.append(autor)
+        elif isinstance(autores, str):
+            autores_list.append(autores)
+        autores_str = ''
+        if autores_list:
+            if len(autores_list) == 1:
+                autores_str = autores_list[0]
+            elif len(autores_list) == 2:
+                autores_str = f"{autores_list[0]} y {autores_list[1]}"
+            else:
+                autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
         titulo = libro.get("titulo", "Título pendiente")
         año = libro.get("año", "Año pendiente")
         editorial = libro.get("editorial", "Editorial pendiente")
-        
-        # Formatear referencia
         if autores_str:
             return f"{autores_str} ({año}). {titulo}. {editorial}."
         else:
@@ -73,48 +83,56 @@ def formatear_referencia_articulo(articulo):
         str: Referencia formateada
     """
     try:
-        autores_str = ""
-        if "autores" in articulo and isinstance(articulo["autores"], dict):
-            autores_list = []
-            for key in sorted(articulo["autores"].keys()):
-                autor = articulo["autores"][key]
-                if isinstance(autor, dict) and "apellido" in autor:
-                    inicial = autor.get("inicial", "")
-                    apellido = autor.get("apellido", "")
-                    if inicial and apellido:
+        autores = articulo.get('autores', [])
+        autores_list = []
+        if isinstance(autores, dict):
+            for key in sorted(autores.keys()):
+                autor = autores[key]
+                if isinstance(autor, dict):
+                    apellido = autor.get('apellido', '').strip()
+                    nombre = autor.get('nombre', '').strip()
+                    inicial = nombre[0] + '.' if nombre else autor.get('inicial', '')
+                    if apellido and inicial:
                         autores_list.append(f"{apellido}, {inicial}")
                     elif apellido:
                         autores_list.append(apellido)
-            
-            if autores_list:
-                if len(autores_list) == 1:
-                    autores_str = autores_list[0]
-                elif len(autores_list) == 2:
-                    autores_str = f"{autores_list[0]} y {autores_list[1]}"
-                else:
-                    autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
-        
+        elif isinstance(autores, list):
+            for autor in autores:
+                if isinstance(autor, dict):
+                    apellido = autor.get('apellido', '').strip()
+                    nombre = autor.get('nombre', '').strip()
+                    inicial = nombre[0] + '.' if nombre else autor.get('inicial', '')
+                    if apellido and inicial:
+                        autores_list.append(f"{apellido}, {inicial}")
+                    elif apellido:
+                        autores_list.append(apellido)
+                elif isinstance(autor, str):
+                    autores_list.append(autor)
+        elif isinstance(autores, str):
+            autores_list.append(autores)
+        autores_str = ''
+        if autores_list:
+            if len(autores_list) == 1:
+                autores_str = autores_list[0]
+            elif len(autores_list) == 2:
+                autores_str = f"{autores_list[0]} y {autores_list[1]}"
+            else:
+                autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
         titulo = articulo.get("titulo", "Título pendiente")
         año = articulo.get("año", "Año pendiente")
         revista = articulo.get("revista", "Revista pendiente")
         volumen = articulo.get("volumen", "")
         numero = articulo.get("numero", "")
         paginas = articulo.get("paginas", "")
-        
         referencia = f"{autores_str if autores_str else 'Autor pendiente'} ({año}). {titulo}. {revista}"
-        
         if volumen:
             referencia += f", {volumen}"
             if numero:
                 referencia += f"({numero})"
-        
         if paginas:
             referencia += f", {paginas}"
-        
         referencia += "."
-        
         return referencia
-    
     except Exception:
         return "Referencia pendiente"
 
@@ -330,78 +348,8 @@ def crear_encabezado_profesional(datos):
     semestre = datos.get('SLB-SEM', '') or datos.get('semestre', '') or ''
     docente = datos.get('SLB-DOC', '') or datos.get('docente', '') or ''
     
-    parrafos = [
-        "UNIVERSIDAD NACIONAL DEL CALLAO",
-        "ESCUELA DE POSGRADO DE LA UNAC",
-        "UNIDAD DE POSGRADO DE LA FACULTAD DE INGENIERÍA MECÁNICA Y DE ENERGÍA",
-        "", 
-        "SILABO", 
-        f"PROGRAMA DE POSGRADO: ",
-        f"MAESTRIA EN {programa.upper()}" if programa else "MAESTRIA EN [PROGRAMA]",
-        f"ASIGNATURA: {asignatura.upper()}" if asignatura else "ASIGNATURA: [ASIGNATURA]",
-        f"SEMESTRE ACADÉMICO: 2025 - {semestre.upper()}" if semestre else "SEMESTRE ACADÉMICO: 2025 - [SEMESTRE]",
-        f"DOCENTE: {docente.upper()}" if docente else "DOCENTE: [DOCENTE]",
-        "",
-        "CALLAO, PERÚ",
-        "2025",
-    ]
-
-    for idx, texto in enumerate(parrafos):
-        if texto == "SILABO":
-            p = doc.paragraphs[-1]
-            run = p.add_run(texto)
-        else:
-            p = doc.add_paragraph()
-            run = p.add_run(texto)
-
-        run.font.name = 'Times New Roman'
-        p.paragraph_format.space_before = Pt(6)
-
-        if texto == "UNIVERSIDAD NACIONAL DEL CALLAO":
-            run.font.size = Pt(22)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-        elif texto in ("CALLAO, PERÚ", "2025"):
-            run.font.size = Pt(18)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-        elif texto == "UNIDAD DE POSGRADO DE LA FACULTAD DE INGENIERÍA MECÁNICA Y DE ENERGÍA":
-            run.font.size = Pt(14)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.space_before = Pt(12)
-
-            p_img = doc.add_paragraph()
-            p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            try:
-                p_img.add_run().add_picture('UC.png', width=Inches(1.8))
-            except:
-                p_img.add_run("LOGO UNAC")
-
-        elif texto == "SILABO":
-            run.font.size = Pt(36)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.space_before = Pt(0)
-
-        elif texto.startswith("MAESTRIA EN"):
-            run.font.size = Pt(14)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.space_before = Pt(6)
-            p.paragraph_format.space_after = Pt(18)
-
-        elif texto.startswith(("ASIGNATURA", "SEMESTRE ACADÉMICO", "DOCENTE")):
-            run.font.size = Pt(14)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-
-        else:
-            run.font.size = Pt(14)
-            run.bold = True
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    # ...existing code...
+    # ...existing code...
 #------------------------------------------------------------------------------------------------------v
     p = doc.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
