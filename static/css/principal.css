@@ -1,3 +1,17 @@
+nav.sidebar .nav-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 10px;
+  border-bottom: 1px solid #E3E7EB;
+}
+nav.sidebar .nav-header {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #191919;
+  padding: 0;
+  border: none;
+}
 *, *::before, *::after {
   box-sizing: border-box;
 }
