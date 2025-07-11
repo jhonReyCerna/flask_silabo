@@ -343,13 +343,78 @@ def crear_encabezado_profesional(datos):
     agregar_bordes(tabla)
  #------------------------------------------------------------------------------------------------------
 
-    programa = datos.get('SLB-PROG', '') or datos.get('maestria', '') or ''
-    asignatura = datos.get('SLB-ASSIG', '') or datos.get('asignatura', '') or ''
-    semestre = datos.get('SLB-SEM', '') or datos.get('semestre', '') or ''
-    docente = datos.get('SLB-DOC', '') or datos.get('docente', '') or ''
-    
-    # ...existing code...
-    # ...existing code...
+    parrafos = [
+        "UNIVERSIDAD NACIONAL DEL CALLAO",
+        "ESCUELA DE POSGRADO DE LA UNAC",
+        "UNIDAD DE POSGRADO DE LA FACULTAD DE INGENIERÍA MECÁNICA Y DE ENERGÍA",
+        "", 
+        "SILABO", 
+        f"PROGRAMA DE POSGRADO: ",
+        f"MAESTRIA EN {datos.get('SLB-PROG', '').upper()}",
+        f"ASIGNATURA: {datos.get('SLB-ASSIG', '').upper()}",
+        f"SEMESTRE ACADÉMICO: 2025 - {datos.get('SLB-SEM', '').upper()}",
+        f"DOCENTE: {datos.get('SLB-DOC', '').upper()}",
+        "",
+        "CALLAO, PERÚ",
+        "2025",
+    ]
+
+    for idx, texto in enumerate(parrafos):
+        if texto == "SILABO":
+            p = doc.paragraphs[-1]
+            run = p.add_run(texto)
+        else:
+            p = doc.add_paragraph()
+            run = p.add_run(texto)
+
+        run.font.name = 'Times New Roman'
+        p.paragraph_format.space_before = Pt(6)
+
+        if texto == "UNIVERSIDAD NACIONAL DEL CALLAO":
+            run.font.size = Pt(22)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+        elif texto in ("CALLAO, PERÚ", "2025"):
+            run.font.size = Pt(18)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+        elif texto == "UNIDAD DE POSGRADO DE LA FACULTAD DE INGENIERÍA MECÁNICA Y DE ENERGÍA":
+            run.font.size = Pt(14)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_before = Pt(12)
+
+            p_img = doc.add_paragraph()
+            p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            try:
+                p_img.add_run().add_picture('UC.png', width=Inches(1.8))
+            except:
+                p_img.add_run("LOGO UC")
+
+        elif texto == "SILABO":
+            run.font.size = Pt(36)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_before = Pt(0)
+
+        elif texto.startswith("MAESTRIA EN"):
+            run.font.size = Pt(14)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_before = Pt(6)
+            p.paragraph_format.space_after = Pt(18)
+
+        elif texto.startswith(("ASIGNATURA", "SEMESTRE ACADÉMICO", "DOCENTE")):
+            run.font.size = Pt(14)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+
+        else:
+            run.font.size = Pt(14)
+            run.bold = True
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 #------------------------------------------------------------------------------------------------------v
     p = doc.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
