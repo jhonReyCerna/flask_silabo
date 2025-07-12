@@ -148,15 +148,45 @@ def formatear_referencia_web(web):
         str: Referencia formateada
     """
     try:
-        titulo = web.get("titulo", "Título pendiente")
-        url = web.get("url", "URL pendiente")
-        fecha_acceso = web.get("fecha_acceso", "Fecha pendiente")
-        autor = web.get("autor", "")
-        
-        if autor:
-            return f"{autor}. {titulo}. Recuperado de {url}. Acceso: {fecha_acceso}."
+        autores = web.get('autores', [])
+        autores_list = []
+        if isinstance(autores, list):
+            for autor in autores:
+                apellido = autor.get('apellido', '').strip() if isinstance(autor, dict) else ''
+                inicial = autor.get('inicial', '').strip() if isinstance(autor, dict) else ''
+                if apellido and inicial:
+                    autores_list.append(f"{apellido}, {inicial}")
+                elif apellido:
+                    autores_list.append(apellido)
+        elif isinstance(autores, dict):
+            apellido = autores.get('apellido', '').strip()
+            inicial = autores.get('inicial', '').strip()
+            if apellido and inicial:
+                autores_list.append(f"{apellido}, {inicial}")
+            elif apellido:
+                autores_list.append(apellido)
+        elif isinstance(autores, str):
+            autores_list.append(autores)
+        autores_str = ''
+        if autores_list:
+            if len(autores_list) == 1:
+                autores_str = autores_list[0]
+            elif len(autores_list) == 2:
+                autores_str = f"{autores_list[0]} y {autores_list[1]}"
+            else:
+                autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
         else:
-            return f"{titulo}. Recuperado de {url}. Acceso: {fecha_acceso}."
+            autores_str = "Autor pendiente"
+
+        año = web.get("año", "Año pendiente")
+        dia = web.get("dia", "Día pendiente")
+        mes = web.get("mes", "Mes pendiente")
+        titulo = web.get("titulo", "Título pendiente")
+        sitio = web.get("sitio", "Sitio pendiente")
+        url = web.get("url", "URL pendiente")
+
+        referencia = f"{autores_str} ({año}, {dia} {mes}). {titulo}. {sitio}. {url}"
+        return referencia
     
     except Exception:
         return "Referencia pendiente"
@@ -640,7 +670,6 @@ def crear_encabezado_profesional(datos):
         parrafo_codigo_titulo.paragraph_format.space_after = Pt(0)    
 
         descripcion = capitalizar_despues_de_dos_puntos(descripcion.strip())
-        # Dividir solo en el primer ':' para conservar el texto completo
         partes = descripcion.split(':', 1)
         titulo = partes[0] if len(partes) > 0 else ""
         contenido = partes[1].strip() if len(partes) > 1 else ""
@@ -685,7 +714,6 @@ def crear_encabezado_profesional(datos):
         parrafo_codigo_titulo.paragraph_format.space_after = Pt(0)   
 
         texto = capitalizar_despues_de_dos_puntos(texto.strip())
-        # Dividir solo en el primer ':' para conservar el texto completo
         partes = texto.split(':', 1)
         titulo = partes[0] if len(partes) > 0 else ""
         contenido = partes[1].strip() if len(partes) > 1 else ""
