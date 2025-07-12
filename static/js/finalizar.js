@@ -356,15 +356,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     registrosDisponibles.forEach((registro, index) => {
                         const general = registro.general || {};
                         const metadatos = registro.metadatos || {};
-                        const fechaFinalizacion = metadatos.fecha_finalizacion ? 
-                            new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric'
-                            }) : 'N/A';
-                        
+                        let fechaFinalizacion = 'N/A';
+                        if (metadatos.fecha_finalizacion) {
+                            const fechaStr = metadatos.fecha_finalizacion;
+                            const fechaObj = new Date(fechaStr);
+                            const dia = fechaObj.getDate();
+                            const mes = fechaObj.toLocaleString('es-ES', { month: 'short' });
+                            const anio = fechaObj.getFullYear();
+                            const hora = fechaObj.getHours().toString().padStart(2, '0');
+                            const minutos = fechaObj.getMinutes().toString().padStart(2, '0');
+                            fechaFinalizacion = `${dia} ${mes} ${anio}, ${hora}:${minutos}`;
+                        }
                         const backgroundColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
-                        
                         historialHtml += `
                             <tr class="historial-row" data-index="${index}" style="background-color: ${backgroundColor}; border-bottom: 1px solid #dee2e6; cursor: pointer; transition: background-color 0.2s ease;">
                                 <td style="padding: 12px; border-right: 1px solid #dee2e6; color: #333; font-weight: 500;">${general.asignatura || 'Sin nombre'}</td>
@@ -770,7 +773,18 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <div style="background: #d1ecf1; padding: 15px; border-radius: 8px; border-left: 4px solid #17a2b8;">
                                 <h3 style="margin: 0 0 10px 0; color: #0c5460;">ℹ️ Metadatos</h3>
-                                <p><strong>Finalizado:</strong> ${metadatos.fecha_finalizacion ? new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES') : 'N/A'}</p>
+                                <p><strong>Finalizado:</strong> ${(() => {
+                                    if (metadatos.fecha_finalizacion) {
+                                        const fechaObj = new Date(metadatos.fecha_finalizacion);
+                                        const dia = fechaObj.getDate();
+                                        const mes = fechaObj.toLocaleString('es-ES', { month: 'short' });
+                                        const anio = fechaObj.getFullYear();
+                                        const hora = fechaObj.getHours().toString().padStart(2, '0');
+                                        const minutos = fechaObj.getMinutes().toString().padStart(2, '0');
+                                        return `${dia} ${mes} ${anio}, ${hora}:${minutos}`;
+                                    }
+                                    return 'N/A';
+                                })()}</p>
                                 <p><strong>Versión:</strong> ${general.version || 'N/A'}</p>
                                 <p><strong>Estado:</strong> ${metadatos.estado || 'N/A'}</p>
                             </div>
@@ -1077,12 +1091,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const indiceOriginal = registrosDisponibles.indexOf(registro);
                 const general = registro.general || {};
                 const metadatos = registro.metadatos || {};
-                const fechaFinalizacion = metadatos.fecha_finalizacion ? 
-                    new Date(metadatos.fecha_finalizacion).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                    }) : 'N/A';
+                let fechaFinalizacion = 'N/A';
+                if (metadatos.fecha_finalizacion) {
+                    const fechaObj = new Date(metadatos.fecha_finalizacion);
+                    const dia = fechaObj.getDate();
+                    const mes = fechaObj.toLocaleString('es-ES', { month: 'short' });
+                    const anio = fechaObj.getFullYear();
+                    const hora = fechaObj.getHours().toString().padStart(2, '0');
+                    const minutos = fechaObj.getMinutes().toString().padStart(2, '0');
+                    fechaFinalizacion = `${dia} ${mes} ${anio}, ${hora}:${minutos}`;
+                }
                 
                 const backgroundColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
                 
