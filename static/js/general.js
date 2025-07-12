@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Datos guardados:', data.datos);
                setTimeout(function() {
                    window.location.reload();
-               }, 600); // pequeña espera para mostrar el mensaje
+               }, 600); 
             } else {
                 mostrarMensaje('❌ Error: ' + data.message, 'error');
             }
