@@ -229,6 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (data.success) {
                 mostrarMensaje(data.message, 'exito');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 600); 
             } else {
                 mostrarMensaje(data.message, 'error');
             }

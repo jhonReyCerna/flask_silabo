@@ -370,6 +370,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 mostrarMensaje(data.message || 'Productos guardados exitosamente', 'exito');
                 productosGuardados = unidadesProductos;
+               setTimeout(function() {
+                   window.location.reload();
+               }, 600); 
             } else {
                 mostrarMensaje(data.error || 'Error al guardar productos', 'error');
             }

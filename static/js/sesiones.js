@@ -201,6 +201,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 mostrarMensaje(data.message, 'exito');
                 sesionesGuardadas = unidadesSesiones;
+               setTimeout(function() {
+                   window.location.reload();
+               }, 600); 
             } else {
                 mostrarMensaje(data.message || 'Error al guardar sesiones', 'error');
             }

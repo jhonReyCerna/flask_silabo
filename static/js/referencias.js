@@ -437,6 +437,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 mostrarMensaje('Referencias guardadas exitosamente', 'exito');
                 referenciasData = referenciasFormateadas;
+               setTimeout(function() {
+                   window.location.reload();
+               }, 600); 
             } else {
                 mostrarMensaje('Error al guardar las referencias: ' + (data.message || 'Error desconocido'), 'error');
             }

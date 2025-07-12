@@ -243,6 +243,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     fecha_inicio: fechaInicio,
                     cronograma: cronograma
                 };
+               setTimeout(function() {
+                   window.location.reload();
+               }, 600); 
             } else {
                 mostrarMensaje(data.message, 'error');
             }

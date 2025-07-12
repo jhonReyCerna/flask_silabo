@@ -311,6 +311,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 mostrarMensaje(data.message, 'exito');
                 competenciasGuardadas = unidadesCompetencias;
+               setTimeout(function() {
+                   window.location.reload();
+               }, 600); 
             } else {
                 mostrarMensaje(data.message || 'Error al guardar competencias', 'error');
             }
