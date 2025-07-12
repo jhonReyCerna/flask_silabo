@@ -189,6 +189,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 mostrarMensaje('✅ Datos guardados correctamente', 'success');
                 console.log('Datos guardados:', data.datos);
+               setTimeout(function() {
+                   window.location.reload();
+               }, 600); // pequeña espera para mostrar el mensaje
             } else {
                 mostrarMensaje('❌ Error: ' + data.message, 'error');
             }
