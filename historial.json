@@ -1,5 +1,28 @@
 {
-  "registro_actual": {},
+  "registro_actual": {
+    "general": {
+      "fecha_guardado": "2025-07-11T21:26:17.660775",
+      "codigo": "M.FAP.03.01/R8",
+      "version": "1",
+      "fecha": "2025-07-11",
+      "maestria": "GERENCIA DEL MANTENIMIENTO",
+      "asignatura": "MANTENIMIENTO PRODUCTIVO TOTAL ",
+      "semestre": "A",
+      "docente": "DR. ING. ROBERT WILLIAM CASTILLO ALVA",
+      "horas_teoria": "4",
+      "horas_practica": "0",
+      "creditos": "1",
+      "sesiones": "1",
+      "semanas": "1",
+      "correo": "jhoncerna@gmail.com",
+      "codigo_programa": "GM309",
+      "caracter": "Obligatorio",
+      "proposito": "tshtshrsrhhstrhtrs",
+      "horario": "Horario: Sábado - Domingo",
+      "modalidad": "Presencial",
+      "link_virtual": null
+    }
+  },
   "registros_completados": [
     {
       "general": {

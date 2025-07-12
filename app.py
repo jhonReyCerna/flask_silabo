@@ -1,17 +1,47 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, g
 import json
 import os
 from datetime import datetime
 import tempfile
 from generar_word import generar_documento_word, generar_nombre_archivo
 
+
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta_para_silabo'
-
 app.template_folder = 'templates'
 app.static_folder = 'static'
-
 DATA_FILE = 'historial.json'
+
+# --- FUNCIONES DE ESTADO DE SECCIONES ---
+def estado_secciones():
+    import os, json
+    estado = {
+        'seccion_general_completa': False,
+        'seccion_unidades_completa': False,
+        'seccion_competencias_completa': False,
+        'seccion_productos_completa': False,
+        'seccion_sesiones_completa': False,
+        'seccion_cronograma_completa': False
+    }
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                datos = json.load(f)
+            registro = datos.get('registro_actual', {})
+            estado['seccion_general_completa'] = bool(registro.get('general'))
+            estado['seccion_unidades_completa'] = bool(registro.get('unidades'))
+            estado['seccion_competencias_completa'] = bool(registro.get('competencias'))
+            estado['seccion_productos_completa'] = bool(registro.get('productos'))
+            estado['seccion_sesiones_completa'] = bool(registro.get('sesiones'))
+            estado['seccion_cronograma_completa'] = bool(registro.get('cronograma'))
+        except Exception:
+            pass
+    return estado
+
+# --- CONTEXT PROCESSOR ---
+@app.context_processor
+def inject_secciones_estado():
+    return estado_secciones()
 
 def cargar_datos():
     """Carga los datos del registro actual"""
@@ -70,6 +100,8 @@ def iniciar_nuevo_registro():
 @app.route('/')
 def index():
     """Página principal - Panel de control"""
+    # Siempre inicializa un nuevo registro al acceder a la raíz
+    iniciar_nuevo_registro()
     return render_template('portada.html')
 
 @app.route('/general')
