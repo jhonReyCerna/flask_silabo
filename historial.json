@@ -1,168 +1,5 @@
 {
-  "registro_actual": {
-    "general": {
-      "fecha_guardado": "2025-07-12T12:44:13.267051",
-      "codigo": "M.FAP.03.01/R8",
-      "version": "1",
-      "fecha": "2025-07-12",
-      "maestria": "GERENCIA DEL MANTENIMIENTO",
-      "asignatura": "MANTENIMIENTO PRODUCTIVO TOTAL ",
-      "semestre": "A",
-      "docente": "DR. ING. ROBERT WILLIAM CASTILLO ALVA",
-      "horas_teoria": "4",
-      "horas_practica": "0",
-      "creditos": "1",
-      "sesiones": "1",
-      "semanas": "1",
-      "correo": "rcastilloa@unacvirtual.edu.pe",
-      "codigo_programa": "GM309",
-      "caracter": "Obligatorio",
-      "proposito": "VGJGCGFJHCCHJ",
-      "horario": "Horario: Lunes - Miércoles - Viernes",
-      "modalidad": "Presencial",
-      "link_virtual": null
-    },
-    "unidades": {
-      "sesiones": 2,
-      "unidades": 2,
-      "unidades_detalle": [
-        {
-          "numero": 1,
-          "nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "sesiones": 1,
-          "logro": "CFJYJYYJYJ",
-          "instrumentos": [
-            "YTYTYJTYTTY"
-          ]
-        },
-        {
-          "numero": 2,
-          "nombre": "TYYTJJTY",
-          "sesiones": 1,
-          "logro": "TYYTTYTY",
-          "instrumentos": [
-            "Listado de cotejo con escala estimativa"
-          ]
-        }
-      ]
-    },
-    "competencias": {
-      "unidades_competencias": [
-        {
-          "numero_unidad": 1,
-          "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "competencias": [
-            {
-              "codigo": "RAE1 (CE1)",
-              "titulo": "Fundamentos del TPM según JIMP [Sesión 1, 2, 3 y 4]",
-              "descripcion": "SREREGGRRG"
-            }
-          ]
-        },
-        {
-          "numero_unidad": 2,
-          "unidad_nombre": "TYYTJJTY",
-          "competencias": [
-            {
-              "codigo": "RAE2 (CE2)",
-              "titulo": "Propuesta de Valor del TPM a la Organización [Sesión  5 y 6] \"",
-              "descripcion": "SERGRRGRREERS"
-            }
-          ]
-        }
-      ]
-    },
-    "productos": {
-      "unidades_productos": [
-        {
-          "unidad_numero": 1,
-          "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "productos": [
-            {
-              "codigo": "PA1 (C1)",
-              "titulo": "Análisis Organizacional para TPM según JIMP",
-              "descripcion": "FGHFHFDHFTDH"
-            }
-          ]
-        },
-        {
-          "unidad_numero": 2,
-          "unidad_nombre": "TYYTJJTY",
-          "productos": [
-            {
-              "codigo": "PA2 (C2)",
-              "titulo": "Informe Estratégico de Alineación del TPM",
-              "descripcion": "THTFTFDTHDDF"
-            }
-          ]
-        }
-      ]
-    },
-    "sesiones": {
-      "unidades_sesiones": [
-        {
-          "unidad_numero": 1,
-          "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "total_sesiones": 1,
-          "sesiones": [
-            {
-              "numero_sesion": 1,
-              "temario": "DFXGNGFXNFXGNGNGXFN"
-            }
-          ]
-        },
-        {
-          "unidad_numero": 2,
-          "unidad_nombre": "TYYTJJTY",
-          "total_sesiones": 1,
-          "sesiones": [
-            {
-              "numero_sesion": 2,
-              "temario": "GFFGNXFGNXGFNGNFXGFN"
-            }
-          ]
-        }
-      ]
-    },
-    "cronograma": {
-      "fecha_inicio": "2025-07-12",
-      "cronograma": [
-        {
-          "sesion": 1,
-          "unidad": 1,
-          "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Lunes",
-          "fecha": "14/07/2025",
-          "horas": 6
-        },
-        {
-          "sesion": 2,
-          "unidad": 2,
-          "nombreUnidad": "TYYTJJTY",
-          "dia": "Miércoles",
-          "fecha": "16/07/2025",
-          "horas": 6
-        }
-      ]
-    },
-    "referencias": {
-      "libros": [
-        {
-          "autores": [
-            {
-              "apellido": "Cerna",
-              "inicial": "J."
-            }
-          ],
-          "año": "2025",
-          "editorial": "Editorial Alfa",
-          "titulo": "La computación"
-        }
-      ],
-      "articulos": [],
-      "web": []
-    }
-  },
+  "registro_actual": {},
   "registros_completados": [
     {
       "general": {
@@ -16721,6 +16558,175 @@
         "fecha_finalizacion": "2025-07-11T18:17:31.859235",
         "estado": "completado",
         "id_registro": 44
+      }
+    },
+    {
+      "general": {
+        "fecha_guardado": "2025-07-12T13:20:08.459368",
+        "codigo": "M.FAP.03.01/R2",
+        "version": "1",
+        "fecha": "2025-07-12",
+        "maestria": "GERENCIA DEL MANTENIMIENTO",
+        "asignatura": "MANTENIMIENTO PRODUCTIVO TOTAL ",
+        "semestre": "A",
+        "docente": "DR. ING. ROBERT WILLIAM CASTILLO ALVA",
+        "horas_teoria": "4",
+        "horas_practica": "0",
+        "creditos": "1",
+        "sesiones": "1",
+        "semanas": "1",
+        "correo": "rcastilloa@unacvirtual.edu.pe",
+        "codigo_programa": "GM309",
+        "caracter": "Obligatorio",
+        "proposito": "arggereer",
+        "horario": "Horario: Lunes - Miércoles - Viernes",
+        "modalidad": "Presencial",
+        "link_virtual": null
+      },
+      "unidades": {
+        "sesiones": 2,
+        "unidades": 2,
+        "unidades_detalle": [
+          {
+            "numero": 1,
+            "nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "sesiones": 1,
+            "logro": "sgfbgbsfgsb",
+            "instrumentos": [
+              "sgbbsgfsgfsbgf"
+            ]
+          },
+          {
+            "numero": 2,
+            "nombre": "esgerggsesgr",
+            "sesiones": 1,
+            "logro": "gbgsbfbgfbgfgfb",
+            "instrumentos": [
+              "sgfgbbgfbgfbgfsgbfgbf"
+            ]
+          }
+        ]
+      },
+      "competencias": {
+        "unidades_competencias": [
+          {
+            "numero_unidad": 1,
+            "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "competencias": [
+              {
+                "codigo": "RAE1 (CE1)",
+                "titulo": "Fundamentos del TPM según JIMP [Sesión 1, 2, 3 y 4]",
+                "descripcion": "hgxfhcghcghgch"
+              }
+            ]
+          },
+          {
+            "numero_unidad": 2,
+            "unidad_nombre": "esgerggsesgr",
+            "competencias": [
+              {
+                "codigo": "RAE2 (CE2)",
+                "titulo": "Propuesta de Valor del TPM a la Organización [Sesión  5 y 6] \"",
+                "descripcion": "hvjvhjjhcththcf"
+              }
+            ]
+          }
+        ]
+      },
+      "productos": {
+        "unidades_productos": [
+          {
+            "unidad_numero": 1,
+            "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "productos": [
+              {
+                "codigo": "PA1 (C1)",
+                "titulo": "Análisis Organizacional para TPM según JIMP",
+                "descripcion": "rttrhtrhtreterhtrehhetretrh"
+              }
+            ]
+          },
+          {
+            "unidad_numero": 2,
+            "unidad_nombre": "esgerggsesgr",
+            "productos": [
+              {
+                "codigo": "PA2 (C2)",
+                "titulo": "Informe Estratégico de Alineación del TPM",
+                "descripcion": "nhddhndhnbgghhnghn"
+              }
+            ]
+          }
+        ]
+      },
+      "sesiones": {
+        "unidades_sesiones": [
+          {
+            "unidad_numero": 1,
+            "unidad_nombre": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "total_sesiones": 1,
+            "sesiones": [
+              {
+                "numero_sesion": 1,
+                "temario": "ytfhhcgfyfyukykyyyvyvy"
+              }
+            ]
+          },
+          {
+            "unidad_numero": 2,
+            "unidad_nombre": "esgerggsesgr",
+            "total_sesiones": 1,
+            "sesiones": [
+              {
+                "numero_sesion": 2,
+                "temario": "htdjddtjdtydtfhgf"
+              }
+            ]
+          }
+        ]
+      },
+      "cronograma": {
+        "fecha_inicio": "2025-07-12",
+        "cronograma": [
+          {
+            "sesion": 1,
+            "unidad": 1,
+            "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
+            "dia": "Lunes",
+            "fecha": "14/07/2025",
+            "horas": 6
+          },
+          {
+            "sesion": 2,
+            "unidad": 2,
+            "nombreUnidad": "esgerggsesgr",
+            "dia": "Miércoles",
+            "fecha": "16/07/2025",
+            "horas": 6
+          }
+        ]
+      },
+      "referencias": {
+        "libros": [
+          {
+            "autores": [
+              {
+                "apellido": "Cerna",
+                "inicial": "J."
+              }
+            ],
+            "año": "2025",
+            "editorial": "Editorial Alfa",
+            "titulo": "La computación"
+          }
+        ],
+        "articulos": [],
+        "web": []
+      },
+      "metadatos": {
+        "fecha_finalizacion": "2025-07-12T13:27:03.619651",
+        "estado": "completado",
+        "id_registro": 45
       }
     }
   ]

@@ -52,6 +52,30 @@ nav.sidebar ul li button {
   box-shadow: none;
   font-family: 'Segoe UI', Arial, sans-serif;
 }
+
+nav.sidebar ul li button {
+  background: #fff;
+  color: #222;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-size: 1.13rem;
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+  transition: background 0.18s, color 0.18s, opacity 0.18s;
+  cursor: pointer;
+}
+
+nav.sidebar ul li button.btn-disabled,
+nav.sidebar ul li button:disabled {
+  background: #f6f7fa !important;
+  color: #b0b3b8 !important;
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 nav.sidebar ul li button:hover,
   nav.sidebar ul li button.active {
   background: #e3e7eb;

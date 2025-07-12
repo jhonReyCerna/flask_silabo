@@ -21,7 +21,8 @@ def estado_secciones():
         'seccion_competencias_completa': False,
         'seccion_productos_completa': False,
         'seccion_sesiones_completa': False,
-        'seccion_cronograma_completa': False
+        'seccion_cronograma_completa': False,
+        'registro_finalizado': False
     }
     if os.path.exists(DATA_FILE):
         try:
@@ -34,11 +35,12 @@ def estado_secciones():
             estado['seccion_productos_completa'] = bool(registro.get('productos'))
             estado['seccion_sesiones_completa'] = bool(registro.get('sesiones'))
             estado['seccion_cronograma_completa'] = bool(registro.get('cronograma'))
+            if registro.get('metadatos', {}).get('estado') == 'completado':
+                estado['registro_finalizado'] = True
         except Exception:
             pass
     return estado
 
-# --- CONTEXT PROCESSOR ---
 @app.context_processor
 def inject_secciones_estado():
     return estado_secciones()
@@ -100,7 +102,6 @@ def iniciar_nuevo_registro():
 @app.route('/')
 def index():
     """Página principal - Panel de control"""
-    # Siempre inicializa un nuevo registro al acceder a la raíz
     iniciar_nuevo_registro()
     return render_template('portada.html')
 
@@ -192,7 +193,6 @@ def unidades():
 def guardar_unidades():
     """Guarda los datos del formulario de unidades"""
     try:
-        # Validar datos de entrada
         sesiones_form = request.form.get('sesiones')
         unidades_form = request.form.get('unidades')
         
