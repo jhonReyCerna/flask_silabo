@@ -69,14 +69,46 @@
 
   <main class="content">
     <div class="top-buttons" id="topButtons">
-      <a href=""><button class="{% if request.endpoint == 'general' %}selected{% endif %} {% if request.endpoint in ['general', 'unidades', 'competencias', 'productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📝</span>General</button></a>
-      <a href=""><button class="{% if request.endpoint == 'unidades' %}selected{% endif %} {% if seccion_general_completa %}completed{% endif %}" {% if not seccion_general_completa %}disabled title="Completa la sección General primero"{% endif %}><span class="icon">📚</span>Unidades</button></a>
-      <a href=""><button class="{% if request.endpoint == 'competencias' %}selected{% endif %} {% if request.endpoint in ['competencias', 'productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">🎯</span>Competencias</button></a>
-      <a href=""><button class="{% if request.endpoint == 'productos' %}selected{% endif %} {% if request.endpoint in ['productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📦</span>Productos</button></a>
-      <a href=""><button class="{% if request.endpoint == 'sesiones' %}selected{% endif %} {% if request.endpoint in ['sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">📅</span>Sesiones</button></a>
-      <a href=""><button class="{% if request.endpoint == 'cronograma' %}selected{% endif %} {% if request.endpoint in ['cronograma', 'referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">⏰</span>Cronograma</button></a>
-      <a href=""><button class="{% if request.endpoint == 'referencias' %}selected{% endif %} {% if request.endpoint in ['referencias', 'finalizar'] %}completed{% endif %}"><span class="icon">🔗</span>Referencias</button></a>
-      <a href=""><button class="{% if request.endpoint == 'finalizar' %}selected{% endif %} {% if request.endpoint in ['finalizar'] %}completed{% endif %}"><span class="icon">✅</span>Finalizar</button></a>
+      <a href="{{ url_for('general') }}">
+        <button class="{% if request.endpoint == 'general' %}selected{% endif %} {% if request.endpoint in ['general', 'unidades', 'competencias', 'productos', 'sesiones', 'cronograma', 'referencias', 'finalizar'] %}completed{% endif %}" title="Paso 1: Completa la información general">
+          <span class="icon">📝</span>General
+        </button>
+      </a>
+      <a href="{{ url_for('unidades') }}">
+        <button title="Paso 2: Completa las unidades" {% if not seccion_general_completa and not registro_finalizado %}class="btn-disabled" disabled{% endif %} {% if request.endpoint == 'unidades' %}selected{% endif %} {% if seccion_general_completa or registro_finalizado %}completed{% endif %}>
+          <span class="icon">📚</span>Unidades
+        </button>
+      </a>
+      <a href="{{ url_for('competencias') }}">
+        <button title="Paso 3: Completa competencias" {% if not seccion_unidades_completa and not registro_finalizado %}class="btn-disabled" disabled{% endif %} {% if request.endpoint == 'competencias' %}selected{% endif %} {% if seccion_unidades_completa or registro_finalizado %}completed{% endif %}>
+          <span class="icon">🎯</span>Competencias
+        </button>
+      </a>
+      <a href="{{ url_for('productos') }}">
+        <button title="Paso 4: Completa productos" {% if not seccion_competencias_completa and not registro_finalizado %}class="btn-disabled" disabled{% endif %} {% if request.endpoint == 'productos' %}selected{% endif %} {% if seccion_competencias_completa or registro_finalizado %}completed{% endif %}>
+          <span class="icon">📦</span>Productos
+        </button>
+      </a>
+      <a href="{{ url_for('sesiones') }}">
+        <button title="Paso 5: Completa sesiones" {% if not seccion_productos_completa and not registro_finalizado %}class="btn-disabled" disabled{% endif %} {% if request.endpoint == 'sesiones' %}selected{% endif %} {% if seccion_productos_completa or registro_finalizado %}completed{% endif %}>
+          <span class="icon">📅</span>Sesiones
+        </button>
+      </a>
+      <a href="{{ url_for('cronograma') }}">
+        <button title="Paso 6: Completa cronograma" {% if not seccion_sesiones_completa and not registro_finalizado %}class="btn-disabled" disabled{% endif %} {% if request.endpoint == 'cronograma' %}selected{% endif %} {% if seccion_sesiones_completa or registro_finalizado %}completed{% endif %}>
+          <span class="icon">⏰</span>Cronograma
+        </button>
+      </a>
+      <a href="{{ url_for('referencias') }}">
+        <button title="Paso 7: Completa referencias" {% if not seccion_cronograma_completa and not registro_finalizado %}class="btn-disabled" disabled{% endif %} {% if request.endpoint == 'referencias' %}selected{% endif %} {% if seccion_cronograma_completa or registro_finalizado %}completed{% endif %}>
+          <span class="icon">🔗</span>Referencias
+        </button>
+      </a>
+      <a href="{{ url_for('finalizar') }}">
+        <button title="Finalizar" {% if request.endpoint == 'finalizar' %}selected{% endif %} {% if registro_finalizado %}completed{% endif %}>
+          <span class="icon">✅</span>Finalizar
+        </button>
+      </a>
     </div>
     <section>
       <h2 id="titulo-principal">{% block titulo %}Contenido Principal{% endblock %}</h2>

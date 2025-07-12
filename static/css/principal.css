@@ -69,7 +69,9 @@ nav.sidebar ul li button {
 }
 
 nav.sidebar ul li button.btn-disabled,
-nav.sidebar ul li button:disabled {
+nav.sidebar ul li button:disabled,
+.top-buttons button.btn-disabled,
+.top-buttons button:disabled {
   background: #f6f7fa !important;
   color: #b0b3b8 !important;
   opacity: 0.7;
