@@ -148,16 +148,19 @@ def formatear_referencia_web(web):
         str: Referencia formateada
     """
     try:
+        autor = web.get("autor", "")
+        fecha = web.get("fecha", "")  # Ejemplo: "2021, marzo 15"
         titulo = web.get("titulo", "Título pendiente")
         url = web.get("url", "URL pendiente")
-        fecha_acceso = web.get("fecha_acceso", "Fecha pendiente")
-        autor = web.get("autor", "")
-        
+
+        referencia = ""
         if autor:
-            return f"{autor}. {titulo}. Recuperado de {url}. Acceso: {fecha_acceso}."
-        else:
-            return f"{titulo}. Recuperado de {url}. Acceso: {fecha_acceso}."
-    
+            referencia += f"{autor}. "
+        if fecha:
+            referencia += f"({fecha}). "
+        referencia += f"{titulo}. "
+        referencia += f"{url}"
+        return referencia.strip()
     except Exception:
         return "Referencia pendiente"
 
