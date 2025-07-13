@@ -1167,12 +1167,21 @@ def generar_html_vista_previa(datos):
                     rae_list = comp_unidad.get('competencias', [])
                     if rae_list:
                         rae = '<br>'.join([f"<strong>{c.get('codigo', '')} ({c.get('titulo', '')}):</strong> {c.get('descripcion', '')}" for c in rae_list])
+            # Buscar producto de aprendizaje solo por número de unidad o por nombre, nunca mostrar el producto de otra unidad
             if isinstance(productos, dict) and productos.get('unidades_productos'):
-                prod_unidad = next((u for u in productos['unidades_productos'] if u.get('numero_unidad') == i), None)
+                prod_unidad = next((u for u in productos['unidades_productos'] if u.get('unidad_numero') == i), None)
+                if not prod_unidad:
+                    nombre_unidad_normalizado = nombre_unidad.strip().lower()
+                    prod_unidad = next((u for u in productos['unidades_productos'] if u.get('unidad_nombre', '').strip().lower() == nombre_unidad_normalizado), None)
                 if prod_unidad:
                     pa_list = prod_unidad.get('productos', [])
-                    if pa_list:
-                        pa = '<br>'.join([f"<strong>{p.get('codigo', '')} ({p.get('titulo', '')}):</strong> {p.get('descripcion', '')}" for p in pa_list])
+                    if pa_list and any(p.get('codigo', '').strip() or p.get('titulo', '').strip() or p.get('descripcion', '').strip() for p in pa_list):
+                        pa = ''.join([
+                            f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{p.get('codigo', '')} {p.get('titulo', '')}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{p.get('descripcion', '') if p.get('descripcion', '').strip() else '<span class=\"no-data\">No definido</span>'}</p></div>"
+                            for p in pa_list if p.get('codigo', '').strip() or p.get('titulo', '').strip() or p.get('descripcion', '').strip()
+                        ])
+                    else:
+                        pa = '<span class=\"no-data\">No definido</span>'
 
             sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
             sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 30px;'>"
