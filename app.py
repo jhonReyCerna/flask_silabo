@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, g
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import tempfile
 from generar_word import generar_documento_word, generar_nombre_archivo
 
@@ -1189,36 +1189,10 @@ def generar_html_vista_previa(datos):
             sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
             sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 30px;'>"
             sesiones_html += f"<h4 style='margin-bottom: 6px;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</h4>"
-            sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Fecha de inicio:</strong> {fecha_inicio if fecha_inicio else '-'} &nbsp;&nbsp; <strong>Fecha de término:</strong> {fecha_termino if fecha_termino else '-'}</div>"
-            sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Resultado de aprendizaje específico:</strong><br>{rae if rae else '<span class=\"no-data\">No definido</span>'}</div>"
-            sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Producto de aprendizaje de la unidad:</strong><br>{pa if pa else '<span class=\"no-data\">No definido</span>'}</div>"
+            # Eliminado: No mostrar fecha de inicio ni fecha de término en la tabla de sesiones
             sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
-            sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Indicador(es) de logro</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Instrumentos de evaluación</td></tr>"
-            indicador_combinado = None
+            sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td></tr>"
             for sesion in sesiones_unidad:
-                indicador = sesion.get('indicador_logro', sesion.get('indicadores_logro', ''))
-                if indicador and indicador != '-':
-                    if isinstance(indicador, list):
-                        indicador_combinado = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{ind}</li>' for ind in indicador) + '</ul>'
-                    else:
-                        indicador_combinado = indicador.replace('\n', '<br>')
-                    break
-            if not indicador_combinado:
-                indicador_combinado = '<span class="no-data">No definido</span>'
-
-            instrumentos_combinados = None
-            for sesion in sesiones_unidad:
-                instrumentos = sesion.get('instrumentos', sesion.get('instrumentos_evaluacion', ''))
-                if instrumentos and instrumentos != '-':
-                    if isinstance(instrumentos, list):
-                        instrumentos_combinados = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{inst}</li>' for inst in instrumentos) + '</ul>'
-                    else:
-                        instrumentos_combinados = instrumentos.replace('\n', '<br>')
-                    break
-            if not instrumentos_combinados:
-                instrumentos_combinados = '<span class="no-data">No definido</span>'
-
-            for idx, sesion in enumerate(sesiones_unidad):
                 sesion_num = sesion.get('numero_sesion', '') or sesion.get('nombre', '') or 'Sesión'
                 horas = sesion.get('horas', '')
                 fecha = sesion.get('fecha', '')
@@ -1233,9 +1207,6 @@ def generar_html_vista_previa(datos):
                 sesiones_html += f"<tr>"
                 sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: center; vertical-align: middle; font-family: Arial, sans-serif; font-size: 11pt;'>{sesion_info}</td>"
                 sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{tema_html}</td>"
-                if idx == 0:
-                    sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;' rowspan='{len(sesiones_unidad)}'>{indicador_combinado}</td>"
-                    sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;' rowspan='{len(sesiones_unidad)}'>{instrumentos_combinados}</td>"
                 sesiones_html += "</tr>"
             sesiones_html += "</table></div>"
     sesiones_html = sesiones_html.replace('<table', "<table style='border-collapse: collapse; width: 100%; margin-top: 10px; font-family: Arial, sans-serif; font-size: 11pt;'", 1)
@@ -1292,54 +1263,47 @@ def generar_html_vista_previa(datos):
                     """
     
     cronograma_html = ""
-    if isinstance(cronograma, dict) and cronograma and cronograma.get('semanas'):
-        cronograma_html += """
-        <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
-            <tr>
-                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
-                    SEMANA
-                </td>
-                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
-                    FECHA
-                </td>
-                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 50%;">
-                    ACTIVIDAD
-                </td>
-                <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 20%;">
-                    OBSERVACIONES
-                </td>
-            </tr>
+    # Mostrar cronograma aunque no tenga datos
+    cronograma_html += """
+    <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+        <tr>
+            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 20%;">SESIÓN</td>
+            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 80%;">FECHA</td>
+        </tr>
+    """
+    semanas_cronograma = []
+    num_sesiones = 4
+    if isinstance(general, dict):
+        semanas_val = general.get('semanas')
+        sesiones_val = general.get('sesiones')
+        try:
+            if sesiones_val and int(sesiones_val) > 0:
+                num_sesiones = int(sesiones_val)
+            elif semanas_val and int(semanas_val) > 0:
+                num_sesiones = int(semanas_val)
+        except Exception:
+            num_sesiones = 4
+
+    # Generar fechas automáticamente según fecha de inicio y número de sesiones
+    fecha_inicio = None
+    if isinstance(cronograma, dict):
+        fecha_inicio = cronograma.get('fecha_inicio')
+    if not fecha_inicio:
+        fecha_inicio = '2025-08-01'  # valor por defecto si no hay fecha
+    try:
+        fecha_base = datetime.strptime(fecha_inicio, '%Y-%m-%d')
+    except Exception:
+        fecha_base = datetime.strptime('2025-08-01', '%Y-%m-%d')
+    for i in range(num_sesiones):
+        fecha_sesion = fecha_base + timedelta(days=7*i)
+        fecha = fecha_sesion.strftime('%Y-%m-%d')
+        cronograma_html += f"""
+        <tr>
+            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">{i+1}</td>
+            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">{fecha}</td>
+        </tr>
         """
-        
-        semanas_cronograma = cronograma.get('semanas', [])
-        for i, semana in enumerate(semanas_cronograma, 1):
-            if isinstance(semana, dict):
-                fecha = semana.get('fecha', f'Semana {i}')
-                actividad = semana.get('actividad', 'Actividad de aprendizaje')
-                observaciones = semana.get('observaciones', '')
-            else:
-                fecha = f'Semana {i}'
-                actividad = 'Actividad de aprendizaje'
-                observaciones = ''
-            
-            cronograma_html += f"""
-            <tr>
-                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                    {i}
-                </td>
-                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                    {fecha}
-                </td>
-                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; vertical-align: top; text-align: justify;">
-                    {actividad}
-                </td>
-                <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                    {observaciones}
-                </td>
-            </tr>
-            """
-        
-        cronograma_html += "</table>"
+    cronograma_html += "</table>"
     
     html_content = f"""
     <!DOCTYPE html>
