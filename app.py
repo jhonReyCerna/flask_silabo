@@ -12,7 +12,6 @@ app.template_folder = 'templates'
 app.static_folder = 'static'
 DATA_FILE = 'historial.json'
 
-# --- FUNCIONES DE ESTADO DE SECCIONES ---
 def estado_secciones():
     import os, json
     estado = {
