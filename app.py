@@ -1263,46 +1263,79 @@ def generar_html_vista_previa(datos):
                     """
     
     cronograma_html = ""
-    # Mostrar cronograma aunque no tenga datos
     cronograma_html += """
-    <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+    <table style=\"width: 100%; border-collapse: collapse; margin: 10px 0;\">
         <tr>
-            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 20%;">SESIÓN</td>
-            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 80%;">FECHA</td>
+            <td style=\"border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8;\">SESIÓN</td>
+            <td style=\"border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8;\">UNIDAD</td>
+            <td style=\"border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8;\">DÍA</td>
+            <td style=\"border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8;\">FECHA</td>
+            <td style=\"border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8;\">HORAS</td>
         </tr>
     """
-    semanas_cronograma = []
-    num_sesiones = 4
-    if isinstance(general, dict):
-        semanas_val = general.get('semanas')
-        sesiones_val = general.get('sesiones')
-        try:
-            if sesiones_val and int(sesiones_val) > 0:
-                num_sesiones = int(sesiones_val)
-            elif semanas_val and int(semanas_val) > 0:
-                num_sesiones = int(semanas_val)
-        except Exception:
-            num_sesiones = 4
-
-    # Generar fechas automáticamente según fecha de inicio y número de sesiones
-    fecha_inicio = None
-    if isinstance(cronograma, dict):
-        fecha_inicio = cronograma.get('fecha_inicio')
-    if not fecha_inicio:
-        fecha_inicio = '2025-08-01'  # valor por defecto si no hay fecha
-    try:
-        fecha_base = datetime.strptime(fecha_inicio, '%Y-%m-%d')
-    except Exception:
-        fecha_base = datetime.strptime('2025-08-01', '%Y-%m-%d')
-    for i in range(num_sesiones):
-        fecha_sesion = fecha_base + timedelta(days=7*i)
-        fecha = fecha_sesion.strftime('%Y-%m-%d')
-        cronograma_html += f"""
-        <tr>
-            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">{i+1}</td>
-            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">{fecha}</td>
-        </tr>
-        """
+    # Usar los datos de las sesiones para generar el cronograma
+    sesiones = datos.get('sesiones', {})
+    unidades = datos.get('unidades', {})
+    unidades_detalle = unidades.get('unidades_detalle', []) if isinstance(unidades, dict) else []
+    sesion_num = 1
+    if isinstance(sesiones, dict) and sesiones.get('unidades_sesiones'):
+        # Find the first date to start from
+        first_date = None
+        for unidad in sesiones['unidades_sesiones']:
+            for sesion in unidad.get('sesiones', []):
+                fecha_raw = sesion.get('fecha', '')
+                if fecha_raw:
+                    try:
+                        first_date = datetime.strptime(fecha_raw, '%Y-%m-%d')
+                        break
+                    except Exception:
+                        continue
+            if first_date:
+                break
+        if not first_date:
+            # Default start date if none present
+            first_date = datetime(datetime.now().year, 4, 30)
+        current_date = first_date
+        dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+        for idx_unidad, unidad in enumerate(sesiones['unidades_sesiones']):
+            for sesion in unidad.get('sesiones', []):
+                tema = sesion.get('temario', '')
+                if isinstance(tema, list):
+                    tema_str = ', '.join(tema)
+                else:
+                    tema_str = tema
+                unidad_col = tema_str if tema_str else f"Unidad {idx_unidad+1}"
+                fecha_raw = sesion.get('fecha', '')
+                horas = sesion.get('horas', '')
+                # Auto-complete FECHA and DÍA if missing
+                if fecha_raw:
+                    try:
+                        fecha_dt = datetime.strptime(fecha_raw, '%Y-%m-%d')
+                        dia_semana = dias_semana[fecha_dt.weekday()]
+                        fecha_formateada = fecha_dt.strftime('%d/%m/%Y')
+                        current_date = fecha_dt + timedelta(days=1)
+                    except Exception:
+                        fecha_formateada = fecha_raw
+                        dia_semana = ''
+                else:
+                    # Skip weekends, use next weekday
+                    while current_date.weekday() > 4:
+                        current_date += timedelta(days=1)
+                    dia_semana = dias_semana[current_date.weekday()]
+                    fecha_formateada = current_date.strftime('%d/%m/%Y')
+                    current_date += timedelta(days=1)
+                # Auto-complete HORAS if missing
+                horas_val = horas if horas else '6h'
+                cronograma_html += f"""
+                <tr>
+                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{sesion_num}</td>
+                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{unidad_col}</td>
+                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{dia_semana}</td>
+                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{fecha_formateada}</td>
+                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{horas_val}</td>
+                </tr>
+                """
+                sesion_num += 1
     cronograma_html += "</table>"
     
     html_content = f"""
