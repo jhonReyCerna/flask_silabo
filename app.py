@@ -1190,7 +1190,7 @@ def generar_html_vista_previa(datos):
             sesiones_html += f"<h4 style='margin-bottom: 6px;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</h4>"
         
             sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
-            sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td></tr>"
+            sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión </td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td></tr>"
             for sesion in sesiones_unidad:
                 sesion_num = sesion.get('numero_sesion', '') or sesion.get('nombre', '') or 'Sesión'
                 horas = sesion.get('horas', '')
