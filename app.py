@@ -1133,7 +1133,7 @@ def generar_html_vista_previa(datos):
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
                 <td rowspan="4" style="width: 100px; border: 1px solid #000; text-align: center; vertical-align: middle; padding: 5px;">
-                    <div style="width: 75px; height: 60px; border: 1px solid #ccc; display: inline-block; text-align: center; line-height: 60px; color: #666; font-size: 10px;">LOGO UC</div>
+                    <img src="/static/img/UC.png" alt="Logo UNAC" style="width:75px; height:60px; object-fit:contain;" />
                 </td>
                 <td colspan="5" style="border: 1px solid #000; background-color: #B7D6F0; text-align: center; padding: 5px; font-weight: bold; font-size: 11px;">
                     FORMACIÓN ACADÉMICA Y PROFESIONAL
@@ -1150,8 +1150,8 @@ def generar_html_vista_previa(datos):
             <tr>
                 <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: top;">Código: {codigo}</td>
                 <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Versión: {version}</td>
-                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Fecha: {fecha}</td>
-                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Página: 1 de 1</td>
+                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center, vertical-align: top;">Fecha: {fecha}</td>
+                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center, vertical-align: top;">Página: 1 de 1</td>
             </tr>
         </table>
     </div>
@@ -1576,7 +1576,7 @@ def generar_html_vista_previa(datos):
                 
                 <div class="centrado">
                     <div style="margin: 20px 0;">
-                        <div style="width: 1.8in; height: 100px; border: 1px solid #ccc; display: inline-block; text-align: center; line-height: 100px; color: #666;">LOGO UNAC</div>
+                        <img src="/static/img/UC.png" alt="Logo UNAC" style="width:300px; height:220px; object-fit:contain; border: 1px solid #ccc; display: inline-block;" />
                     </div>
                 </div>
                 

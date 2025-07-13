@@ -274,7 +274,7 @@ def crear_encabezado_profesional(datos):
     parrafo = celda_logo.paragraphs[0]
     run = parrafo.add_run()
     try:
-        run.add_picture("UC.png", width=Inches(0.75))
+        run.add_picture("static/img/UC.png", width=Inches(0.75))
     except:
         run.text = "LOGO UC"
     parrafo.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -419,7 +419,7 @@ def crear_encabezado_profesional(datos):
             p_img = doc.add_paragraph()
             p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
             try:
-                p_img.add_run().add_picture('UC.png', width=Inches(1.8))
+                p_img.add_run().add_picture('static/img/UC.png', width=Inches(1.8))
             except:
                 p_img.add_run("LOGO UC")
 
