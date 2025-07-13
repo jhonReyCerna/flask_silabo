@@ -1622,14 +1622,14 @@ def generar_html_vista_previa(datos):
             
             {f'''
             <div class="section">
-                <h3>V. PROGRAMACIÓN DE SESIONES</h3>
+                <h3>V. ORGANIZACIÓN DE LAS UNIDADES DE APRENDIZAJE </h3>
                 <div class="content">
                     {sesiones_html}
                 </div>
             </div>
             ''' if sesiones_html else '''
             <div class="section">
-                <h3>V. PROGRAMACIÓN DE SESIONES</h3>
+                <h3>V. ORGANIZACIÓN DE LAS UNIDADES DE APRENDIZAJE</h3>
                 <div class="content">
                     <p class="no-data">No se han definido sesiones.</p>
                 </div>
