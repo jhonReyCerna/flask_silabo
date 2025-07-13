@@ -1166,8 +1166,11 @@ def generar_html_vista_previa(datos):
                 if comp_unidad:
                     rae_list = comp_unidad.get('competencias', [])
                     if rae_list:
-                        rae = '<br>'.join([f"<strong>{c.get('codigo', '')} ({c.get('titulo', '')}):</strong> {c.get('descripcion', '')}" for c in rae_list])
-            # Buscar producto de aprendizaje solo por número de unidad o por nombre, nunca mostrar el producto de otra unidad
+                        rae = '<br>'.join([
+                            f"<strong>{c.get('codigo', '')} ({c.get('titulo', '')}):</strong><br>{c.get('descripcion', '')}"
+                            for c in rae_list
+                        ])
+ 
             if isinstance(productos, dict) and productos.get('unidades_productos'):
                 prod_unidad = next((u for u in productos['unidades_productos'] if u.get('unidad_numero') == i), None)
                 if not prod_unidad:
@@ -1191,7 +1194,6 @@ def generar_html_vista_previa(datos):
             sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Producto de aprendizaje de la unidad:</strong><br>{pa if pa else '<span class=\"no-data\">No definido</span>'}</div>"
             sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
             sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Indicador(es) de logro</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Instrumentos de evaluación</td></tr>"
-            # Obtener el indicador de logro combinado
             indicador_combinado = None
             for sesion in sesiones_unidad:
                 indicador = sesion.get('indicador_logro', sesion.get('indicadores_logro', ''))
@@ -1204,7 +1206,6 @@ def generar_html_vista_previa(datos):
             if not indicador_combinado:
                 indicador_combinado = '<span class="no-data">No definido</span>'
 
-            # Obtener instrumentos de evaluación combinados
             instrumentos_combinados = None
             for sesion in sesiones_unidad:
                 instrumentos = sesion.get('instrumentos', sesion.get('instrumentos_evaluacion', ''))
@@ -1237,7 +1238,6 @@ def generar_html_vista_previa(datos):
                     sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;' rowspan='{len(sesiones_unidad)}'>{instrumentos_combinados}</td>"
                 sesiones_html += "</tr>"
             sesiones_html += "</table></div>"
-    # Encabezado de la tabla con formato Word
     sesiones_html = sesiones_html.replace('<table', "<table style='border-collapse: collapse; width: 100%; margin-top: 10px; font-family: Arial, sans-serif; font-size: 11pt;'", 1)
     sesiones_html = sesiones_html.replace('<th', "<th style='border: 2px solid #222; background: #e6e6e6; color: #222; padding: 7px; text-align: center; font-family: Arial, sans-serif; font-size: 11pt;'")
     sesiones_html = sesiones_html.replace('<tr>', "<tr style='border: 2px solid #222;'>")
