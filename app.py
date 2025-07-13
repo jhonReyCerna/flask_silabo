@@ -1156,12 +1156,51 @@ def generar_html_vista_previa(datos):
         for i, unidad in enumerate(unidades_detalle, 1):
             nombre_unidad = unidad.get('nombre', f'Unidad {i}') if isinstance(unidad, dict) else f'Unidad {i}'
             sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
-            sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 20px;'><table style='width: 100%; border-collapse: collapse; margin: 10px 0;'><tr><td colspan='5' style='border: 1px solid #000; background-color: #f0f0f0; padding: 8px; font-weight: bold; text-align: center; font-size: 12pt;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</td></tr>"
+            sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 20px;'>"
+            sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
+            sesiones_html += f"<tr><td colspan='4' style='border: 1px solid #000; background-color: #f0f0f0; padding: 8px; font-weight: bold; text-align: center; font-size: 12pt;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</td></tr>"
+            sesiones_html += "<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Indicador(es) de logro</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Instrumentos de evaluación</td></tr>"
             for sesion in sesiones_unidad:
-                tema = sesion.get('temario', 'Sin tema definido')
-                sesiones_html += f"<tr><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>{contador_sesion}</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>-</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; vertical-align: top; text-align: justify;'>{tema}</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>4 horas</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>-</td></tr>"
+                # SESIÓN N, horas, fecha (cada uno en línea separada)
+                sesion_num = sesion.get('numero_sesion', f'SESIÓN {contador_sesion}')
+                horas = sesion.get('horas', '4 horas')
+                fecha = sesion.get('fecha', '')
+                sesion_info = f"<strong>{sesion_num}</strong><br>{horas}" + (f"<br>{fecha}" if fecha else "")
+
+                # Temario / actividad
+                tema = sesion.get('temario', '')
+                if isinstance(tema, list):
+                    tema_html = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{t}</li>' for t in tema) + '</ul>'
+                else:
+                    # Si hay saltos de línea, los convertimos en <br>
+                    tema_html = tema.replace('\n', '<br>') if tema else 'Sin tema definido'
+
+                # Indicador(es) de logro
+                indicador = sesion.get('indicador_logro', sesion.get('indicadores_logro', ''))
+                if isinstance(indicador, list):
+                    indicador_html = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{ind}</li>' for ind in indicador) + '</ul>'
+                else:
+                    indicador_html = indicador.replace('\n', '<br>') if indicador else '-'
+
+                # Instrumentos de evaluación
+                instrumentos = sesion.get('instrumentos', sesion.get('instrumentos_evaluacion', ''))
+                if isinstance(instrumentos, list):
+                    instrumentos_html = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{inst}</li>' for inst in instrumentos) + '</ul>'
+                else:
+                    instrumentos_html = instrumentos.replace('\n', '<br>') if instrumentos else '-'
+
+                sesiones_html += f"<tr>"
+                sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: center; vertical-align: middle; font-family: Arial, sans-serif; font-size: 11pt;'>{sesion_info}</td>"
+                sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{tema_html}</td>"
+                sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{indicador_html}</td>"
+                sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{instrumentos_html}</td>"
+                sesiones_html += "</tr>"
                 contador_sesion += 1
             sesiones_html += "</table></div>"
+    # Encabezado de la tabla con formato Word
+    sesiones_html = sesiones_html.replace('<table', "<table style='border-collapse: collapse; width: 100%; margin-top: 10px; font-family: Arial, sans-serif; font-size: 11pt;'", 1)
+    sesiones_html = sesiones_html.replace('<th', "<th style='border: 2px solid #222; background: #e6e6e6; color: #222; padding: 7px; text-align: center; font-family: Arial, sans-serif; font-size: 11pt;'")
+    sesiones_html = sesiones_html.replace('<tr>', "<tr style='border: 2px solid #222;'>")
     referencias_html = ""
     if isinstance(referencias, dict) and referencias:
         if referencias.get('libros'):
