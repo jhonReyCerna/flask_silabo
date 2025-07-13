@@ -1098,15 +1098,8 @@ def vista_previa_word():
         """
 
 def generar_html_vista_previa(datos):
-    """Genera el HTML de vista previa que simula exactamente el documento Word"""
+    # Variables principales para el formato HTML
     general = datos.get('general', {})
-    unidades = datos.get('unidades', {})
-    competencias = datos.get('competencias', {})
-    productos = datos.get('productos', {})
-    sesiones = datos.get('sesiones', {})
-    cronograma = datos.get('cronograma', {})
-    referencias = datos.get('referencias', {})
-    
     programa = general.get('maestria', '[PROGRAMA]')
     asignatura = general.get('asignatura', '[ASIGNATURA]')
     semestre = general.get('semestre', '[SEMESTRE]')
@@ -1119,184 +1112,63 @@ def generar_html_vista_previa(datos):
     proposito = general.get('proposito', '[PROPÓSITO DE LA ASIGNATURA]')
     caracter = general.get('caracter', '[CARÁCTER]')
     codigo_programa = general.get('codigo_programa', '[CÓDIGO PROGRAMA]')
-    
     horas_teoria = general.get('horas_teoria', 0)
     horas_practica = general.get('horas_practica', 0)
     creditos = general.get('creditos', 0)
     sesiones_total = general.get('sesiones', 0)
     semanas = general.get('semanas', 0)
-    
     horas_totales = int(horas_teoria) + int(horas_practica)
-    
-    encabezado_tabla = f"""
-    <div class="header-table">
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-            <tr>
-                <td rowspan="4" style="width: 100px; border: 1px solid #000; text-align: center; vertical-align: middle; padding: 5px;">
-                    <img src="/static/img/UC.png" alt="Logo UNAC" style="width:75px; height:60px; object-fit:contain;" />
-                </td>
-                <td colspan="5" style="border: 1px solid #000; background-color: #B7D6F0; text-align: center; padding: 5px; font-weight: bold; font-size: 11px;">
-                    FORMACIÓN ACADÉMICA Y PROFESIONAL
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: middle;">PROCESO NIVEL 0:</td>
-                <td colspan="3" style="border: 1px solid #000; padding: 5px; font-size: 8px; text-align: center; vertical-align: middle;">ENSEÑANZA – APRENDIZAJE</td>
-            </tr>
-            <tr>
-                <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: middle;">REGISTRO</td>
-                <td colspan="3" style="border: 1px solid #000; padding: 5px; font-size: 8px; text-align: center; vertical-align: middle;">FORMATO DE SÍLABO</td>
-            </tr>
-            <tr>
-                <td colspan="2" style="border: 1px solid #000; padding: 5px; font-size: 8px; vertical-align: top;">Código: {codigo}</td>
-                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center; vertical-align: top;">Versión: {version}</td>
-                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center, vertical-align: top;">Fecha: {fecha}</td>
-                <td style="border: 1px solid #000; padding: 5px; font-size: 9px; text-align: center, vertical-align: top;">Página: 1 de 1</td>
-            </tr>
-        </table>
-    </div>
-    """
-    
-    if isinstance(unidades, dict):
-        unidades_detalle = unidades.get('unidades_detalle', [])
-    else:
-        unidades_detalle = []
-    
+    """Genera el HTML de vista previa que simula exactamente el documento Word"""
+    general = datos.get('general', {})
+    unidades = datos.get('unidades', {})
+    competencias = datos.get('competencias', {})
+    # --- NUEVO BLOQUE: Adaptar a la estructura real de los datos guardados ---
+    # Unidades
+    unidades = datos.get('unidades', {})
+    unidades_detalle = unidades.get('unidades_detalle', []) if isinstance(unidades, dict) else []
     unidades_html = ""
     for i, unidad in enumerate(unidades_detalle, 1):
         if isinstance(unidad, dict):
             nombre = unidad.get('nombre', f'Unidad {i}')
-            descripcion = unidad.get('descripcion', 'Sin descripción')
-            if ':' in descripcion:
-                partes = descripcion.split(':', 1)
-                descripcion = partes[0] + ': ' + partes[1].strip().capitalize()
-            unidades_html += f"""
-            <p style="margin: 6px 0;"><strong>Unidad {i}:</strong> {descripcion}</p>
-            """
-    
+            descripcion = unidad.get('descripcion', '').strip()
+            if descripcion:
+                unidades_html += f"<p style='margin: 6px 0;'><strong>Unidad {i}:</strong> {nombre if nombre else f'Unidad {i}'}<br>{descripcion}</p>"
+            else:
+                unidades_html += f"<p style='margin: 6px 0;'><strong>Unidad {i}:</strong> {nombre if nombre else f'Unidad {i}'}</p>"
+    # Competencias
+    competencias = datos.get('competencias', {})
     competencias_html = ""
-    if isinstance(competencias, dict) and competencias:
-        for unidad_num, comp_unidad in competencias.items():
-            if comp_unidad and isinstance(comp_unidad, list):
-                for comp in comp_unidad:
-                    if isinstance(comp, dict):
-                        codigo_comp = comp.get('codigo', '')
-                        titulo = comp.get('titulo', '')
-                        descripcion_comp = comp.get('descripcion', '')
-                        competencias_html += f"""
-                        <div style="margin: 6px 0; margin-left: 1.3cm;">
-                            <p style="margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;">
-                                {codigo_comp} {titulo}:
-                            </p>
-                            <p style="margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;">
-                                {descripcion_comp}
-                            </p>
-                        </div>
-                        """
-    
+    if isinstance(competencias, dict) and competencias.get('unidades_competencias'):
+        for unidad in competencias['unidades_competencias']:
+            for comp in unidad.get('competencias', []):
+                codigo = comp.get('codigo', '')
+                titulo = comp.get('titulo', '')
+                descripcion = comp.get('descripcion', '')
+                competencias_html += f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{codigo} {titulo}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{descripcion}</p></div>"
+    # Productos
+    productos = datos.get('productos', {})
     productos_html = ""
-    if isinstance(productos, dict) and productos:
-        for unidad_num, prod_unidad in productos.items():
-            if prod_unidad and isinstance(prod_unidad, list):
-                for prod in prod_unidad:
-                    if isinstance(prod, dict):
-                        codigo_prod = prod.get('codigo', '')
-                        titulo_prod = prod.get('titulo', '')
-                        descripcion_prod = prod.get('descripcion', '')
-                        productos_html += f"""
-                        <div style="margin: 6px 0; margin-left: 1.3cm;">
-                            <p style="margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;">
-                                {codigo_prod} {titulo_prod}:
-                            </p>
-                            <p style="margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;">
-                                {descripcion_prod}
-                            </p>
-                        </div>
-                        """
-    
+    if isinstance(productos, dict) and productos.get('unidades_productos'):
+        for unidad in productos['unidades_productos']:
+            for prod in unidad.get('productos', []):
+                codigo = prod.get('codigo', '')
+                titulo = prod.get('titulo', '')
+                descripcion = prod.get('descripcion', '')
+                productos_html += f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{codigo} {titulo}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{descripcion}</p></div>"
+    # Sesiones
+    sesiones = datos.get('sesiones', {})
     sesiones_html = ""
-    if isinstance(sesiones, dict) and sesiones and unidades_detalle:
+    if isinstance(sesiones, dict) and sesiones.get('unidades_sesiones') and unidades_detalle:
         contador_sesion = 1
         for i, unidad in enumerate(unidades_detalle, 1):
-            unidad_num = str(i)
-            if unidad_num in sesiones:
-                sesiones_unidad = sesiones[unidad_num]
-                if isinstance(unidad, dict):
-                    nombre_unidad = unidad.get('nombre', f'Unidad {i}')
-                else:
-                    nombre_unidad = f'Unidad {i}'
-                fecha_inicio = "01/03/2025"  
-                fecha_termino = "28/03/2025" 
-                
-
-                sesiones_html += f"""
-                <div style="page-break-inside: avoid; margin-bottom: 20px;">
-                    <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
-                        <tr>
-                            <td colspan="5" style="border: 1px solid #000; background-color: #f0f0f0; padding: 8px; font-weight: bold; text-align: center; font-size: 12pt;">
-                                UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5" style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 11pt;">
-                                Fecha de inicio: {fecha_inicio} &nbsp;&nbsp;&nbsp; Fecha de término: {fecha_termino}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5" style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 11pt;">
-                                Resultado de aprendizaje específico {i}:
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
-                                SEMANA/ SESIÓN
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
-                                FECHA
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 40%;">
-                                TEMARIO/ACTIVIDAD
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
-                                DURACIÓN
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8; width: 15%;">
-                                MODALIDAD
-                            </td>
-                        </tr>
-                """
-                
-                for sesion in sesiones_unidad:
-                    if isinstance(sesion, dict):
-                        tema = sesion.get('tema', 'Sin tema definido')
-                    else:
-                        tema = 'Sin tema definido'
-                    sesiones_html += f"""
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                                {contador_sesion}
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                                01/03/2025
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; vertical-align: top; text-align: justify;">
-                                {tema}
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                                4 horas
-                            </td>
-                            <td style="border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;">
-                                {modalidad}
-                            </td>
-                        </tr>
-                    """
-                    contador_sesion += 1
-                
-                sesiones_html += """
-                    </table>
-                </div>
-                """
-    
+            nombre_unidad = unidad.get('nombre', f'Unidad {i}') if isinstance(unidad, dict) else f'Unidad {i}'
+            sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
+            sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 20px;'><table style='width: 100%; border-collapse: collapse; margin: 10px 0;'><tr><td colspan='5' style='border: 1px solid #000; background-color: #f0f0f0; padding: 8px; font-weight: bold; text-align: center; font-size: 12pt;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</td></tr>"
+            for sesion in sesiones_unidad:
+                tema = sesion.get('temario', 'Sin tema definido')
+                sesiones_html += f"<tr><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>{contador_sesion}</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>-</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; vertical-align: top; text-align: justify;'>{tema}</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>4 horas</td><td style='border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;'>-</td></tr>"
+                contador_sesion += 1
+            sesiones_html += "</table></div>"
     referencias_html = ""
     if isinstance(referencias, dict) and referencias:
         if referencias.get('libros'):
