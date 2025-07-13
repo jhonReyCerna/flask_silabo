@@ -1158,7 +1158,6 @@ def generar_html_vista_previa(datos):
             nombre_unidad = unidad.get('nombre', f'Unidad {i}') if isinstance(unidad, dict) else f'Unidad {i}'
             fecha_inicio = unidad.get('fecha_inicio', '')
             fecha_termino = unidad.get('fecha_termino', '')
-            # Buscar RAE y PA para la unidad
             rae = ""
             pa = ""
             if isinstance(competencias, dict) and competencias.get('unidades_competencias'):
@@ -1189,7 +1188,7 @@ def generar_html_vista_previa(datos):
             sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
             sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 30px;'>"
             sesiones_html += f"<h4 style='margin-bottom: 6px;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</h4>"
-            # Eliminado: No mostrar fecha de inicio ni fecha de término en la tabla de sesiones
+        
             sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
             sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td></tr>"
             for sesion in sesiones_unidad:
@@ -1273,69 +1272,29 @@ def generar_html_vista_previa(datos):
             <td style=\"border: 1px solid #000; padding: 8px; font-weight: bold; font-size: 10pt; text-align: center; background-color: #f8f8f8;\">HORAS</td>
         </tr>
     """
-    # Usar los datos de las sesiones para generar el cronograma
-    sesiones = datos.get('sesiones', {})
-    unidades = datos.get('unidades', {})
-    unidades_detalle = unidades.get('unidades_detalle', []) if isinstance(unidades, dict) else []
-    sesion_num = 1
-    if isinstance(sesiones, dict) and sesiones.get('unidades_sesiones'):
-        # Find the first date to start from
-        first_date = None
-        for unidad in sesiones['unidades_sesiones']:
-            for sesion in unidad.get('sesiones', []):
-                fecha_raw = sesion.get('fecha', '')
-                if fecha_raw:
-                    try:
-                        first_date = datetime.strptime(fecha_raw, '%Y-%m-%d')
-                        break
-                    except Exception:
-                        continue
-            if first_date:
-                break
-        if not first_date:
-            # Default start date if none present
-            first_date = datetime(datetime.now().year, 4, 30)
-        current_date = first_date
-        dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-        for idx_unidad, unidad in enumerate(sesiones['unidades_sesiones']):
-            for sesion in unidad.get('sesiones', []):
-                tema = sesion.get('temario', '')
-                if isinstance(tema, list):
-                    tema_str = ', '.join(tema)
-                else:
-                    tema_str = tema
-                unidad_col = tema_str if tema_str else f"Unidad {idx_unidad+1}"
-                fecha_raw = sesion.get('fecha', '')
-                horas = sesion.get('horas', '')
-                # Auto-complete FECHA and DÍA if missing
-                if fecha_raw:
-                    try:
-                        fecha_dt = datetime.strptime(fecha_raw, '%Y-%m-%d')
-                        dia_semana = dias_semana[fecha_dt.weekday()]
-                        fecha_formateada = fecha_dt.strftime('%d/%m/%Y')
-                        current_date = fecha_dt + timedelta(days=1)
-                    except Exception:
-                        fecha_formateada = fecha_raw
-                        dia_semana = ''
-                else:
-                    # Skip weekends, use next weekday
-                    while current_date.weekday() > 4:
-                        current_date += timedelta(days=1)
-                    dia_semana = dias_semana[current_date.weekday()]
-                    fecha_formateada = current_date.strftime('%d/%m/%Y')
-                    current_date += timedelta(days=1)
-                # Auto-complete HORAS if missing
-                horas_val = horas if horas else '6h'
-                cronograma_html += f"""
-                <tr>
-                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{sesion_num}</td>
-                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{unidad_col}</td>
-                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{dia_semana}</td>
-                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{fecha_formateada}</td>
-                    <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{horas_val}</td>
-                </tr>
-                """
-                sesion_num += 1
+    cronograma_data = datos.get('cronograma', {})
+    cronograma_list = cronograma_data.get('cronograma', []) if isinstance(cronograma_data, dict) else []
+    if cronograma_list:
+        for sesion in cronograma_list:
+            sesion_num = sesion.get('sesion', '')
+            unidad_col = sesion.get('unidad', '')
+            dia_semana = sesion.get('dia', '')
+            fecha_formateada = sesion.get('fecha', '')
+            horas_val = sesion.get('horas', '')
+            cronograma_html += f"""
+            <tr>
+                <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{sesion_num}</td>
+                <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{unidad_col}</td>
+                <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{dia_semana}</td>
+                <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{fecha_formateada}</td>
+                <td style=\"border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: center; vertical-align: top;\">{horas_val}</td>
+            </tr>
+            """
+    else:
+        # Si no hay cronograma guardado, mostrar mensaje vacío
+        cronograma_html += """
+        <tr><td colspan='5' style='text-align:center; color:#999; font-style:italic;'>No se ha generado el cronograma.</td></tr>
+        """
     cronograma_html += "</table>"
     
     html_content = f"""

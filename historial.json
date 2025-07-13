@@ -1,6 +1,7 @@
 {
   "registro_actual": {
     "general": {
+      "fecha_guardado": "2025-07-13T17:42:19.701923",
       "codigo": "M.FAP.03.01/R9",
       "version": "1",
       "fecha": "2024-03-08",
@@ -17,7 +18,7 @@
       "codigo_programa": "GM309",
       "caracter": "Obligatorio",
       "proposito": "Su desarrollo metodológico integra coloquios, talleres, análisis de casos prácticos  y  un proyecto integrador, mediante los cuales los estudiantes analizan organizaciones utilizando los fundamentos del TPM, articulan propuestas de valor alineadas con estrategias corporativas, diseñan y planifican el despliegue de un Plan Maestro de TPM. El curso tiene como propósito desarrollar en los estudiantes las competencias necesarias para diseñar, planificar y validar estrategias integrales de mantenimiento productivo total, preparándolos para liderar con éxito su implementación en contextos organizacionales. ",
-      "horario": "Horario: Lunes - Miércoles - Viernes",
+      "horario": "Horario: Sábado - Domingo",
       "modalidad": "Virtual",
       "link_virtual": "https://meet.google.com/dkn-vuof-tfy?authuser=0&hl=es"
     },
@@ -246,103 +247,103 @@
       ]
     },
     "cronograma": {
-      "fecha_inicio": "2025-04-30",
+      "fecha_inicio": "2025-04-19",
       "cronograma": [
         {
           "sesion": 1,
           "unidad": 1,
           "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Miércoles",
-          "fecha": "30/04/2025",
-          "horas": 6
+          "dia": "Sábado",
+          "fecha": "19/04/2025",
+          "horas": 9
         },
         {
           "sesion": 2,
           "unidad": 1,
           "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Viernes",
-          "fecha": "02/05/2025",
-          "horas": 6
+          "dia": "Domingo",
+          "fecha": "20/04/2025",
+          "horas": 9
         },
         {
           "sesion": 3,
           "unidad": 1,
           "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Lunes",
-          "fecha": "05/05/2025",
-          "horas": 6
+          "dia": "Sábado",
+          "fecha": "26/04/2025",
+          "horas": 9
         },
         {
           "sesion": 4,
           "unidad": 1,
           "nombreUnidad": "FRAMEWORK TPM SEGÚN JIMP\"",
-          "dia": "Miércoles",
-          "fecha": "07/05/2025",
-          "horas": 6
+          "dia": "Domingo",
+          "fecha": "27/04/2025",
+          "horas": 9
         },
         {
           "sesion": 5,
           "unidad": 2,
           "nombreUnidad": "Propuesta de Valor del TPM a la Organización",
-          "dia": "Viernes",
-          "fecha": "09/05/2025",
-          "horas": 6
+          "dia": "Sábado",
+          "fecha": "03/05/2025",
+          "horas": 9
         },
         {
           "sesion": 6,
           "unidad": 2,
           "nombreUnidad": "Propuesta de Valor del TPM a la Organización",
-          "dia": "Lunes",
-          "fecha": "12/05/2025",
-          "horas": 6
+          "dia": "Domingo",
+          "fecha": "04/05/2025",
+          "horas": 9
         },
         {
           "sesion": 7,
           "unidad": 3,
           "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Miércoles",
-          "fecha": "14/05/2025",
-          "horas": 6
+          "dia": "Sábado",
+          "fecha": "10/05/2025",
+          "horas": 9
         },
         {
           "sesion": 8,
           "unidad": 3,
           "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Viernes",
-          "fecha": "16/05/2025",
-          "horas": 6
+          "dia": "Domingo",
+          "fecha": "11/05/2025",
+          "horas": 9
         },
         {
           "sesion": 9,
           "unidad": 3,
           "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Lunes",
-          "fecha": "19/05/2025",
-          "horas": 6
+          "dia": "Sábado",
+          "fecha": "17/05/2025",
+          "horas": 9
         },
         {
           "sesion": 10,
           "unidad": 3,
           "nombreUnidad": "Diseño del Plan Maestro de TPM",
-          "dia": "Miércoles",
-          "fecha": "21/05/2025",
-          "horas": 6
+          "dia": "Domingo",
+          "fecha": "18/05/2025",
+          "horas": 9
         },
         {
           "sesion": 11,
           "unidad": 4,
           "nombreUnidad": "Verificación y Validación del Plan Estratégico de TPM",
-          "dia": "Viernes",
-          "fecha": "23/05/2025",
-          "horas": 6
+          "dia": "Sábado",
+          "fecha": "24/05/2025",
+          "horas": 9
         },
         {
           "sesion": 12,
           "unidad": 4,
           "nombreUnidad": "Verificación y Validación del Plan Estratégico de TPM",
-          "dia": "Lunes",
-          "fecha": "26/05/2025",
-          "horas": 6
+          "dia": "Domingo",
+          "fecha": "25/05/2025",
+          "horas": 9
         }
       ]
     },
