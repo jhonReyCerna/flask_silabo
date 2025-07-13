@@ -1098,7 +1098,6 @@ def vista_previa_word():
         """
 
 def generar_html_vista_previa(datos):
-    # Variables principales para el formato HTML
     general = datos.get('general', {})
     programa = general.get('maestria', '[PROGRAMA]')
     asignatura = general.get('asignatura', '[ASIGNATURA]')
@@ -1122,8 +1121,6 @@ def generar_html_vista_previa(datos):
     general = datos.get('general', {})
     unidades = datos.get('unidades', {})
     competencias = datos.get('competencias', {})
-    # --- NUEVO BLOQUE: Adaptar a la estructura real de los datos guardados ---
-    # Unidades
     unidades = datos.get('unidades', {})
     unidades_detalle = unidades.get('unidades_detalle', []) if isinstance(unidades, dict) else []
     unidades_html = ""
@@ -1135,7 +1132,6 @@ def generar_html_vista_previa(datos):
                 unidades_html += f"<p style='margin: 6px 0;'><strong>Unidad {i}:</strong> {nombre if nombre else f'Unidad {i}'}<br>{descripcion}</p>"
             else:
                 unidades_html += f"<p style='margin: 6px 0;'><strong>Unidad {i}:</strong> {nombre if nombre else f'Unidad {i}'}</p>"
-    # Competencias
     competencias = datos.get('competencias', {})
     competencias_html = ""
     if isinstance(competencias, dict) and competencias.get('unidades_competencias'):
@@ -1145,7 +1141,6 @@ def generar_html_vista_previa(datos):
                 titulo = comp.get('titulo', '')
                 descripcion = comp.get('descripcion', '')
                 competencias_html += f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{codigo} {titulo}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{descripcion}</p></div>"
-    # Productos
     productos = datos.get('productos', {})
     productos_html = ""
     if isinstance(productos, dict) and productos.get('unidades_productos'):
@@ -1155,7 +1150,6 @@ def generar_html_vista_previa(datos):
                 titulo = prod.get('titulo', '')
                 descripcion = prod.get('descripcion', '')
                 productos_html += f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{codigo} {titulo}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{descripcion}</p></div>"
-    # Sesiones
     sesiones = datos.get('sesiones', {})
     sesiones_html = ""
     if isinstance(sesiones, dict) and sesiones.get('unidades_sesiones') and unidades_detalle:
