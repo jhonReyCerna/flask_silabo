@@ -1107,6 +1107,7 @@ def generar_html_vista_previa(datos):
     fecha = general.get('fecha', '[FECHA]')
     correo = general.get('correo', '[CORREO]')
     modalidad = general.get('modalidad', '[MODALIDAD]')
+    link_virtual = general.get('link_virtual', '')
     proposito = general.get('proposito', '[PROPÓSITO DE LA ASIGNATURA]')
     caracter = general.get('caracter', '[CARÁCTER]')
     codigo_programa = general.get('codigo_programa', '[CÓDIGO PROGRAMA]')
@@ -1213,7 +1214,6 @@ def generar_html_vista_previa(datos):
     sesiones_html = sesiones_html.replace('<tr>', "<tr style='border: 2px solid #222;'>")
     referencias_html = ""
     if isinstance(referencias, dict):
-        # Libros
         referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Libros:</p>"
         if referencias.get('libros'):
             for i, libro in enumerate(referencias['libros'], 1):
@@ -1233,7 +1233,6 @@ def generar_html_vista_previa(datos):
                     """
         else:
             referencias_html += "<p class='no-data' style='margin-left: 0.5in;'>No se han agregado libros.</p>"
-        # Artículos de revista
         referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Artículos de revista:</p>"
         if referencias.get('articulos'):
             for i, articulo in enumerate(referencias['articulos'], 1):
@@ -1253,7 +1252,6 @@ def generar_html_vista_previa(datos):
                     """
         else:
             referencias_html += "<p class='no-data' style='margin-left: 0.5in;'>No se han agregado artículos de revista.</p>"
-        # Recursos web
         referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Recursos web:</p>"
         if referencias.get('web'):
             for i, web in enumerate(referencias['web'], 1):
@@ -1295,7 +1293,6 @@ def generar_html_vista_previa(datos):
             </tr>
             """
     else:
-        # Si no hay cronograma guardado, mostrar mensaje vacío
         cronograma_html += """
         <tr><td colspan='5' style='text-align:center; color:#999; font-style:italic;'>No se ha generado el cronograma.</td></tr>
         """
@@ -1571,11 +1568,7 @@ def generar_html_vista_previa(datos):
                         <td>Correo electrónico institucional</td>
                         <td>{correo}</td>
                     </tr>
-                    <tr>
-                        <td>1.11</td>
-                        <td>Modalidad</td>
-                        <td>{modalidad}</td>
-                    </tr>
+                    {f'''<tr><td rowspan="2">1.11</td><td>Modalidad</td><td>{modalidad}</td></tr><tr><td>Enlace de clase virtual</td><td>{link_virtual}</td></tr>''' if modalidad.strip().lower() == 'virtual' and link_virtual else f'<tr><td>1.11</td><td>Modalidad</td><td>{modalidad}</td></tr>'}
                 </table>
             </div>
             

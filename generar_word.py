@@ -445,7 +445,7 @@ def crear_encabezado_profesional(datos):
             run.font.size = Pt(14)
             run.bold = True
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-#------------------------------------------------------------------------------------------------------v
+#------------------------------------------------------------------------------------------------------
     p = doc.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     run = p.add_run()
@@ -490,6 +490,7 @@ def crear_encabezado_profesional(datos):
     docente = datos.get('SLB-DOC', '') or datos.get('docente', '') or '[DOCENTE]'
     correo = datos.get('SLB-CORREO', '') or datos.get('correo', '') or '[CORREO]'
     modalidad = datos.get('SLB-MODALIDAD', '') or datos.get('modalidad', '') or '[MODALIDAD]'
+    link_virtual = datos.get('link_virtual', '') or datos.get('SLB-LINKVIRTUAL', '')
 
     tabla_datos = [
         ["1.1", "Asignatura", asignatura.title()],
@@ -508,6 +509,10 @@ def crear_encabezado_profesional(datos):
         ["1.11", "Modalidad", modalidad]
     ]
 
+    modalidad_es_virtual = modalidad.strip().lower() == 'virtual' and link_virtual
+    if modalidad_es_virtual:
+        tabla_datos.append(["", "Enlace de clase virtual", link_virtual])
+
     tabla = doc.add_table(rows=len(tabla_datos), cols=3)
     tabla.style = "Table Grid"
     tabla.autofit = False
@@ -516,6 +521,11 @@ def crear_encabezado_profesional(datos):
     for row in tabla.rows:
         for idx, cell in enumerate(row.cells):
             cell.width = widths[idx]
+
+    if modalidad_es_virtual:
+        idx_modalidad = len(tabla_datos) - 2
+        idx_link = len(tabla_datos) - 1
+        tabla.cell(idx_modalidad, 0).merge(tabla.cell(idx_link, 0))
 
     for i, fila in enumerate(tabla_datos):
         for j, valor in enumerate(fila):
@@ -1010,7 +1020,6 @@ def crear_encabezado_profesional(datos):
 
         if i <= len(competencias):
             codigo, descripcion = competencias[i - 1]
-            # Dividir solo en el primer ':' para conservar el texto completo
             partes = descripcion.split(':', 1)
             titulo = partes[0].strip().capitalize() if len(partes) > 0 else ""
             contenido = partes[1].strip() if len(partes) > 1 else ""
