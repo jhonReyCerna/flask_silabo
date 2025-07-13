@@ -1212,9 +1212,10 @@ def generar_html_vista_previa(datos):
     sesiones_html = sesiones_html.replace('<th', "<th style='border: 2px solid #222; background: #e6e6e6; color: #222; padding: 7px; text-align: center; font-family: Arial, sans-serif; font-size: 11pt;'")
     sesiones_html = sesiones_html.replace('<tr>', "<tr style='border: 2px solid #222;'>")
     referencias_html = ""
-    if isinstance(referencias, dict) and referencias:
+    if isinstance(referencias, dict):
+        # Libros
+        referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Libros:</p>"
         if referencias.get('libros'):
-            referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Libros:</p>"
             for i, libro in enumerate(referencias['libros'], 1):
                 if isinstance(libro, dict):
                     autores = []
@@ -1224,16 +1225,17 @@ def generar_html_vista_previa(datos):
                             apellido = autor.get('apellido', '')
                             if apellido and nombre:
                                 autores.append(f"{apellido}, {nombre[0]}.")
-                    
                     autores_str = " & ".join(autores) if autores else "Autor desconocido"
                     referencias_html += f"""
                     <p style="margin: 3px 0 3px 0.5in; text-align: justify; font-size: 11pt;">
                         {i}. {autores_str} ({libro.get('año', 'S.f.')}). <em>{libro.get('titulo', '')}</em>. {libro.get('editorial', '')}.
                     </p>
                     """
-        
+        else:
+            referencias_html += "<p class='no-data' style='margin-left: 0.5in;'>No se han agregado libros.</p>"
+        # Artículos de revista
+        referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Artículos de revista:</p>"
         if referencias.get('articulos'):
-            referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Artículos de revista:</p>"
             for i, articulo in enumerate(referencias['articulos'], 1):
                 if isinstance(articulo, dict):
                     autores = []
@@ -1243,16 +1245,17 @@ def generar_html_vista_previa(datos):
                             apellido = autor.get('apellido', '')
                             if apellido and nombre:
                                 autores.append(f"{apellido}, {nombre[0]}.")
-                    
                     autores_str = " & ".join(autores) if autores else "Autor desconocido"
                     referencias_html += f"""
                     <p style="margin: 3px 0 3px 0.5in; text-align: justify; font-size: 11pt;">
                         {i}. {autores_str} ({articulo.get('año', 'S.f.')}). {articulo.get('titulo', '')}. <em>{articulo.get('revista', '')}</em>, {articulo.get('volumen', '')}({articulo.get('numero', '')}), {articulo.get('paginas', '')}. {articulo.get('doi', '')}
                     </p>
                     """
-        
+        else:
+            referencias_html += "<p class='no-data' style='margin-left: 0.5in;'>No se han agregado artículos de revista.</p>"
+        # Recursos web
+        referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Recursos web:</p>"
         if referencias.get('web'):
-            referencias_html += "<p style='margin: 12px 0 6px 0; font-weight: bold; font-size: 12pt;'>Recursos web:</p>"
             for i, web in enumerate(referencias['web'], 1):
                 if isinstance(web, dict):
                     referencias_html += f"""
@@ -1260,7 +1263,8 @@ def generar_html_vista_previa(datos):
                         {i}. {web.get('autor', 'Autor desconocido')} ({web.get('año', 'S.f.')}). {web.get('titulo', '')}. <em>{web.get('sitio', '')}</em>. {web.get('url', '')}
                     </p>
                     """
-    
+        else:
+            referencias_html += "<p class='no-data' style='margin-left: 0.5in;'>No se han agregado recursos web.</p>"
     cronograma_html = ""
     cronograma_html += """
     <table style=\"width: 100%; border-collapse: collapse; margin: 10px 0;\">
@@ -1644,22 +1648,6 @@ def generar_html_vista_previa(datos):
                 <h3>VI. CRONOGRAMA</h3>
                 <div class="content">
                     <p class="no-data">No se ha generado el cronograma.</p>
-                </div>
-            </div>
-            '''}
-            
-            {f'''
-            <div class="section">
-                <h3>VII. REFERENCIAS BIBLIOGRÁFICAS</h3>
-                <div class="content">
-                    {referencias_html}
-                </div>
-            </div>
-            ''' if referencias_html else '''
-            <div class="section">
-                <h3>VII. REFERENCIAS BIBLIOGRÁFICAS</h3>
-                <div class="content">
-                    <p class="no-data">No se han agregado referencias bibliográficas.</p>
                 </div>
             </div>
             '''}
