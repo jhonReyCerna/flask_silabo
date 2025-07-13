@@ -1150,52 +1150,83 @@ def generar_html_vista_previa(datos):
                 descripcion = prod.get('descripcion', '')
                 productos_html += f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{codigo} {titulo}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{descripcion}</p></div>"
     sesiones = datos.get('sesiones', {})
+    productos = datos.get('productos', {})
+    competencias = datos.get('competencias', {})
     sesiones_html = ""
     if isinstance(sesiones, dict) and sesiones.get('unidades_sesiones') and unidades_detalle:
-        contador_sesion = 1
         for i, unidad in enumerate(unidades_detalle, 1):
             nombre_unidad = unidad.get('nombre', f'Unidad {i}') if isinstance(unidad, dict) else f'Unidad {i}'
-            sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
-            sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 20px;'>"
-            sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
-            sesiones_html += f"<tr><td colspan='4' style='border: 1px solid #000; background-color: #f0f0f0; padding: 8px; font-weight: bold; text-align: center; font-size: 12pt;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</td></tr>"
-            sesiones_html += "<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Indicador(es) de logro</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Instrumentos de evaluación</td></tr>"
-            for sesion in sesiones_unidad:
-                # SESIÓN N, horas, fecha (cada uno en línea separada)
-                sesion_num = sesion.get('numero_sesion', f'SESIÓN {contador_sesion}')
-                horas = sesion.get('horas', '4 horas')
-                fecha = sesion.get('fecha', '')
-                sesion_info = f"<strong>{sesion_num}</strong><br>{horas}" + (f"<br>{fecha}" if fecha else "")
+            fecha_inicio = unidad.get('fecha_inicio', '')
+            fecha_termino = unidad.get('fecha_termino', '')
+            # Buscar RAE y PA para la unidad
+            rae = ""
+            pa = ""
+            if isinstance(competencias, dict) and competencias.get('unidades_competencias'):
+                comp_unidad = next((u for u in competencias['unidades_competencias'] if u.get('numero_unidad') == i), None)
+                if comp_unidad:
+                    rae_list = comp_unidad.get('competencias', [])
+                    if rae_list:
+                        rae = '<br>'.join([f"<strong>{c.get('codigo', '')} ({c.get('titulo', '')}):</strong> {c.get('descripcion', '')}" for c in rae_list])
+            if isinstance(productos, dict) and productos.get('unidades_productos'):
+                prod_unidad = next((u for u in productos['unidades_productos'] if u.get('numero_unidad') == i), None)
+                if prod_unidad:
+                    pa_list = prod_unidad.get('productos', [])
+                    if pa_list:
+                        pa = '<br>'.join([f"<strong>{p.get('codigo', '')} ({p.get('titulo', '')}):</strong> {p.get('descripcion', '')}" for p in pa_list])
 
-                # Temario / actividad
+            sesiones_unidad = sesiones['unidades_sesiones'][i-1]['sesiones'] if len(sesiones['unidades_sesiones']) > i-1 else []
+            sesiones_html += f"<div style='page-break-inside: avoid; margin-bottom: 30px;'>"
+            sesiones_html += f"<h4 style='margin-bottom: 6px;'>UNIDAD DE APRENDIZAJE N° {i}: {nombre_unidad}</h4>"
+            sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Fecha de inicio:</strong> {fecha_inicio if fecha_inicio else '-'} &nbsp;&nbsp; <strong>Fecha de término:</strong> {fecha_termino if fecha_termino else '-'}</div>"
+            sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Resultado de aprendizaje específico:</strong><br>{rae if rae else '<span class=\"no-data\">No definido</span>'}</div>"
+            sesiones_html += f"<div style='margin-bottom: 6px;'><strong>Producto de aprendizaje de la unidad:</strong><br>{pa if pa else '<span class=\"no-data\">No definido</span>'}</div>"
+            sesiones_html += f"<table style='width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11pt;'>"
+            sesiones_html += f"<tr style='background-color: #e8e8e8; font-weight: bold;'><td style='border: 1px solid #000; padding: 8px; text-align: center;'>No. Sesión / Horas Lectivas</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Tema / actividad</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Indicador(es) de logro</td><td style='border: 1px solid #000; padding: 8px; text-align: left;'>Instrumentos de evaluación</td></tr>"
+            # Obtener el indicador de logro combinado
+            indicador_combinado = None
+            for sesion in sesiones_unidad:
+                indicador = sesion.get('indicador_logro', sesion.get('indicadores_logro', ''))
+                if indicador and indicador != '-':
+                    if isinstance(indicador, list):
+                        indicador_combinado = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{ind}</li>' for ind in indicador) + '</ul>'
+                    else:
+                        indicador_combinado = indicador.replace('\n', '<br>')
+                    break
+            if not indicador_combinado:
+                indicador_combinado = '<span class="no-data">No definido</span>'
+
+            # Obtener instrumentos de evaluación combinados
+            instrumentos_combinados = None
+            for sesion in sesiones_unidad:
+                instrumentos = sesion.get('instrumentos', sesion.get('instrumentos_evaluacion', ''))
+                if instrumentos and instrumentos != '-':
+                    if isinstance(instrumentos, list):
+                        instrumentos_combinados = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{inst}</li>' for inst in instrumentos) + '</ul>'
+                    else:
+                        instrumentos_combinados = instrumentos.replace('\n', '<br>')
+                    break
+            if not instrumentos_combinados:
+                instrumentos_combinados = '<span class="no-data">No definido</span>'
+
+            for idx, sesion in enumerate(sesiones_unidad):
+                sesion_num = sesion.get('numero_sesion', '') or sesion.get('nombre', '') or 'Sesión'
+                horas = sesion.get('horas', '')
+                fecha = sesion.get('fecha', '')
+                sesion_info = f"<strong>{sesion_num}</strong>" + (f"<br>{horas}" if horas else "") + (f"<br>{fecha}" if fecha else "")
+
                 tema = sesion.get('temario', '')
                 if isinstance(tema, list):
                     tema_html = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{t}</li>' for t in tema) + '</ul>'
                 else:
-                    # Si hay saltos de línea, los convertimos en <br>
-                    tema_html = tema.replace('\n', '<br>') if tema else 'Sin tema definido'
-
-                # Indicador(es) de logro
-                indicador = sesion.get('indicador_logro', sesion.get('indicadores_logro', ''))
-                if isinstance(indicador, list):
-                    indicador_html = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{ind}</li>' for ind in indicador) + '</ul>'
-                else:
-                    indicador_html = indicador.replace('\n', '<br>') if indicador else '-'
-
-                # Instrumentos de evaluación
-                instrumentos = sesion.get('instrumentos', sesion.get('instrumentos_evaluacion', ''))
-                if isinstance(instrumentos, list):
-                    instrumentos_html = '<ul style="margin:0; padding-left:18px;">' + ''.join(f'<li>{inst}</li>' for inst in instrumentos) + '</ul>'
-                else:
-                    instrumentos_html = instrumentos.replace('\n', '<br>') if instrumentos else '-'
+                    tema_html = tema.replace('\n', '<br>') if tema else '<span class="no-data">No definido</span>'
 
                 sesiones_html += f"<tr>"
                 sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: center; vertical-align: middle; font-family: Arial, sans-serif; font-size: 11pt;'>{sesion_info}</td>"
                 sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{tema_html}</td>"
-                sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{indicador_html}</td>"
-                sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;'>{instrumentos_html}</td>"
+                if idx == 0:
+                    sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;' rowspan='{len(sesiones_unidad)}'>{indicador_combinado}</td>"
+                    sesiones_html += f"<td style='border: 2px solid #222; padding: 7px; text-align: left; vertical-align: top; font-family: Arial, sans-serif; font-size: 11pt;' rowspan='{len(sesiones_unidad)}'>{instrumentos_combinados}</td>"
                 sesiones_html += "</tr>"
-                contador_sesion += 1
             sesiones_html += "</table></div>"
     # Encabezado de la tabla con formato Word
     sesiones_html = sesiones_html.replace('<table', "<table style='border-collapse: collapse; width: 100%; margin-top: 10px; font-family: Arial, sans-serif; font-size: 11pt;'", 1)
