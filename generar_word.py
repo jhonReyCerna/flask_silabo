@@ -57,9 +57,9 @@ def formatear_referencia_libro(libro):
             if len(autores_list) == 1:
                 autores_str = autores_list[0]
             elif len(autores_list) == 2:
-                autores_str = f"{autores_list[0]} y {autores_list[1]}"
+                autores_str = f"{autores_list[0]} & {autores_list[1]}"
             else:
-                autores_str = ", ".join(autores_list[:-1]) + f" y {autores_list[-1]}"
+                autores_str = ", ".join(autores_list[:-1]) + f" & {autores_list[-1]}"
         titulo = libro.get("titulo", "Título pendiente")
         año = libro.get("año", "Año pendiente")
         editorial = libro.get("editorial", "Editorial pendiente")
