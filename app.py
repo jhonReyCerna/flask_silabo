@@ -1177,7 +1177,7 @@ def generar_html_vista_previa(datos):
                     pa_list = prod_unidad.get('productos', [])
                     if pa_list and any(p.get('codigo', '').strip() or p.get('titulo', '').strip() or p.get('descripcion', '').strip() for p in pa_list):
                         pa = ''.join([
-                            f"<div style='margin: 6px 0; margin-left: 1.3cm;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt;'>{p.get('codigo', '')} {p.get('titulo', '')}:</p><p style='margin: 6px 0 0 0.5in; text-align: justify; font-size: 11pt;'>{p.get('descripcion', '') if p.get('descripcion', '').strip() else '<span class=\"no-data\">No definido</span>'}</p></div>"
+                            f"<div style='margin: 6px 0;'><p style='margin: 6px 0 0 0; font-weight: bold; font-size: 12pt; text-align: left;'>{p.get('codigo', '')} {p.get('titulo', '')}:</p><p style='margin: 6px 0 0 0; text-align: left; font-size: 11pt;'>{p.get('descripcion', '') if p.get('descripcion', '').strip() else '<span class=\"no-data\">No definido</span>'}</p></div>"
                             for p in pa_list if p.get('codigo', '').strip() or p.get('titulo', '').strip() or p.get('descripcion', '').strip()
                         ])
                     else:
