@@ -7982,6 +7982,35 @@
         "estado": "completado",
         "id_registro": 20
       }
+    },
+    {
+      "general": {
+        "fecha_guardado": "2025-07-14T18:29:43.161706",
+        "codigo": "M.FAP.03.01/R9",
+        "version": "1",
+        "fecha": "2025-07-14",
+        "maestria": "GERENCIA DEL MANTENIMIENTO",
+        "asignatura": "MANTENIMIENTO PRODUCTIVO TOTAL ",
+        "semestre": "A",
+        "docente": "DR. ING. ROBERT WILLIAM CASTILLO ALVA",
+        "horas_teoria": "4",
+        "horas_practica": "0",
+        "creditos": "1",
+        "sesiones": "1",
+        "semanas": "1",
+        "correo": "rcastilloa@unacvirtual.edu.pe",
+        "codigo_programa": "GM309",
+        "caracter": "Obligatorio",
+        "proposito": "hrrssgr",
+        "horario": "Horario: Lunes - Miércoles - Viernes",
+        "modalidad": "Presencial",
+        "link_virtual": null
+      },
+      "metadatos": {
+        "fecha_finalizacion": "2025-07-14T18:29:46.802115",
+        "estado": "completado",
+        "id_registro": 21
+      }
     }
   ]
 }

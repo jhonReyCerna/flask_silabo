@@ -183,13 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
     async function generarDocumento(datos) {
         try {
             mostrarMensaje('📄 Generando documento Word...', 'info');
-            
             const response = await fetch('/generar_word');
-            
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
-                
                 const contentDisposition = response.headers.get('Content-Disposition');
                 let filename = 'Silabo.docx';
                 if (contentDisposition) {
@@ -198,23 +195,35 @@ document.addEventListener('DOMContentLoaded', function() {
                         filename = filenameMatch[1].replace(/['"]/g, '');
                     }
                 }
-                
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = filename;
                 document.body.appendChild(link);
                 link.click();
-                
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
-                
                 mostrarMensaje('✅ Documento Word descargado correctamente. Registro finalizado.', 'success');
-                
                 mostrarOpcionesPosteriorFinalizacion();
-                
             } else {
-                const errorData = await response.json();
-                mostrarMensaje(`❌ ${errorData.message}`, 'error');
+                let errorData = {};
+                try {
+                    errorData = await response.json();
+                } catch (e) {
+                    errorData.message = 'Error desconocido al generar el documento.';
+                }
+            
+                if (errorData.message && errorData.message.includes('Faltan datos en las siguientes secciones')) {
+                    const secciones = errorData.message.match(/secciones: (.+)\./);
+                    let seccionesFaltantes = secciones && secciones[1] ? secciones[1] : '';
+                    mostrarMensaje(
+                        `❌ No se puede generar el documento.<br>Faltan datos en las siguientes secciones:<br><b>${seccionesFaltantes}</b><br><br>` +
+                        `Completa todas las secciones requeridas antes de continuar. <br>` +
+                        `<a href="/general" style="display:inline-block;margin-top:10px;padding:7px 28px;border-radius:6px;background:#2563eb;color:#fff;font-weight:600;font-size:1.08em;text-decoration:none;box-shadow:0 2px 8px rgba(37,99,235,0.08);transition:background 0.2s;letter-spacing:0.5px;">Ir a General</a>`,
+                        'error'
+                    );
+                } else {
+                    mostrarMensaje(`❌ ${errorData.message}`, 'error');
+                }
             }
         } catch (error) {
             console.error('Error al generar documento:', error);
@@ -225,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function mostrarOpcionesPosteriorFinalizacion() {
         generarDocumentoBtn.disabled = true;
         vistaPreviaBtn.disabled = true;
-        // modificarBtn ya no existe
         const container = document.querySelector('.finalizar-container');
         container.innerHTML = `
             <h1 class="finalizar-titulo">🎉 ¡Registro Completado!</h1>

@@ -789,16 +789,23 @@ def generar_word():
     """Genera y descarga un documento Word del sílabo, luego finaliza el registro"""
     try:
         datos = cargar_datos()
-        datos_general = datos.get('general', {})
-        
-        if not datos_general:
+        # Validar que todas las secciones requeridas estén completas
+        secciones_requeridas = [
+            'general', 'unidades', 'competencias', 'productos', 'sesiones', 'cronograma', 'referencias'
+        ]
+        faltantes = []
+        for seccion in secciones_requeridas:
+            valor = datos.get(seccion)
+            if not valor or (isinstance(valor, dict) and not valor):
+                faltantes.append(seccion.capitalize())
+        if faltantes:
             return jsonify({
                 'success': False,
-                'message': 'No hay datos para generar el documento. Complete el formulario general primero.'
+                'message': f'No se puede generar el documento. Faltan datos en las siguientes secciones: {', '.join(faltantes)}.'
             }), 400
-        
+
         datos_completos = {
-            'general': datos_general,
+            'general': datos.get('general', {}),
             'unidades': datos.get('unidades', {}),
             'competencias': datos.get('competencias', {}),
             'productos': datos.get('productos', {}),
@@ -806,24 +813,24 @@ def generar_word():
             'cronograma': datos.get('cronograma', {}),
             'referencias': datos.get('referencias', {})
         }
-        
+
         doc = generar_documento_word(datos_completos)
-        
+
         with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
             doc.save(tmp_file.name)
             tmp_file_path = tmp_file.name
-        
-        nombre_archivo = generar_nombre_archivo(datos_general)
-        
+
+        nombre_archivo = generar_nombre_archivo(datos.get('general', {}))
+
         finalizar_registro()
-        
+
         return send_file(
             tmp_file_path,
             as_attachment=True,
             download_name=nombre_archivo,
             mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         )
-        
+
     except Exception as e:
         return jsonify({
             'success': False,
