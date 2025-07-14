@@ -371,8 +371,7 @@ def crear_encabezado_profesional(datos):
         fila.height = Inches(0.2)
 
     agregar_bordes(tabla)
- #------------------------------------------------------------------------------------------------------
-
+ #----------------------------------------------------------------------------------------
     parrafos = [
         "UNIVERSIDAD NACIONAL DEL CALLAO",
         "ESCUELA DE POSGRADO DE LA UNAC",
@@ -445,7 +444,7 @@ def crear_encabezado_profesional(datos):
             run.font.size = Pt(14)
             run.bold = True
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-#------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------
     p = doc.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     run = p.add_run()
