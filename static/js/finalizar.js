@@ -167,7 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (datos && Object.keys(datos).length > 0) {
             await generarDocumento(datos);
         } else {
-            mostrarMensaje('❌ No hay datos para generar el documento. Complete el formulario general primero.', 'error');
+            mostrarMensaje(
+                '❌ No hay datos para generar el documento. Complete el formulario general primero. <br>' +
+                '<a href="/general" style="display:inline-block;margin-top:10px;padding:7px 28px;border-radius:6px;background:#2563eb;color:#fff;font-weight:600;font-size:1.08em;text-decoration:none;box-shadow:0 2px 8px rgba(37,99,235,0.08);transition:background 0.2s;letter-spacing:0.5px;">Ir a general</a>',
+                'error'
+            );
         }
     });
 
