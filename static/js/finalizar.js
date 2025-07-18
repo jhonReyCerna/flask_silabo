@@ -390,6 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <td style="padding: 12px; color: #28a745; font-weight: 500;">${fechaFinalizacion}</td>
                             </tr>
                         `;
+                        
                     });
                     
                     historialHtml += `
